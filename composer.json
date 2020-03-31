@@ -1,7 +1,7 @@
 {
-    "name": "yiisoft/yii2-app-basic",
-    "description": "Yii 2 Basic Project Template",
-    "keywords": ["yii2", "framework", "basic", "project template"],
+    "name": "SimplePOS",
+    "description": "web page to get a simple  way to sell productos and get the gains",
+    "keywords": ["yii2", "framework", "point of sales", "pos"],
     "homepage": "http://www.yiiframework.com/",
     "type": "project",
     "license": "BSD-3-Clause",
@@ -17,7 +17,14 @@
         "php": ">=5.6.0",
         "yiisoft/yii2": "~2.0.14",
         "yiisoft/yii2-bootstrap": "~2.0.0",
-        "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0"
+        "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
+        "gevman/yii2-excel-import": "^1.0",
+        "arogachev/yii2-excel": "^0.1.1",
+        "boundstate/yii2-importexport": "*",
+        "phpoffice/phpspreadsheet": "^1.11",
+        "richardfan1126/yii2-js-register": "*",
+        "mike42/escpos-php": "^2.1"
+
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

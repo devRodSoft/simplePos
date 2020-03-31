@@ -5,10 +5,10 @@ return [
     'dsn' => 'mysql:host=localhost;dbname=simplepos',
     'username' => 'root',
     'password' => '',
-    'charset' => 'utf8',
+    'charset' => 'utf8'
 
     // Schema cache options (for production environment)
     //'enableSchemaCache' => true,
     //'schemaCacheDuration' => 60,
-    //'schemaCache' => 'cache',
+    //'schemaCache' => 'cache', 
 ];

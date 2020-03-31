@@ -4,6 +4,7 @@ $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
 $config = [
+    'timeZone' => 'america/Mexico_City',
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
@@ -12,6 +13,14 @@ $config = [
         '@npm'   => '@vendor/npm-asset',
     ],
     'components' => [
+        'formatter' => [
+            'class' => 'yii\i18n\Formatter',
+            'dateFormat' => 'dd.MM.yyyy',
+            'datetimeFormat' => 'php:d.m.Y H:i:s',
+            'decimalSeparator' => ',',
+            'thousandSeparator' => '.',            
+            'currencyCode' => 'MXN',
+        ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => '8HMyQOdmBDYNM8Gl8WjlmsusxZkAoiUC',
@@ -43,14 +52,15 @@ $config = [
             ],
         ],
         'db' => $db,
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                '<controller:\w+>/<action:\w+>/<barcode:\w+>' => '<controller>/<action>',
+                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+                
             ],
         ],
-        */
     ],
     'params' => $params,
 ];
