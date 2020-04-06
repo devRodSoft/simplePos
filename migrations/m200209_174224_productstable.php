@@ -16,12 +16,11 @@ class m200209_174224_productstable extends Migration
         $this->createTable('productos', [
             //Datos del producto
             'id' => $this->primaryKey(),
-            'codidoBarras' => $this->string()->notNull(),
-            'descripcion' => $this->string()->notNull(),
-            'precio' => $this->integer()->notNull(),
-            'cantidad' => $this->integer()->notNull(),
-            'created_at' => $this->integer()->notNull(),
-            'updated_at' => $this->integer()->notNull(),
+            'codidoBarras' => $this->string(),
+            'descripcion'  => $this->string()->notNull(),
+            'precio'       => $this->float()->notNull(),
+            'precio1'      => $this->float(),
+            'cantidad'     => $this->integer()->default(0),
         ]);
     }
     /**

@@ -3,20 +3,22 @@
 use yii\db\Migration;
 
 /**
- * Class m200209_181731_detalleVentaTable
+ * Class m200406_133549_ventaDetalleTabl
  */
-class m200209_181731_detalleVentaTable extends Migration
+class m200406_133549_ventaDetalleTabl extends Migration
 {
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
+
+        //Detalle ventas table 
         $this->createTable('detalleVenta', [
-            'id' => $this->primaryKey(),
-            'ventaId' => $this->integer()->notNull(), 
+            'id'         => $this->primaryKey(),
+            'ventaId'    => $this->integer()->notNull(), 
             'productoId' => $this->integer()->notNull(), 
-            'precio' => $this->float(),       
+            'precio'     => $this->float(),       
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
         ]);
@@ -48,7 +50,7 @@ class m200209_181731_detalleVentaTable extends Migration
      */
     public function safeDown()
     {
-        echo "m200209_181731_detalleVentaTable cannot be reverted.\n";
+        echo "m200406_133549_ventaDetalleTabl cannot be reverted.\n";
 
         return false;
     }
