@@ -11,7 +11,9 @@ use yii\behaviors\TimestampBehavior;
  * @property int $id
  * @property string $codidoBarras
  * @property string $descripcion
+ * @property int $costo
  * @property int $precio
+ * @property int $precio1
  * @property string $cantidad
  * @property int $created_at
  * @property int $updated_at
@@ -44,7 +46,8 @@ class Productos extends \yii\db\ActiveRecord
     {
         return [
             [['codidoBarras', 'descripcion', 'precio', 'cantidad'], 'required'],
-            [['precio', 'cantidad', 'created_at', 'updated_at'], 'integer'],
+            [['cantidad', 'created_at', 'updated_at'], 'integer'],
+            [['costo', 'precio', 'precio1'], 'number'],
             [['codidoBarras', 'descripcion'], 'string', 'max' => 255],
         ];
     }
@@ -58,7 +61,9 @@ class Productos extends \yii\db\ActiveRecord
             'id' => 'ID',
             'codidoBarras' => 'Codido Barras',
             'descripcion' => 'Descripcion',
+            'costo' => 'Costo',
             'precio' => 'Precio',
+            'precio1' => 'Precio 1',
             'cantidad' => 'Cantidad',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',

@@ -29,19 +29,4 @@ class m200403_184313_sucursal extends Migration
 
         return false;
     }
-
-    /*
-    // Use up()/down() to run migration code without a transaction.
-    public function up()
-    {
-
-    }
-
-    public function down()
-    {
-        echo "m200403_184313_sucursal cannot be reverted.\n";
-
-        return false;
-    }
-    */
 }

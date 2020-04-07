@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Productos;
+use app\models\SucursalProducto;
 use app\models\ProductosSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -116,25 +117,48 @@ class ProductosController extends Controller
     }
     /* import inventary */ 
     public function actionImport() {
-
-        $inputFileName = 'uploads/inventario.xlsx';
+        echo "importing";
+        $inputFileName = 'uploads/inven.xlsx';
         //  $helper->log('Loading file ' . pathinfo($inputFileName, PATHINFO_BASENAME) . ' using IOFactory to identify the format');
         $spreadsheet = IOFactory::load($inputFileName);
         $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
 
         foreach ($sheetData as $data => $valor) {
             // $array[3] se actualizará con cada valor de $array...
-
+            //var_dump($valor);
             if ($valor["A"] != NULL) {
 
                 $producto = new Productos();
 
                 $producto->codidoBarras = $valor["A"];
-                $producto->descripcion = $valor["B"];
-                $producto->precio = $valor["C"];
-                $producto->cantidad = $valor["D"];
+                $producto->descripcion  = $valor["B"];
+                $producto->costo        = $valor["C"];
+                $producto->precio       = $valor["D"];
+                $producto->precio1      = $valor["E"];
+                $producto->cantidad     = $valor["F"];
 
+                //var_dump();
+                //Save the product
                 echo $producto->save();
+
+                //save the fisrt sucursal
+                $sucursalProducto = new SucursalProducto();
+
+                $sucursalProducto->sucursalId = $valor['G'];
+                $sucursalProducto->productoId = $producto->id;
+                $sucursalProducto->cantidad   = $valor['H'];
+
+                echo $sucursalProducto->save();
+
+
+                //save the secon sucursal
+                $sucursalProducto = new SucursalProducto();
+
+                $sucursalProducto->sucursalId = $valor['I'];
+                $sucursalProducto->productoId = $producto->id;
+                $sucursalProducto->cantidad   = $valor['J'];
+
+                echo $sucursalProducto->save();
             }       
         }
     }

@@ -16,14 +16,14 @@ class m200403_184415_sucursal_producto extends Migration
         $this->createTable('sucursalProducto', [
             //Datos del producto
             'id'         => $this->primaryKey(),
-            'sucursalId' => $this->string()->notNull(),
-            'productoId' => $this->string()->notNull(),            
-            'cantidad'   => $this->integer()->default(0),
+            'sucursalId' => $this->integer()->notNull(),
+            'productoId' => $this->integer()->notNull(),            
+            'cantidad'   => $this->integer()->defaultValue(0),
         ]);
 
-        // add foreign key for sucursal 
+        // add foreign key for table `menu-user`
         $this->addForeignKey(
-            'fk-sucursal-nombre-id',
+            'fk-sucursal-producto-id',
             'sucursalProducto',
             'sucursalId',
             'sucursales',
@@ -31,6 +31,7 @@ class m200403_184415_sucursal_producto extends Migration
             'CASCADE'
         );
 
+  
         // add foreign key for table productos
         $this->addForeignKey(
             'fk-sucursales-producto-id',

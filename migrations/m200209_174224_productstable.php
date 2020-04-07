@@ -15,7 +15,7 @@ class m200209_174224_productstable extends Migration
         //Productos
         $this->createTable('productos', [
             //Datos del producto
-            'id' => $this->primaryKey(),
+            'id'           => $this->primaryKey(),
             'codidoBarras' => $this->string(),
             'descripcion'  => $this->string()->notNull(),
             'precio'       => $this->float()->notNull(),

@@ -38,9 +38,10 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
-            ['label' => 'Productos', 'url' => ['/productos/index']],
-            ['label' => 'Ventas', 'url' => ['/ventas/index']],
-            /*['label' => 'Contact', 'url' => ['/site/contact']],
+            ['label' => 'Productos',  'url' => ['/productos/index']],
+            ['label' => 'Ventas',     'url' => ['/ventas/index']],
+            ['label' => 'Sucursales', 'url' => ['/sucursales/index']],
+            ['label' => 'Usuarios',   'url' => ['/user/index']],
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login']]
             ) : (
@@ -52,7 +53,7 @@ AppAsset::register($this);
                 )
                 . Html::endForm()
                 . '</li>'
-            )*/
+            )
         ],
     ]);
     NavBar::end();

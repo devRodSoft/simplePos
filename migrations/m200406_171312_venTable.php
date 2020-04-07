@@ -3,9 +3,9 @@
 use yii\db\Migration;
 
 /**
- * Class m200406_133514_ventaTable
+ * Class m200406_171312_venTable
  */
-class m200406_133514_ventaTable extends Migration
+class m200406_171312_venTable extends Migration
 {
     /**
      * {@inheritdoc}
@@ -18,9 +18,20 @@ class m200406_133514_ventaTable extends Migration
             'id'         => $this->primaryKey(),
             'total'      => $this->float()->notNull(),
             'descuento'  => $this->float(),
+            'userId'     => $this->integer(),
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
         ]);
+
+        // add foreign key for table `venta`
+        $this->addForeignKey(
+            'fk-who-do-the-self-id',
+            'ventas',
+            'userId',
+            'user',
+            'id',
+            'CASCADE'
+        );
     }
 
     /**
@@ -28,7 +39,7 @@ class m200406_133514_ventaTable extends Migration
      */
     public function safeDown()
     {
-        echo "m200406_133514_ventaTable cannot be reverted.\n";
+        echo "m200406_171312_venTable cannot be reverted.\n";
 
         return false;
     }
@@ -42,7 +53,7 @@ class m200406_133514_ventaTable extends Migration
 
     public function down()
     {
-        echo "m200406_133514_ventaTable cannot be reverted.\n";
+        echo "m200406_171312_venTable cannot be reverted.\n";
 
         return false;
     }
