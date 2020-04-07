@@ -10,11 +10,16 @@ $this->title = 'Punto de Venta';
 ?>
 <div class="site-index">
     <div class="container">
-        <h2>Sucursal</h2>
-        <select name="hall" id="sucursales" value="1">
-            <option value="1">Seduction 1</option>
-            <option value="2">Seduction 2</option>
-        </select>
+        <div class="container">
+            <div class="col-md-3">
+                
+                <h2>Sucursal</h2>
+                <select name="sucursales" id="sucursales" class="form-control">
+                    <option value="1" selected>Seduction 1</option>
+                    <option value="2">Seduction 2</option>
+                </select>
+            </div>
+        </div>
         <h2>Producto</h2>
         <input type="text" class="form-control" id="barCode" aria-describedby="basic-addon3">
     </div>
@@ -54,7 +59,13 @@ $this->title = 'Punto de Venta';
     var descuento = 0; 
     var productos = [];  
     var cart = [];  
+    var sucursalSelected = $("#sucursales :selected").val();
 
+
+    //Buttons actins
+    $('#sucursales').on('change', function (element) {
+        sucursalSelected = $("#sucursales :selected").val();
+    })
 
     $('#descuento').on('keypress', function getProducto(e){
         if (e.which != 13)
@@ -67,7 +78,7 @@ $this->title = 'Punto de Venta';
 
     $('#pagar').on('click', function () {        
         url =   "<?php echo Yii::$app->request->baseUrl; ?>" + "/ventas/pagar/";
-        $.post(url, {'total': total, 'descuento': descuento, 'productos': productos})
+        $.post(url, {'total': total, 'descuento': descuento, 'productos': cart})
             .done(function( data ) {
                 url = "http://localhost/simpleprint/index.php";
 
@@ -80,10 +91,12 @@ $this->title = 'Punto de Venta';
             });
     });
 
-    //New login Refactor start here! 
+
+    $('#cancelar').on('click', function clear() {
+        resetDatos();
+    });
 
     //helpers
-
     /* Reset the sale data */
     function resetDatos() {
         $('#descuento').val("");
@@ -95,19 +108,12 @@ $this->title = 'Punto de Venta';
         cart = [];
     }
 
-
-    //Buttons actions 
-    $('#cancelar').on('click', function clear() {
-        resetDatos();
-    });
-
-
-    //Add to car productos
+    //Find a product
     $('#barCode').on('keypress', function getProducto(e) {
         if (e.which != 13)
             return
 
-        var url = "<?php echo Yii::$app->request->baseUrl; ?>" + "/productos/producto/" + this.value + "/" + 1;
+        var url = "<?php echo Yii::$app->request->baseUrl; ?>" + "/productos/producto/" + this.value + "/" + sucursalSelected;
         $.get(url)
             .done(function(producto) {           
 
@@ -121,8 +127,7 @@ $this->title = 'Punto de Venta';
                productos.push(producto[0]);
                selectedItems(producto[0]);
             
-               total += parseFloat(producto[0].producto.precio);
-               $('#total').text(total);
+               
                $('#barCode').val("");
             })
             .fail(function(jqXHR, textStatus, errorThrown) { 
@@ -151,9 +156,17 @@ $this->title = 'Punto de Venta';
         found = false;
         
         for (index in cart) {
-            if (cart[index].codidoBarras == item.codidoBarras) {
+            if (cart[index].producto.id == item.producto.id) {
                 console.log(cart[index],  item);
+
+                //check if can  add one more product check from sucursal producto cantidad
+                if (cart[index].selectedCantidad + 1 > cart[index].cantidad ){
+                    toastr.warning('Ya no tienes existencias disponibles');
+                    return
+                }
+                    
                 cart[index].selectedCantidad +=1;
+                
                 found = true;
                // break;
             }
@@ -162,7 +175,7 @@ $this->title = 'Punto de Venta';
 
         // If is a new item add in the cart
         if (!found) {
-            item[0].selectedCantidad = 1;
+            item.selectedCantidad = 1;
             cart.push(item);
         }
 
@@ -173,6 +186,7 @@ $this->title = 'Punto de Venta';
 
 
     function showCart() {
+        var totalPrice = 0;
         //Remove the items
         $('.detalle').remove();
         
@@ -180,13 +194,14 @@ $this->title = 'Punto de Venta';
             var productTotal = '<td>' + cart[product].selectedCantidad + '</td>'
             var desc = '<td>' + cart[product].producto.descripcion + '</td>';
             var precio = '<td>' + (cart[product].selectedCantidad * cart[product].producto.precio) + '</td>';
-               
+            
+            totalPrice += (cart[product].selectedCantidad * cart[product].producto.precio);
+            
             
             $('#productos').append('<tr class=\"detalle\">'+productTotal+desc+precio+'</tr>');
         }
+        $('#total').text(totalPrice);
     }
-
-
 
 </script>
 <?php JSRegister::end(); ?>
