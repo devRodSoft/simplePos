@@ -106,13 +106,24 @@ class ProductosController extends Controller
             'model' => $model,
         ]);
     }
-    public function actionProducto($barcode)
+    public function actionProducto($barcode, $sucursal)
     {
+        
         $request = Yii::$app->request;
         $params = $request->get();
-        
-        if (Yii::$app->request->isAjax) {
-            return $this->asJson(Productos::find()->where(['codidoBarras' => $barcode])->one());
+
+        if (Yii::$app->request->isAjax) {            
+
+            $data = SucursalProducto::find()
+
+            ->joinWith('producto p')
+            ->where(['in', 'p.codidoBarras', $barcode])
+            ->andWhere(['sucursalproducto.sucursalId' => $sucursal])
+            ->andWhere(['>','sucursalproducto.cantidad', 0])
+            ->asArray()
+            ->all();
+          
+            return $this->asJson($data);
         }    
     }
     /* import inventary */ 

@@ -56,7 +56,7 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                '<controller:\w+>/<action:\w+>/<barcode:\w+>' => '<controller>/<action>',
+                '<controller:\w+>/<action:\w+>/<barcode:\w+>/<sucursal:\w+>' => '<controller>/<action>',
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
                 
             ],

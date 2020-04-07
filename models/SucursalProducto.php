@@ -5,12 +5,15 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "sucursalProducto".
+ * This is the model class for table "sucursalproducto".
  *
  * @property int $id
  * @property int $sucursalId
  * @property int $productoId
  * @property int|null $cantidad
+ *
+ * @property Sucursales $sucursal
+ * @property Productos $producto
  */
 class SucursalProducto extends \yii\db\ActiveRecord
 {
@@ -19,7 +22,7 @@ class SucursalProducto extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'sucursalProducto';
+        return 'sucursalproducto';
     }
 
     /**
@@ -46,5 +49,25 @@ class SucursalProducto extends \yii\db\ActiveRecord
             'productoId' => 'Producto ID',
             'cantidad' => 'Cantidad',
         ];
+    }
+
+    /**
+     * Gets query for [[Sucursal]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSucursal()
+    {
+        return $this->hasOne(Sucursales::className(), ['id' => 'sucursalId']);
+    }
+
+    /**
+     * Gets query for [[Producto]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProducto()
+    {
+        return $this->hasOne(Productos::className(), ['id' => 'productoId']);
     }
 }

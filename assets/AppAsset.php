@@ -21,8 +21,10 @@ class AppAsset extends AssetBundle
     public $baseUrl = '@web';
     public $css = [
         'css/site.css',
+        'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css'
     ];
     public $js = [
+        'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',

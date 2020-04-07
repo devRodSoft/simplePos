@@ -48,6 +48,7 @@ $this->title = 'Punto de Venta';
 
 <?php JSRegister::begin(); ?>
 <script>
+    toastr.options.newestOnTop = false; 
 
     var total = 0;       
     var descuento = 0; 
@@ -106,17 +107,21 @@ $this->title = 'Punto de Venta';
         if (e.which != 13)
             return
 
-        var url = "<?php echo Yii::$app->request->baseUrl; ?>" + "/productos/producto/" + this.value;
+        var url = "<?php echo Yii::$app->request->baseUrl; ?>" + "/productos/producto/" + this.value + "/" + 1;
         $.get(url)
-            .done(function(producto) { 
-               var desc = '<td>' + producto.descripcion + '</td>';
-               var precio = '<td>' + producto.precio + '</td>';
-              
+            .done(function(producto) {           
+
+               //check if product exist 
+               if (!producto.length) {
+                 toastr.warning('No se encontro el producto o no tienes existencias!');     
+                 return;
+               }
+                    
                //producto is the data to print the ticket              
-               productos.push(producto);
-               selectedItems(producto);
-               //$('#productos').append('<tr class=\"detalle\">'+desc+precio+'</tr>');
-               total += producto.precio;
+               productos.push(producto[0]);
+               selectedItems(producto[0]);
+            
+               total += parseFloat(producto[0].producto.precio);
                $('#total').text(total);
                $('#barCode').val("");
             })
@@ -126,7 +131,7 @@ $this->title = 'Punto de Venta';
             });
     });
 
-    // Add selected items and do the validations to quantity! 
+    // Add selected items and do the validations to quantity!
     
     function selectedItems (item) {
        // console.log(item);
@@ -135,9 +140,7 @@ $this->title = 'Punto de Venta';
             //selectedItemsArr.push(Object.assing(item, {selectedCantidad: 1}));
             item.selectedCantidad = 1;
             cart.push(item);
-            showCart();
-            //console.log(item);
-            //console.log(selectedItemsArr);
+            showCart();        
         } else {
             findItems(item);
         }
@@ -149,7 +152,7 @@ $this->title = 'Punto de Venta';
         
         for (index in cart) {
             if (cart[index].codidoBarras == item.codidoBarras) {
-                console.log(cart[index].codidoBarras,  item.codidoBarras);
+                console.log(cart[index],  item);
                 cart[index].selectedCantidad +=1;
                 found = true;
                // break;
@@ -159,7 +162,7 @@ $this->title = 'Punto de Venta';
 
         // If is a new item add in the cart
         if (!found) {
-            item.selectedCantidad = 1;
+            item[0].selectedCantidad = 1;
             cart.push(item);
         }
 
@@ -175,8 +178,8 @@ $this->title = 'Punto de Venta';
         
         for (product in cart) {
             var productTotal = '<td>' + cart[product].selectedCantidad + '</td>'
-            var desc = '<td>' + cart[product].descripcion + '</td>';
-            var precio = '<td>' + (cart[product].selectedCantidad * cart[product].precio) + '</td>';
+            var desc = '<td>' + cart[product].producto.descripcion + '</td>';
+            var precio = '<td>' + (cart[product].selectedCantidad * cart[product].producto.precio) + '</td>';
                
             
             $('#productos').append('<tr class=\"detalle\">'+productTotal+desc+precio+'</tr>');
