@@ -78,13 +78,6 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         ];
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getClientes()
-    {
-        return $this->hasMany(Cliente::className(), ['userId' => 'id']);
-    }
 
     /**
      * @inheritdoc

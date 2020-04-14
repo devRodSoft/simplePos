@@ -18,9 +18,10 @@ use app\models\Sucursales;
         /* Get data for dopdowns */
         $ldSucursales = Sucursales::find()->all();
         $sucursales   = ArrayHelper::map($ldSucursales,'id','nombre');    
+        $session      = Yii::$app->session;
     ?>
-
-    <?php echo $form->field($model, 'sucursalId')->dropDownList($sucursales, ['prompt'=>'Selecciona una Sucursal'])->label('Sucursal');?>
+    
+    <?php echo $form->field($model, 'sucursalId')->hiddenInput(['value' => $session->get('sucursal')])->label(false); ?> 
 
     <?php echo $form->field($model, 'userId')->hiddenInput(['value' => Yii::$app->user->identity->id])->label(false); ?>    
 

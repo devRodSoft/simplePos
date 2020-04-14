@@ -68,4 +68,35 @@ class DetalleVentaSearch extends DetalleVenta
 
         return $dataProvider;
     }
+    public function Corte($params, $id)
+    {
+        $query = DetalleVenta::find()->joinWith('venta v')
+        ->where(['in', 'v.cajaId', $id]);
+
+        // add conditions that should always apply here
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
+
+        // grid filtering conditions
+        $query->andFilterWhere([
+            'id' => $this->id,
+            'ventaId' => $this->ventaId,
+            'productoId' => $this->productoId,
+            'precio' => $this->precio,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+        ]);
+
+        return $dataProvider;
+    }
 }

@@ -2,6 +2,8 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use app\models\Sucursales;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\CajasSearch */
@@ -18,18 +20,30 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a(Yii::t('app', 'Create Cajas'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php // echo $this->render('_search', ['model' => $searchModel]);
+        $listaSucursales = ArrayHelper::map(Sucursales::find()->all(), 'id', 'nombre');
+    ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'formatter' => ['class' => 'yii\i18n\Formatter','nullDisplay' => ''],
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
             'id',
-            'sucursalId',
-            'userId',
-            'saldoInicial',
+            [
+                'label' => 'Sucursal',
+                'attribute' => 'sucursalId',
+                'filter' => false,
+                'value' => function ($model) {
+                    return $model->sucursal->nombre;
+                }
+            ],
+            'user.username',
+            [
+                'label'     =>  'Saldo Inicial',
+                'attribute' =>  'saldoInicial',
+                'filter'    =>  false
+            ],
             'saldoFinal',
             //'isOpen',
             //'created_at',
@@ -40,6 +54,4 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
-
-
 </div>

@@ -54,14 +54,19 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+
+        $model = new LoginForm();
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect(['site/login', array('model' => $model)]);
+        }
+
         $cajas =  new Cajas();
 
         if (count($cajas->getOpenCaja())) {
             return $this->render('pos');
-        } 
+        }     
 
-        return $this->render("cajas/create");
-        
+        return $this->redirect("cajas/create");
     }    
 
     /**
@@ -71,12 +76,15 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+
+            $session = Yii::$app->session;
+
+            // comprueba si una sesión está ya abierta
+            $session->set('sucursal', $model->sucursalSelected);
+
+
             return $this->goBack();
         }
 

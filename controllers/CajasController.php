@@ -5,6 +5,9 @@ namespace app\controllers;
 use Yii;
 use app\models\Cajas;
 use app\models\CajasSearch;
+use app\models\Detalleventa;
+use app\models\DetalleVentaSearch;
+use app\models\User;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -35,7 +38,14 @@ class CajasController extends Controller
      */
     public function actionIndex()
     {
+        $session = Yii::$app->session;
         $searchModel = new CajasSearch();
+
+        //Check if the user is admin or is restaurant type in then sisten vendedor
+        if (!Yii::$app->user->identity->userType == User::SUPER_ADMIN) {
+            $searchModel->sucursalId = $session->get('sucursal');
+        }
+                
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -123,5 +133,29 @@ class CajasController extends Controller
         }
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+    }
+
+    public function actionCorte($id) {
+        $dataProvider  =  new DetalleVentaSearch();
+        $data = $dataProvider->Corte([], $id);
+
+        return $this->render('corte', [
+            'data' => $data,
+            'searchModel' => $dataProvider
+        ]);
+    }
+
+    public function actionCerrar($id) {
+        $totalVentas = DetalleVenta::find()->joinWith('venta v')
+        ->where(['in', 'v.cajaId', $id])->sum('total');
+
+        $caja = Cajas::find()->where(['=', "id", $id])->one();
+
+        $caja->saldoFinal = $caja->saldoInicial + $totalVentas;
+        $caja->cierre = date('Y-m-d H:i:s');
+        
+        $caja->save();
+
+        return $this->redirect(['view', 'id' => $id]);
     }
 }

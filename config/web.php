@@ -20,6 +20,7 @@ $config = [
             'decimalSeparator' => ',',
             'thousandSeparator' => '.',            
             'currencyCode' => 'MXN',
+            'defaultTimeZone' => 'America/Mexico_City',
         ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
@@ -63,6 +64,11 @@ $config = [
         ],
     ],
     'params' => $params,
+    'modules' => [ 'gridview' => [
+        'class' => '\kartik\grid\Module'],
+        'class' => 'yii\i18n\PhpMessageSource',
+        //'basePath' => '@kvexport/messages',
+       'forceTranslation' => true]
 ];
 
 if (YII_ENV_DEV) {

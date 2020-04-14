@@ -24,13 +24,18 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            //['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'ventaId',
-            'productoId',
-            'precio',
-            'created_at',
+           // 'id',
+            //'ventaId',
+            'producto.descripcion',
+            [
+                'label' => "precio Unitario",
+                'attribute' => "precio",
+                'filter' => false
+            ],
+            'cantidad',
+            'created_at:dateTime',
             //'updated_at',
 
             ['class' => 'yii\grid\ActionColumn'],

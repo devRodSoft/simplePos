@@ -1,5 +1,5 @@
 {
-    "name": "SimplePOS",
+    "name": "simplepos",
     "description": "web page to get a simple  way to sell productos and get the gains",
     "keywords": ["yii2", "framework", "point of sales", "pos"],
     "homepage": "http://www.yiiframework.com/",
@@ -23,7 +23,9 @@
         "boundstate/yii2-importexport": "*",
         "phpoffice/phpspreadsheet": "^1.11",
         "richardfan1126/yii2-js-register": "*",
-        "mike42/escpos-php": "^2.1"
+        "mike42/escpos-php": "^2.1",
+        "kartik-v/yii2-grid": "dev-master",
+        "kartik-v/yii2-export": "dev-master"
 
     },
     "require-dev": {

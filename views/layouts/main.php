@@ -9,6 +9,7 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
+use app\models\User;
 
 AppAsset::register($this);
 ?>
@@ -40,9 +41,10 @@ AppAsset::register($this);
         'items' => [
             ['label' => 'Productos',  'url' => ['/productos/index']],
             ['label' => 'Sucupro',    'url' => ['/sucursal-producto/index']],
+            ['label' => 'Reportes',   'url' => ['/detalle-venta/index']],
             ['label' => 'Ventas',     'url' => ['/ventas/index']],
             ['label' => 'Sucursales', 'url' => ['/sucursales/index']],
-            ['label' => 'Usuarios',   'url' => ['/user/index']],
+            ['label' => 'Usuarios',   'url' => ['/user/index'], 'visible' => !Yii::$app->user->isGuest && Yii::$app->user->identity->userType == User::SUPER_ADMIN,],
             ['label' => 'Cajas',      'url' => ['/cajas/index']],
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login']]

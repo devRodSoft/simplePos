@@ -8,9 +8,9 @@ return [
     'charset' => 'utf8'
 
     /*'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=seductio_venta;dbname=seductio_puntodeventa',
-    'username' => 'root',
-    'password' => '[ZXU1=!M2)iV',
+    'dsn' => 'mysql:host=localhost;dbname=myrodsof_sex',
+    'username' => 'myrodsof_sex',
+    'password' => 'sex2020Rodsoft',
     'charset' => 'utf8'*/
 
     // Schema cache options (for production environment)

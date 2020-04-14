@@ -217,6 +217,7 @@ $this->title = 'Punto de Venta';
             $('#productos').append('<tr class=\"detalle\">'+productTotal+desc+precio+'</tr>');
         }
         $('#total').text(totalPrice);
+        total = totalPrice;
     }
 
 </script>
