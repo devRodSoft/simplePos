@@ -39,6 +39,7 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
             ['label' => 'Productos',  'url' => ['/productos/index']],
+            ['label' => 'Sucupro',    'url' => ['/sucursal-producto/index']],
             ['label' => 'Ventas',     'url' => ['/ventas/index']],
             ['label' => 'Sucursales', 'url' => ['/sucursales/index']],
             ['label' => 'Usuarios',   'url' => ['/user/index']],
