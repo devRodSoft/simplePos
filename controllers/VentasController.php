@@ -10,7 +10,8 @@ use app\models\Productos;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use app\models\Cajas;
+use app\models\SucursalProducto;
 //to print
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Mike42\Escpos\Printerd;
@@ -85,36 +86,43 @@ class VentasController extends Controller
     public function actionPagar() {
 
         $model = new Ventas();
+        $caja  = new Cajas();
 
         $total     = Yii::$app->request->post('total');
         $descuento = Yii::$app->request->post('descuento');
         $productos = Yii::$app->request->post('productos');
+        $wPrice    = Yii::$app->request->post('precioSelected');
 
         $model->total     =  $total;
         $model->descuento =  $descuento;
-
+        $model->cajaId    =  $caja->getIdOpenCaja()->id;
+        
+        //Guardamos la venta
         if ($model->save()) {
             foreach($productos as $producto) {
-
+                //Intentamos guardar el detalle de la venta
                 $modelDetalle = new Detalleventa();
     
                 $modelDetalle->ventaId    = $model->id;
-                $modelDetalle->productoId = $producto['id']; 
-                $modelDetalle->precio     = $producto['precio']; 
-    
-                $modelDetalle->save();
+                $modelDetalle->productoId = $producto['producto']['id'];              
+                $modelDetalle->precio     = $wPrice == 1 ? $producto['producto']['precio'] : $producto['producto']['precio1'];
+                $modelDetalle->cantidad   = $producto['selectedCantidad'];
 
-                $producto = Productos::find()->where(['id' => $producto['id']])->one();
+                //Guardamos el detalle de la venta
+                $modelDetalle->save();  
 
-                $producto->cantidad =  $producto->cantidad - 1 >= 0 ? $producto->cantidad - 1 : 0; 
+                //Descontamos inventario por producto vendido
+                $productoInventario = SucursalProducto::find()->where(['=', 'productoId', $producto['producto']['id']])->andWhere(['=', 'sucursalId', $producto['sucursalId']])->one();
+
+                //var_dump($productoInventario->cantidad);
+                $productoInventario->cantidad -= $producto['selectedCantidad'];
                 
-                $producto->save();
-               
+                $productoInventario->save();
             }
                      
             return true;
         } else {
-            return false;
+            die("hubo problema");
         }
     }
 

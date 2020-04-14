@@ -24,7 +24,7 @@ class m200406_171320_venDeTable extends Migration
 
         // add foreign key for table `venta`
         $this->addForeignKey(
-            'fk-venta-detalle-venta-id',
+            'fk-venta-detalle-id',
             'detalleVenta',
             'ventaId',
             'ventas',
@@ -34,7 +34,7 @@ class m200406_171320_venDeTable extends Migration
 
         // add foreign key for table `venta`
         $this->addForeignKey(
-            'fk-venta-detalle-producto-id',
+            'fk-venta-detalle-producto-venta-id',
             'detalleVenta',
             'productoId',
             'productos',
@@ -52,19 +52,4 @@ class m200406_171320_venDeTable extends Migration
 
         return false;
     }
-
-    /*
-    // Use up()/down() to run migration code without a transaction.
-    public function up()
-    {
-
-    }
-
-    public function down()
-    {
-        echo "m200406_171320_venDeTable cannot be reverted.\n";
-
-        return false;
-    }
-    */
 }

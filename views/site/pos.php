@@ -19,6 +19,14 @@ $this->title = 'Punto de Venta';
                     <option value="2">Seduction 2</option>
                 </select>
             </div>
+            <div class="col-md-3">
+                
+                <h2>Precio</h2>
+                <select name="sucursales" id="precios" class="form-control">
+                    <option value="1" selected>Menudeo</option>
+                    <option value="2">Mayoreo</option>
+                </select>
+            </div>
         </div>
         <h2>Producto</h2>
         <input type="text" class="form-control" id="barCode" aria-describedby="basic-addon3">
@@ -60,9 +68,15 @@ $this->title = 'Punto de Venta';
     var productos = [];  
     var cart = [];  
     var sucursalSelected = $("#sucursales :selected").val();
+    var precioSelected   = $("#precios :selected").val();
 
 
-    //Buttons actins
+    //Buttons actions
+    $('#precios').change(function (element) {
+        precioSelected = $("#sucursales :selected").val();
+        showCart();
+    })
+
     $('#sucursales').on('change', function (element) {
         sucursalSelected = $("#sucursales :selected").val();
     })
@@ -78,7 +92,7 @@ $this->title = 'Punto de Venta';
 
     $('#pagar').on('click', function () {        
         url =   "<?php echo Yii::$app->request->baseUrl; ?>" + "/ventas/pagar/";
-        $.post(url, {'total': total, 'descuento': descuento, 'productos': cart})
+        $.post(url, {'total': total, 'descuento': descuento, 'precioSelected': precioSelected, 'productos': cart})
             .done(function( data ) {
                 url = "http://localhost/simpleprint/index.php";
 
@@ -90,7 +104,6 @@ $this->title = 'Punto de Venta';
                 resetDatos();
             });
     });
-
 
     $('#cancelar').on('click', function clear() {
         resetDatos();
@@ -127,7 +140,6 @@ $this->title = 'Punto de Venta';
                productos.push(producto[0]);
                selectedItems(producto[0]);
             
-               
                $('#barCode').val("");
             })
             .fail(function(jqXHR, textStatus, errorThrown) { 
@@ -157,7 +169,7 @@ $this->title = 'Punto de Venta';
         
         for (index in cart) {
             if (cart[index].producto.id == item.producto.id) {
-                console.log(cart[index],  item);
+                //console.log(cart[index],  item);
 
                 //check if can  add one more product check from sucursal producto cantidad
                 if (cart[index].selectedCantidad + 1 > cart[index].cantidad ){
@@ -193,10 +205,14 @@ $this->title = 'Punto de Venta';
         for (product in cart) {
             var productTotal = '<td>' + cart[product].selectedCantidad + '</td>'
             var desc = '<td>' + cart[product].producto.descripcion + '</td>';
-            var precio = '<td>' + (cart[product].selectedCantidad * cart[product].producto.precio) + '</td>';
-            
-            totalPrice += (cart[product].selectedCantidad * cart[product].producto.precio);
-            
+
+            if ($("#precios :selected").val() == 1) {
+                var precio = '<td>' + (cart[product].selectedCantidad * cart[product].producto.precio) + '</td>';
+                totalPrice += (cart[product].selectedCantidad * cart[product].producto.precio);
+            } else {
+                var precio = '<td>' + (cart[product].selectedCantidad * cart[product].producto.precio1) + '</td>';
+                totalPrice += (cart[product].selectedCantidad * cart[product].producto.precio1);
+            }
             
             $('#productos').append('<tr class=\"detalle\">'+productTotal+desc+precio+'</tr>');
         }

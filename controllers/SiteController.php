@@ -9,7 +9,7 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
-use app\models\Productos;
+use app\models\Cajas;
 
 
 class SiteController extends Controller
@@ -54,8 +54,14 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        //return $this->render('index');
-        return $this->render('pos');
+        $cajas =  new Cajas();
+
+        if (count($cajas->getOpenCaja())) {
+            return $this->render('pos');
+        } 
+
+        return $this->render("cajas/create");
+        
     }    
 
     /**
