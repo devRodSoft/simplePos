@@ -11,6 +11,7 @@ use app\models\User;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\Salidas;
 
 /**
  * CajasController implements the CRUD actions for Cajas model.
@@ -149,9 +150,14 @@ class CajasController extends Controller
         $totalVentas = DetalleVenta::find()->joinWith('venta v')
         ->where(['in', 'v.cajaId', $id])->sum('total');
 
-        $caja = Cajas::find()->where(['=', "id", $id])->one();
+        $caja = Cajas::find()->where(['=', 'id', $id])->one();
 
-        $caja->saldoFinal = $caja->saldoInicial + $totalVentas;
+        $Efectivo = DetalleVenta::find()->joinWith('venta v')->where(['in', 'v.cajaId', $caja->id])->andWhere(['=', 'tipoVenta', '0'])->sum('total');
+        $targeta  = DetalleVenta::find()->joinWith('venta v')->where(['in', 'v.cajaId', $caja->id])->andWhere(['=', 'tipoVenta', '1'])->sum('total');
+        $salidas  = Salidas::find()->where(['=', 'cajaId', $caja->id])->sum('retiroCantidad');
+
+        $caja->saldoFinal = ($caja->saldoInicial + $Efectivo + $targeta) - $salidas;
+
         $caja->cierre = date('Y-m-d H:i:s');
         
         $caja->save();

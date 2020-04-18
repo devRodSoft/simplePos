@@ -72,6 +72,7 @@ $this->title = 'Punto de Venta';
                     <th scope="col">Producto</th>
                     <th scope="col">Sucursal</th>
                     <th scope="col">Precio</th>
+                    <th scope="col">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="productos">
@@ -91,7 +92,6 @@ $this->title = 'Punto de Venta';
         </div>
     </div>
 </div>
-
 
 <?php JSRegister::begin(); ?>
 <script>
@@ -335,6 +335,22 @@ $this->title = 'Punto de Venta';
         showCart();
     }
 
+    //Remove one each one cantidad from product
+    $(document).on('click', '.buttonDelete', function(el) { 
+        var current = el.currentTarget.name.split("-");
+            for (index in cart) {
+                if (cart[index].producto.id == current[1] && cart[index].sucursalId == current[0]) {
+                    cart[index].selectedCantidad -= 1;
+                    
+                    if (cart[index].selectedCantidad == 0) {
+                        cart.splice(index, 1);
+                    }
+                    showCart();
+                }
+            }        
+    });
+
+
     function showCart() {
         var totalPrice = 0;
         //Remove the items
@@ -344,6 +360,7 @@ $this->title = 'Punto de Venta';
             var productTotal = '<td>' + cart[product].selectedCantidad + '</td>'
             var desc         = '<td>' + cart[product].producto.descripcion + '</td>';
             var sucursal     = '<td>' + (cart[product].sucursalId == 1   ? "Seduction centro" : "Seduction 2 central") + '</td>';
+            var actions      = '<td><button name="'+ cart[product].sucursalId + '-' + cart[product].producto.id + '" class="buttonDelete">-</button></td>';
 
             if ($("#precios :selected").val() == 1) {
                 var precio = '<td>' + (cart[product].selectedCantidad * cart[product].producto.precio) + '</td>';
@@ -353,7 +370,7 @@ $this->title = 'Punto de Venta';
                 totalPrice += (cart[product].selectedCantidad * cart[product].producto.precio1);
             }
             
-            $('#productos').append('<tr class=\"detalle\">'+productTotal+desc+sucursal+precio+'</tr>');
+            $('#productos').append('<tr class=\"detalle\">'+productTotal+desc+sucursal+precio+actions+'</tr>');
         }
         $('#total').text(totalPrice);
         total = totalPrice;
