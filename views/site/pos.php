@@ -98,6 +98,7 @@ $this->title = 'Punto de Venta';
     var total = 0;       
     var descuento = 0; 
     var productos = [];  
+    var productosFound = [];
     var cart = [];  
     var sucursalSelected = $("#sucursales :selected").val();
     var precioSelected   = $("#precios :selected").val();
@@ -162,7 +163,6 @@ $this->title = 'Punto de Venta';
         var url = "<?php echo Yii::$app->request->baseUrl; ?>" + "/productos/producto/" + this.value + "/" + sucursalSelected;
         $.get(url)
             .done(function(productos) {           
-
                 //check products exist
                //check if product exist 
                if (!productos.length) {
@@ -190,6 +190,38 @@ $this->title = 'Punto de Venta';
             });
     });
 
+    //find by barcode 
+    function findByBarcode (barcode, sucursal) {
+        var url = "<?php echo Yii::$app->request->baseUrl; ?>" + "/productos/producto/" + barcode + "/" + sucursal;
+        console.log(url);
+        $.get(url)
+            .done(function(productos) {                          
+                //check products exist
+               //check if product exist 
+               if (!productos.length) {
+                 toastr.warning('No se encontro el producto!');     
+                 return;
+               } 
+               
+               if (productos.length>=1) {
+                   for (index in productos) {
+                       if (productos[index].sucursalId == sucursal) {
+                            productos.push(productos[index]);
+                            selectedItems(productos[index]);
+                       }
+                   }
+               } else {
+                    productos.push(productos[0]);
+                    selectedItems(productos[0]);
+               }
+
+               $('#barCode').val("");
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) { 
+                $('#barCode').val("");
+                console.log("fail");
+            });
+    }
     // findl product by id
 
     function findByDescription (id) {
@@ -227,6 +259,8 @@ $this->title = 'Punto de Venta';
     // Add selected items and do the validations to quantity!
     
     function selectedItems (item) {
+        var found = false;
+        var suc = sucursalSelected == 1 ? 2 : 1;
        // console.log(item);
         if (cart.length == 0) {
             
@@ -235,40 +269,67 @@ $this->title = 'Punto de Venta';
             cart.push(item);
             showCart();        
         } else {
-            findItems(item);
+            for (index in cart) {
+                //check the current selected sucursal and check if can add other item
+                if (cart[index].producto.id == item.producto.id && item.sucursalId == sucursalSelected) {
+                    found = true;
+                }
+
+                //check if item exist with the second sucursal
+                if (cart[index].producto.id == item.producto.id && item.sucursalId == cart[index].sucursalId) {
+                    found = true;
+                }
+
+                //check in other sucursal
+                if (cart[index].producto.id == item.producto.id && item.sucursalId != cart[index].sucursalId && item.hasOwnProperty('selectedCantidad')) {                    
+                    found = false;
+                }
+            }
+
+            if (found) {
+                findItems(item);
+            } else {                
+                item.selectedCantidad = 1;
+                cart.push(item);
+                showCart(); 
+            }
         }
     }
 
     function findItems(item) {
-        //flag to check if items exist in the curent cart
-        found = false;
         
+        //flag to check if items exist in the curent cart
+        //found = false;
+
+        var tryOtherSucursal = false;
+        var suc = $("#sucursales :selected").val() == 1 ? 2 : 1;
+
         for (index in cart) {
-            if (cart[index].producto.id == item.producto.id) {
+
+            if (cart[index].producto.id == item.producto.id && cart[index].sucursalId == item.sucursalId) {
                 //console.log(cart[index],  item);
 
                 //check if can  add one more product check from sucursal producto cantidad
-                if (cart[index].selectedCantidad + 1 > cart[index].cantidad ){
-                    toastr.warning('Ya no tienes existencias disponibles');
-                    return
+                if (cart[index].selectedCantidad + 1 > cart[index].cantidad && !tryOtherSucursal){
+                        tryOtherSucursal = true;
+                        toastr.warning('Ya no tienes existencias disponibles');
+                } else {
+                    cart[index].selectedCantidad +=1;                    
                 }
-                    
-                cart[index].selectedCantidad +=1;
-                
-                found = true;
-               // break;
-            }
+            } 
             
         }
 
+        if (tryOtherSucursal) {
+            var barcode = $('#barCode').val() == "" ? item.producto.codidoBarras : $('#barCode').val();
+            findByBarcode(barcode, suc);
+        }
         // If is a new item add in the cart
-        if (!found) {
+        /*if (!found) {
             item.selectedCantidad = 1;
             cart.push(item);
-        }
+        }*/
 
-        console.log("new");
-        console.log(cart);
         showCart();
     }
 

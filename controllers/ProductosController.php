@@ -106,8 +106,7 @@ class ProductosController extends Controller
             'model' => $model,
         ]);
     }
-    public function actionProducto($barcode, $sucursal)
-    {
+    public function actionProducto($barcode, $sucursal) {
         
         $request = Yii::$app->request;
         //$params = $request->get();
@@ -118,7 +117,7 @@ class ProductosController extends Controller
 
             ->joinWith('producto p')
             ->where(['in', 'p.codidoBarras', $barcode])
-            //->andWhere(['sucursalproducto.sucursalId' => $sucursal])
+            ->andWhere(['sucursalproducto.sucursalId' => $sucursal])
             ->andWhere(['>','sucursalproducto.cantidad', 0])
             ->asArray()
             ->all();
