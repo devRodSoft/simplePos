@@ -99,8 +99,31 @@ class ProductosController extends Controller
         $model = new Productos();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+
+            //save the fisrt sucursal
+            $sucursalProducto = new SucursalProducto();
+
+            //Add sucursal 1
+            $sucursalProducto->sucursalId = 1;
+            $sucursalProducto->productoId = $model->id;
+            $sucursalProducto->cantidad   = 0;
+
+            $sucursalProducto->save();
+
+            //save the fisrt sucursal
+            $sucursalProducto = new SucursalProducto();
+
+            //Add sucursal 1
+            $sucursalProducto->sucursalId = 2;
+            $sucursalProducto->productoId = $model->id;
+            $sucursalProducto->cantidad   = 0;
+
+            $sucursalProducto->save();
+
+            return $this->redirect(['sucursal-producto']);
         }
+
+        
 
         return $this->render('create', [
             'model' => $model,

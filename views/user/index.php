@@ -58,6 +58,4 @@ $this->title = 'Usuarios';
             ]     
         ],
     ]); ?>
-
-
 </div>
