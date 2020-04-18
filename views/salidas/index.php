@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use app\models\User;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\SalidasSearch */
@@ -34,7 +35,19 @@ $this->params['breadcrumbs'][] = $this->title;
             //'created_at',
             //'updated_at',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn',
+            'template' => '{view}',
+            ],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{update}',
+                'visible' => Yii::$app->user->identity->userType == User::SUPER_ADMIN
+            ],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{delete}',
+                'visible' => Yii::$app->user->identity->userType == User::SUPER_ADMIN
+            ]     
         ],
     ]); ?>
 

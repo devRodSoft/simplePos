@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use app\models\User;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\UserSearch */
@@ -42,7 +43,19 @@ $this->title = 'Usuarios';
                 }
             ],
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn',
+            'template' => '{view}',
+            ],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{update}',
+                'visible' => Yii::$app->user->identity->userType == User::SUPER_ADMIN
+            ],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{delete}',
+                'visible' => Yii::$app->user->identity->userType == User::SUPER_ADMIN
+            ]     
         ],
     ]); ?>
 

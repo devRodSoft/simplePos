@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use app\models\Sucursales;
 use yii\helpers\ArrayHelper;
+use app\models\User;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\CajasSearch */
@@ -51,7 +52,19 @@ $this->params['breadcrumbs'][] = $this->title;
             //'cierre',
             //'updated_at',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn',
+            'template' => '{view}',
+            ],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{update}',
+                'visible' => Yii::$app->user->identity->userType == User::SUPER_ADMIN
+            ],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{delete}',
+                'visible' => Yii::$app->user->identity->userType == User::SUPER_ADMIN
+            ]     
         ],
     ]); ?>
 </div>

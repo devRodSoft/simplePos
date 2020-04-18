@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+use app\models\User;
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\SucursalesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -30,7 +31,19 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'nombre',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn',
+            'template' => '{view}',
+            ],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{update}',
+                'visible' => Yii::$app->user->identity->userType == User::SUPER_ADMIN
+            ],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{delete}',
+                'visible' => Yii::$app->user->identity->userType == User::SUPER_ADMIN
+            ]     
         ],
     ]); ?>
 
