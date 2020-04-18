@@ -55,8 +55,8 @@ $this->params['breadcrumbs'][] = $this->title;
         
             //'isOpen',
             //'created_at:dateTime',
-            'apertura:dateTime',
-            'cierre:dateTime',
+            'apertura',
+            'cierre',
             //'updated_at',
         ],
     ]) ?>

@@ -3,6 +3,10 @@ use yii\helpers\Html;
 use richardfan\widget\JSRegister;
 use app\models\Sucursales;
 use yii\helpers\ArrayHelper;
+use yii\jui\AutoComplete;
+use yii\web\JsExpression;
+use app\models\Productos;
+
 /* @var $this yii\web\View */
 
 $this->title = 'Punto de Venta';
@@ -12,11 +16,10 @@ $this->title = 'Punto de Venta';
     <div class="container">
         <div class="container">
             <div class="col-md-3">
-                
                 <h2>Sucursal</h2>
                 <select name="sucursales" id="sucursales" class="form-control">
-                    <option value="1" selected>Seduction 1</option>
-                    <option value="2">Seduction 2</option>
+                    <option value="1" selected>Seduction centro</option>
+                    <option value="2">Seduction 2 central</option>
                 </select>
             </div>
             <div class="col-md-3">
@@ -28,8 +31,36 @@ $this->title = 'Punto de Venta';
                 </select>
             </div>
         </div>
-        <h2>Producto</h2>
-        <input type="text" class="form-control" id="barCode" aria-describedby="basic-addon3">
+        <div class="row">
+            <div class="col-md-6">
+            <h2>Codigo</h2>
+                <input type="text" class="form-control" id="barCode" aria-describedby="basic-addon3">
+            </div>
+            <div class="col-md-6">
+                <h2>Descripcion</h2>
+
+                    <?php 
+                    $data = Productos::find()
+                    ->select(['descripcion as value', 'descripcion as label','id as id'])
+                    ->asArray()
+                    ->all();
+        
+                    echo AutoComplete::widget([    
+                    'clientOptions' => [
+                    'source' => $data,
+                    'minLength'=>'3', 
+                    'options' => ['class' => 'form-control'],    
+                    'select' => new JsExpression("function( event, ui ) {
+                        $('#descripcion').val(ui.item.id);
+                        findByDescription(ui.item.id);
+                        //#memberssearch-family_name_id is the id of hiddenInput.
+                        }")],
+                    ]);
+
+                ?>
+            </div>
+        </div>
+        
     </div>
     <div class="container">
         <h2>Datos de venta</h2>
@@ -39,6 +70,7 @@ $this->title = 'Punto de Venta';
                     <tr>
                     <th scope="col">Cantidad</th>
                     <th scope="col">Producto</th>
+                    <th scope="col">Sucursal</th>
                     <th scope="col">Precio</th>
                     </tr>
                 </thead>
@@ -99,6 +131,7 @@ $this->title = 'Punto de Venta';
                 $.post(url, {'total': total, 'descuento': descuento, 'productos': productos})
                     .done(function( data ) {
                     console.log("print ticket!")
+                    toastr.success('Venta realizada');
                     productos = [];
                 });
                 resetDatos();
@@ -128,18 +161,27 @@ $this->title = 'Punto de Venta';
 
         var url = "<?php echo Yii::$app->request->baseUrl; ?>" + "/productos/producto/" + this.value + "/" + sucursalSelected;
         $.get(url)
-            .done(function(producto) {           
+            .done(function(productos) {           
 
+                //check products exist
                //check if product exist 
-               if (!producto.length) {
-                 toastr.warning('No se encontro el producto o no tienes existencias!');     
+               if (!productos.length) {
+                 toastr.warning('No se encontro el producto!');     
                  return;
+               } 
+               
+               if (productos.length>1) {
+                   for (index in productos) {
+                       if (productos[index].sucursalId == sucursalSelected) {
+                            productos.push(productos[index]);
+                            selectedItems(productos[index]);
+                       }
+                   }
+               } else {
+                    productos.push(productos[0]);
+                    selectedItems(productos[0]);
                }
-                    
-               //producto is the data to print the ticket              
-               productos.push(producto[0]);
-               selectedItems(producto[0]);
-            
+
                $('#barCode').val("");
             })
             .fail(function(jqXHR, textStatus, errorThrown) { 
@@ -148,6 +190,40 @@ $this->title = 'Punto de Venta';
             });
     });
 
+    // findl product by id
+
+    function findByDescription (id) {
+        console.log(id);
+        var url = "<?php echo Yii::$app->request->baseUrl; ?>" + "/productos/nombre/" + id;
+        $.get(url)
+            .done(function(productos) {           
+
+                //check products exist
+               //check if product exist 
+               if (!productos.length) {
+                 toastr.warning('No se encontro el producto!');     
+                 return;
+               } 
+               
+               if (productos.length>1) {
+                   for (index in productos) {
+                       if (productos[index].sucursalId == sucursalSelected) {
+                            productos.push(productos[index]);
+                            selectedItems(productos[index]);
+                       }
+                   }
+               } else {
+                    productos.push(productos[0]);
+                    selectedItems(productos[0]);
+               }
+
+               $('#barCode').val("");
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) { 
+                $('#barCode').val("");
+                console.log("fail");
+            });
+    }
     // Add selected items and do the validations to quantity!
     
     function selectedItems (item) {
@@ -196,7 +272,6 @@ $this->title = 'Punto de Venta';
         showCart();
     }
 
-
     function showCart() {
         var totalPrice = 0;
         //Remove the items
@@ -204,7 +279,8 @@ $this->title = 'Punto de Venta';
         
         for (product in cart) {
             var productTotal = '<td>' + cart[product].selectedCantidad + '</td>'
-            var desc = '<td>' + cart[product].producto.descripcion + '</td>';
+            var desc         = '<td>' + cart[product].producto.descripcion + '</td>';
+            var sucursal     = '<td>' + (cart[product].sucursalId == 1   ? "Seduction centro" : "Seduction 2 central") + '</td>';
 
             if ($("#precios :selected").val() == 1) {
                 var precio = '<td>' + (cart[product].selectedCantidad * cart[product].producto.precio) + '</td>';
@@ -214,7 +290,7 @@ $this->title = 'Punto de Venta';
                 totalPrice += (cart[product].selectedCantidad * cart[product].producto.precio1);
             }
             
-            $('#productos').append('<tr class=\"detalle\">'+productTotal+desc+precio+'</tr>');
+            $('#productos').append('<tr class=\"detalle\">'+productTotal+desc+sucursal+precio+'</tr>');
         }
         $('#total').text(totalPrice);
         total = totalPrice;

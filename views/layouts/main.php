@@ -10,6 +10,7 @@ use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 use app\models\User;
+use app\models\Sucursales;
 
 AppAsset::register($this);
 ?>
@@ -29,6 +30,9 @@ AppAsset::register($this);
 
 <div class="wrap">
     <?php
+    $selectedSucursal = "";
+    $session = Yii::$app->session;
+    
     NavBar::begin([
         'brandLabel' => "Simple POS",
         'brandUrl' => Yii::$app->homeUrl,
@@ -39,20 +43,20 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
-            ['label' => 'Productos',  'url' => ['/productos/index']],
-            ['label' => 'Sucupro',    'url' => ['/sucursal-producto/index']],
-            ['label' => 'Reportes',   'url' => ['/detalle-venta/index']],
-            ['label' => 'Ventas',     'url' => ['/ventas/index']],
-            ['label' => 'Sucursales', 'url' => ['/sucursales/index']],
-            ['label' => 'Usuarios',   'url' => ['/user/index'], 'visible' => !Yii::$app->user->isGuest && Yii::$app->user->identity->userType == User::SUPER_ADMIN,],
-            ['label' => 'Cajas',      'url' => ['/cajas/index']],
+            ['label' => 'Productos',  'url' => ['/productos/index'],         'visible' => !Yii::$app->user->isGuest],
+            ['label' => 'Sucupro',    'url' => ['/sucursal-producto/index'], 'visible' => !Yii::$app->user->isGuest],
+            ['label' => 'Reportes',   'url' => ['/detalle-venta/index'],     'visible' => !Yii::$app->user->isGuest],
+            ['label' => 'Ventas',     'url' => ['/ventas/index'],            'visible' => !Yii::$app->user->isGuest ],
+            ['label' => 'Sucursales', 'url' => ['/sucursales/index'],        'visible' => !Yii::$app->user->isGuest],
+            ['label' => 'Cajas',      'url' => ['/cajas/index'],             'visible' => !Yii::$app->user->isGuest],
+            ['label' => 'Usuarios',   'url' => ['/user/index'],              'visible' => !Yii::$app->user->isGuest && Yii::$app->user->identity->userType == User::SUPER_ADMIN,],
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login']]
             ) : (
                 '<li>'
                 . Html::beginForm(['/site/logout'], 'post')
                 . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->username . ')',
+                    'Logout (' . Yii::$app->user->identity->username . ' - ' . Sucursales::find()->select('nombre')->where(['=', 'id', $session->get('sucursal')])->one()->nombre .   ')',
                     ['class' => 'btn btn-link logout']
                 )
                 . Html::endForm()

@@ -110,7 +110,7 @@ class ProductosController extends Controller
     {
         
         $request = Yii::$app->request;
-        $params = $request->get();
+        //$params = $request->get();
 
         if (Yii::$app->request->isAjax) {            
 
@@ -118,13 +118,32 @@ class ProductosController extends Controller
 
             ->joinWith('producto p')
             ->where(['in', 'p.codidoBarras', $barcode])
-            ->andWhere(['sucursalproducto.sucursalId' => $sucursal])
+            //->andWhere(['sucursalproducto.sucursalId' => $sucursal])
             ->andWhere(['>','sucursalproducto.cantidad', 0])
             ->asArray()
             ->all();
           
             return $this->asJson($data);
         }    
+    }
+
+    public function actionNombre($idProducto) {
+        $request = Yii::$app->request;
+        //$params = $request->get();
+
+        if (Yii::$app->request->isAjax) {            
+
+            $data = SucursalProducto::find()
+
+            ->joinWith('producto p')
+            ->where(['in', 'p.id', $idProducto])
+            //->andWhere(['sucursalproducto.sucursalId' => $sucursal])
+            ->andWhere(['>','sucursalproducto.cantidad', 0])
+            ->asArray()
+            ->all();
+          
+            return $this->asJson($data);
+        }   
     }
     /* import inventary */ 
     public function actionImport() {
@@ -137,7 +156,7 @@ class ProductosController extends Controller
         foreach ($sheetData as $data => $valor) {
             // $array[3] se actualizará con cada valor de $array...
             //var_dump($valor);
-            if ($valor["A"] != NULL) {
+            if ($valor["B"] != NULL) {
 
                 $producto = new Productos();
 

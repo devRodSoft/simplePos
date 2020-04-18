@@ -11,6 +11,8 @@ use app\models\SucursalProducto;
  */
 class SucursalProductoSearch extends SucursalProducto
 {
+    public $producto;
+    public $barcode;
     /**
      * {@inheritdoc}
      */
@@ -18,6 +20,7 @@ class SucursalProductoSearch extends SucursalProducto
     {
         return [
             [['id', 'sucursalId', 'productoId', 'cantidad'], 'integer'],
+            [['barcode','producto'], 'safe'],
         ];
     }
 
@@ -41,11 +44,25 @@ class SucursalProductoSearch extends SucursalProducto
     {
         $query = SucursalProducto::find();
 
+        $query->joinWith(['producto']);
         // add conditions that should always apply here
+
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+
+         // Lets do the same with country now
+        $dataProvider->sort->attributes['producto'] = [
+            'asc' => ['productos.descripcion' => SORT_ASC],
+            'desc' => ['productos.descripcion' => SORT_DESC],
+        ];
+
+         // Lets do the same with country now
+         $dataProvider->sort->attributes['barcode'] = [
+            'asc' => ['productos.codidoBarras' => SORT_ASC],
+            'desc' => ['productos.codidoBarras' => SORT_DESC],
+        ];
 
         $this->load($params);
 
@@ -61,7 +78,10 @@ class SucursalProductoSearch extends SucursalProducto
             'sucursalId' => $this->sucursalId,
             'productoId' => $this->productoId,
             'cantidad' => $this->cantidad,
-        ]);
+        ])
+
+        ->andFilterWhere(['like', 'productos.descripcion', $this->producto])
+        ->andFilterWhere(['like', 'productos.codidoBarras', $this->barcode]);
 
         return $dataProvider;
     }

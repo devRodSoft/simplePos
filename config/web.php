@@ -59,6 +59,9 @@ $config = [
             'rules' => [
                 '<controller:\w+>/<action:\w+>/<barcode:\w+>/<sucursal:\w+>' => '<controller>/<action>',
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+
+                '<controller:\w+>/<action:\w+>/<idProducto:\w+>' => '<controller>/<action>',
+                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
                 
             ],
         ],

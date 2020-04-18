@@ -40,13 +40,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             [
-                'label' => 'Producto',
-                'attribute' => 'producto.descripcion',
-                'filter' => true,
-                
+                'attribute' => 'producto',
+                'value' => 'producto.descripcion',
+                'filter' => true
             ],
-            'producto.codidoBarras',
-            'cantidad',
+            [
+                'attribute' => 'barcode',
+                'value' => 'producto.codidoBarras',
+                'filter' => true 
+            ],
+            'cantidad:integer',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
