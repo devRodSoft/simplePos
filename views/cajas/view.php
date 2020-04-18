@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
-use app\models\Ventas;
+use app\models\Salidas;
 use app\models\DetalleVenta;
 
 /* @var $this yii\web\View */
@@ -58,6 +58,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 ->where(['in', 'v.cajaId', $model->id])->andWhere(['=', 'tipoVenta', '1'])->sum('total')
             ],
             [
+                'label' => 'Salidas',
+                'value' => Salidas::find()->where(['=', 'cajaId', $model->id])->sum('retiroCantidad')
+            ],
+            [
                 'label' => 'Saldo Final',
                 'value' =>  function ($model) {
                     $Efectivo = DetalleVenta::find()->joinWith('venta v')
@@ -66,7 +70,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     $targeta = DetalleVenta::find()->joinWith('venta v')
                     ->where(['in', 'v.cajaId', $model->id])->andWhere(['=', 'tipoVenta', '1'])->sum('total');
 
-                    return $model->saldoInicial + $Efectivo + $targeta;
+                    $salidas = Salidas::find()->where(['=', 'cajaId', $model->id])->sum('retiroCantidad');
+
+                    return ($model->saldoInicial + $Efectivo + $targeta) - $salidas;
                 }
             ],
         
