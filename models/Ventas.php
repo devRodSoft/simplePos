@@ -12,6 +12,7 @@ use yii\behaviors\TimestampBehavior;
  * @property float|null $descuento
  * @property int|null $userId
  * @property int $cajaId
+ * @property int $tipoVenta
  * @property int $created_at
  * @property int $updated_at
  *
@@ -20,6 +21,9 @@ use yii\behaviors\TimestampBehavior;
  */
 class Ventas extends \yii\db\ActiveRecord
 {
+
+    const EFECTIVO = 0;
+    const TARGETA  = 1;
     /**
      * {@inheritdoc}
      */
@@ -45,7 +49,7 @@ class Ventas extends \yii\db\ActiveRecord
         return [
             [['total', 'cajaId'], 'required'],
             [['total', 'descuento'], 'number'],
-            [['userId', 'cajaId', 'created_at', 'updated_at'], 'integer'],
+            [['userId', 'cajaId', 'tipoVenta', 'created_at', 'updated_at'], 'integer'],
             [['cajaId'], 'exist', 'skipOnError' => true, 'targetClass' => Cajas::className(), 'targetAttribute' => ['cajaId' => 'id']],
             [['userId'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['userId' => 'id']],
         ];
@@ -62,6 +66,7 @@ class Ventas extends \yii\db\ActiveRecord
             'descuento' => 'Descuento',
             'userId' => 'User ID',
             'cajaId' => 'Caja ID',
+            'tipoVenta' => "tipoVenta",
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];

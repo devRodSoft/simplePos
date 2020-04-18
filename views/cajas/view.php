@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use app\models\Ventas;
 use app\models\DetalleVenta;
 
 /* @var $this yii\web\View */
@@ -47,11 +48,27 @@ $this->params['breadcrumbs'][] = $this->title;
             
             'saldoInicial',
             [
-                'label' => 'Saldo Ventas',
+                'label' => 'Ventas Efectivo',
                 'value' => DetalleVenta::find()->joinWith('venta v')
-                ->where(['in', 'v.cajaId', $model->id])->sum('total')
+                ->where(['in', 'v.cajaId', $model->id])->andWhere(['=', 'tipoVenta', '0'])->sum('total')
             ],
-            'saldoFinal',
+            [
+                'label' => 'Ventas Targeta',
+                'value' => DetalleVenta::find()->joinWith('venta v')
+                ->where(['in', 'v.cajaId', $model->id])->andWhere(['=', 'tipoVenta', '1'])->sum('total')
+            ],
+            [
+                'label' => 'Saldo Final',
+                'value' =>  function ($model) {
+                    $Efectivo = DetalleVenta::find()->joinWith('venta v')
+                    ->where(['in', 'v.cajaId', $model->id])->andWhere(['=', 'tipoVenta', '0'])->sum('total');
+
+                    $targeta = DetalleVenta::find()->joinWith('venta v')
+                    ->where(['in', 'v.cajaId', $model->id])->andWhere(['=', 'tipoVenta', '1'])->sum('total');
+
+                    return $model->saldoInicial + $Efectivo + $targeta;
+                }
+            ],
         
             //'isOpen',
             //'created_at:dateTime',

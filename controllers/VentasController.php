@@ -92,10 +92,12 @@ class VentasController extends Controller
         $descuento = Yii::$app->request->post('descuento');
         $productos = Yii::$app->request->post('productos');
         $wPrice    = Yii::$app->request->post('precioSelected');
+        $tipoVenta = Yii::$app->request->post('tipoVenta');
 
         $model->total     =  $total;
         $model->descuento =  $descuento;
         $model->cajaId    =  $caja->getIdOpenCaja()->id;
+        $model->tipoVenta =  $tipoVenta != "false" ? Ventas::TARGETA : Ventas::EFECTIVO;
         
         //Guardamos la venta
         if ($model->save()) {

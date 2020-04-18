@@ -30,6 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'total:currency',
             'descuento:currency',
             'created_at',
+            'tipoVenta',
             //'updated_at',
 
             ['class' => 'yii\grid\ActionColumn'],

@@ -83,6 +83,8 @@ $this->title = 'Punto de Venta';
             </div>
             
             <div>
+                <label for="">Pago con targeta?</label>
+                <input type="checkbox" name="targeta" id="pagoTargeta">
                 <button id="pagar" class="btn btn-success">Pagar</button>
                 <button id="cancelar" class="btn btn-warning">Cancelar</button>
             </div>
@@ -125,7 +127,7 @@ $this->title = 'Punto de Venta';
 
     $('#pagar').on('click', function () {        
         url =   "<?php echo Yii::$app->request->baseUrl; ?>" + "/ventas/pagar/";
-        $.post(url, {'total': total, 'descuento': descuento, 'precioSelected': precioSelected, 'productos': cart})
+        $.post(url, {'total': total, 'descuento': descuento, 'precioSelected': precioSelected, 'tipoVenta': $('#pagoTargeta').prop('checked'), 'productos': cart})
             .done(function( data ) {
                 url = "http://localhost/simpleprint/index.php";
 

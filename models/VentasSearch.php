@@ -44,7 +44,7 @@ class VentasSearch extends Ventas
     {
        $query = Ventas::find();
        
-       $query->andFilterWhere(['between', 'created_at', date('Y.m.d 00:00:00'), date('Y.m.d 22:00:00')]);
+      // $query->andFilterWhere(['between', 'created_at', date('Y.m.d 00:00:00'), date('Y.m.d 22:00:00')]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
