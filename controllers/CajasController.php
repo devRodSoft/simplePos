@@ -5,7 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\Cajas;
 use app\models\CajasSearch;
-use app\models\Detalleventa;
+use app\models\DetalleVenta;
 use app\models\DetalleVentaSearch;
 use app\models\User;
 use yii\web\Controller;
@@ -157,7 +157,7 @@ class CajasController extends Controller
         $salidas  = Salidas::find()->where(['=', 'cajaId', $caja->id])->sum('retiroCantidad');
 
         $caja->saldoFinal = ($caja->saldoInicial + $Efectivo + $targeta) - $salidas;
-
+        $caja->isOpen = 2;
         $caja->cierre = date('Y-m-d H:i:s');
         
         $caja->save();

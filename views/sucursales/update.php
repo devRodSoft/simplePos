@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Sucursales */
 
-$this->title = Yii::t('app', 'Update Sucursales: {name}', [
+$this->title = Yii::t('app', 'Actulizar Sucursal: {name}', [
     'name' => $model->id,
 ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Sucursales'), 'url' => ['index']];

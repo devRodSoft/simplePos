@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Detalle Venta', ['create'], ['class' => 'btn btn-success']) ?>
+        <?php /* Html::a('Nuevo Detalle Venta', ['create'], ['class' => 'btn btn-success']) */?>
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => false
             ],
             'cantidad',
-            'created_at:dateTime',
+            'created_at:datetime',
             //'updated_at',
 
             ['class' => 'yii\grid\ActionColumn',

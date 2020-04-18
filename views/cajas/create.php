@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Cajas */
 
-$this->title = Yii::t('app', 'Create Cajas');
+$this->title ='Nueva Caja';
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Cajas'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

@@ -116,4 +116,8 @@ class Cajas extends \yii\db\ActiveRecord
         $session = Yii::$app->session;
         return $this->find()->select("id")->where(['=', 'isOpen', 1])->andWhere(['=', 'sucursalId', $session->get('sucursal')])->one();
     }
+
+    public function canClose($id) {
+        return  Cajas::find()->where(['=', 'id', $id])->one()->isOpen == 1 ? true : false; 
+    }
 }

@@ -36,8 +36,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'codigoPostal',
             'telefono',
             'notas',
-            'created_at',
-            'updated_at',
+            //'created_at',
+            //'updated_at',
         ],
     ]) ?>
 

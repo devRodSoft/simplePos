@@ -30,7 +30,7 @@ use app\models\Sucursales;
     <?php echo $form->field($model, 'apertura')->hiddenInput(['value' => date('Y-m-d H:i:s')])->label(false); ?> 
 
     <div class="form-group">
-        <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Guardar', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

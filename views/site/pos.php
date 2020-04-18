@@ -83,11 +83,24 @@ $this->title = 'Punto de Venta';
                 <h1 id="total"></h1>
             </div>
             
-            <div>
-                <label for="">Pago con targeta?</label>
-                <input type="checkbox" name="targeta" id="pagoTargeta">
-                <button id="pagar" class="btn btn-success">Pagar</button>
-                <button id="cancelar" class="btn btn-warning">Cancelar</button>
+            <div class="row">
+
+                <div class="col-md-4">
+                    <button id="cancelar" class="btn btn-warning">Cancelar</button>
+                </div>
+                <div class="col-md-4">
+                    <label for="">Anticipo</label>
+                    <input type="text" id="anticipo" class="form-control text-apartar" style="display: inline; width:129px;">
+                    <button id="apartar" class="btn btn-success">Apartar</button>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="">Pago con targeta?</label>
+                    <input type="checkbox" name="targeta" id="pagoTargeta">
+                    <button id="pagar" class="btn btn-success">Pagar</button>
+                </div>
+                
+                
             </div>
         </div>
     </div>
@@ -140,6 +153,7 @@ $this->title = 'Punto de Venta';
                 resetDatos();
             });
     });
+
 
     $('#cancelar').on('click', function clear() {
         resetDatos();
