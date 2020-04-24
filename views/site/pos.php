@@ -319,33 +319,36 @@ $this->title = 'Punto de Venta';
 
         var tryOtherSucursal = false;
         var suc = $("#sucursales :selected").val() == 1 ? 2 : 1;
+        var showAlert = false;
 
         for (index in cart) {
 
             if (cart[index].producto.id == item.producto.id && cart[index].sucursalId == item.sucursalId) {
                 //console.log(cart[index],  item);
-
+                
                 //check if can  add one more product check from sucursal producto cantidad
-                if (cart[index].selectedCantidad + 1 > cart[index].cantidad && !tryOtherSucursal){
-                        tryOtherSucursal = true;
-                        toastr.warning('Ya no tienes existencias disponibles');
+                if (cart[index].selectedCantidad + 1 > cart[index].cantidad){
+                       showAlert = true;
+                        if (cart[index].sucursalId != suc){
+                            tryOtherSucursal = true;
+                            showAlert = false;
+                        }
                 } else {
                     cart[index].selectedCantidad +=1;                    
                 }
             } 
-            
+        }
+
+        if (showAlert) {
+            toastr.warning('Ya no tienes existencias disponibles en ninguna Sucursal');
         }
 
         if (tryOtherSucursal) {
+            tryOtherSucursal = false;
             var barcode = $('#barCode').val() == "" ? item.producto.codidoBarras : $('#barCode').val();
             findByBarcode(barcode, suc);
         }
-        // If is a new item add in the cart
-        /*if (!found) {
-            item.selectedCantidad = 1;
-            cart.push(item);
-        }*/
-
+        
         showCart();
     }
 
