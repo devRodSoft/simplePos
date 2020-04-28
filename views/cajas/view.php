@@ -79,7 +79,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                     $salidas = Salidas::find()->where(['=', 'cajaId', $model->id])->sum('retiroCantidad');
 
-                    return ($model->saldoInicial + $Efectivo + $targeta) - $salidas;
+                    return ($model->saldoInicial + $Efectivo) - $salidas;
                 }
             ],
         

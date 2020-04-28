@@ -108,13 +108,11 @@ class Cajas extends \yii\db\ActiveRecord
     }
 
     public function getOpenCaja() {
-        $session = Yii::$app->session;
-        return $this->find()->where(['=', 'isOpen', 1])->andWhere(['=', 'sucursalId', $session->get('sucursal')])->all();
+        return $this->find()->where(['=', 'isOpen', 1])->andWhere(['=', 'sucursalId',  Yii::$app->user->identity->sucursalId])->all();
     }
 
     public function getIdOpenCaja() {
-        $session = Yii::$app->session;
-        return $this->find()->select("id")->where(['=', 'isOpen', 1])->andWhere(['=', 'sucursalId', $session->get('sucursal')])->one();
+        return Cajas::find()->select("id")->where(['=', 'isOpen', 1])->andWhere(['=', 'sucursalId',  Yii::$app->user->identity->sucursalId])->one();
     }
 
     public function canClose($id) {

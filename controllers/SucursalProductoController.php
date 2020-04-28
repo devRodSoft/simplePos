@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Productos;
 use Yii;
 use app\models\SucursalProducto;
 use app\models\SucursalProductoSearch;
@@ -75,6 +76,15 @@ class SucursalProductoController extends Controller
         ]);
     }
 
+    public function actionAdd(){
+        $sucProModel   = new SucursalProducto();
+        $productoModel = new Productos(); 
+
+        return $this->render('_create', [
+            'sucursalProductoModel' => $sucProModel,
+            'productosModel' => $productoModel
+        ]);
+    }
     /**
      * Updates an existing SucursalProducto model.
      * If update is successful, the browser will be redirected to the 'view' page.

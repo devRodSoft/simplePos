@@ -351,6 +351,22 @@ $this->title = 'Punto de Venta';
         
         showCart();
     }
+    //Add one each one cantidad from product
+    $(document).on('click', '.buttonAdd', function(el) { 
+        var current = el.currentTarget.name.split("-");
+            for (index in cart) {
+                if (cart[index].producto.id == current[1] && cart[index].sucursalId == current[0]) {
+                    //cart[index].selectedCantidad -= 1;
+                    //if (cart[index].selectedCantidad +1 <= cart[index].cantidad)
+                    if (cart[index].selectedCantidad + 1 <= cart[index].cantidad){
+                        cart[index].selectedCantidad += 1;
+                    } else {
+                        console.log("can't buy more");
+                    }
+                    showCart();
+                }
+            }        
+    });
 
     //Remove one each one cantidad from product
     $(document).on('click', '.buttonDelete', function(el) { 
@@ -358,7 +374,7 @@ $this->title = 'Punto de Venta';
             for (index in cart) {
                 if (cart[index].producto.id == current[1] && cart[index].sucursalId == current[0]) {
                     cart[index].selectedCantidad -= 1;
-                    
+
                     if (cart[index].selectedCantidad == 0) {
                         cart.splice(index, 1);
                     }
@@ -366,7 +382,6 @@ $this->title = 'Punto de Venta';
                 }
             }        
     });
-
 
     function showCart() {
         var totalPrice = 0;
@@ -377,7 +392,7 @@ $this->title = 'Punto de Venta';
             var productTotal = '<td>' + cart[product].selectedCantidad + '</td>'
             var desc         = '<td>' + cart[product].producto.descripcion + '</td>';
             var sucursal     = '<td>' + (cart[product].sucursalId == 1   ? "Seduction centro" : "Seduction 2 central") + '</td>';
-            var actions      = '<td><button name="'+ cart[product].sucursalId + '-' + cart[product].producto.id + '" class="buttonDelete">-</button></td>';
+            var actions      = '<td><button name="'+ cart[product].sucursalId + '-' + cart[product].producto.id + '" class="buttonDelete">-</button><button name="'+ cart[product].sucursalId + '-' + cart[product].producto.id + '" class="buttonAdd">+</button></td>';
 
             if ($("#precios :selected").val() == 1) {
                 var precio = '<td>' + (cart[product].selectedCantidad * cart[product].producto.precio) + '</td>';

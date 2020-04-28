@@ -3,12 +3,17 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use app\models\User;
+use app\models\Sucursales;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\UserSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Usuarios';
+
+$ldSucursales = Sucursales::find()->all();
+$sucursales   = ArrayHelper::map($ldSucursales,'id','nombre');    
 ?>
 <div class="user-index">
 
@@ -28,6 +33,16 @@ $this->title = 'Usuarios';
 
             'id',
             'username',
+            [
+                'label' => 'Sucursal',
+                'attribute' => 'sucursalId',
+                'filter' => $sucursales,
+                'value' =>  function ($model, $key, $index, $column) {
+                    return $model->sucursal->nombre;
+                }
+
+                 
+            ],
             //'auth_key',
             //'password_hash',
             //'password_reset_token',            

@@ -78,13 +78,6 @@ class SiteController extends Controller
     {
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-
-            $session = Yii::$app->session;
-
-            // comprueba si una sesión está ya abierta
-            $session->set('sucursal', $model->sucursalSelected);
-
-
             return $this->goBack();
         }
 

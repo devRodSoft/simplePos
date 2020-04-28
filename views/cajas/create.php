@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1>Para poder vender tienes que abrir una caja!</h1>
 
     <?= $this->render('_form', [
-        'model' => $model,
+        'model' => $model
     ]) ?>
 
 </div>

@@ -97,36 +97,42 @@ class ProductosController extends Controller
     public function actionCreate()
     {
         $model = new Productos();
+        $sucProModel = new SucursalProducto();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+           
+            $cantidades = Yii::$app->request->post();
+          
 
-            //save the fisrt sucursal
+            unset($cantidades["Productos"]);
+
             $sucursalProducto = new SucursalProducto();
 
-            //Add sucursal 1
-            $sucursalProducto->sucursalId = 1;
+            $sucursalProducto->sucursalId = $cantidades['sucursal1'];
             $sucursalProducto->productoId = $model->id;
-            $sucursalProducto->cantidad   = 0;
+            $sucursalProducto->cantidad   = $cantidades['cantidad1'];
 
             $sucursalProducto->save();
 
-            //save the fisrt sucursal
             $sucursalProducto = new SucursalProducto();
 
-            //Add sucursal 1
-            $sucursalProducto->sucursalId = 2;
+            $sucursalProducto->sucursalId = $cantidades['sucursal2'];
             $sucursalProducto->productoId = $model->id;
-            $sucursalProducto->cantidad   = 0;
+            $sucursalProducto->cantidad   = $cantidades['cantidad2'];
 
             $sucursalProducto->save();
 
-            return $this->redirect(['sucursal-producto']);
+
+             return $this->render('view', [
+                'model' => $this->findModel($model->id),
+            ]);
+
+
         }
-
-        
 
         return $this->render('create', [
             'model' => $model,
+            'sucProModel' => $sucProModel,
         ]);
     }
     public function actionProducto($barcode, $sucursal) {

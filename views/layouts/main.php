@@ -30,8 +30,6 @@ AppAsset::register($this);
 
 <div class="wrap">
     <?php
-    $selectedSucursal = "";
-    $session = Yii::$app->session;
     
     NavBar::begin([
         'brandLabel' => "Simple POS",
@@ -58,7 +56,7 @@ AppAsset::register($this);
                 '<li>'
                 . Html::beginForm(['/site/logout'], 'post')
                 . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->username . ' - ' . Sucursales::find()->select('nombre')->where(['=', 'id', $session->get('sucursal')])->one()->nombre .   ')',
+                    'Logout (' . Yii::$app->user->identity->username . ' - ' . Sucursales::find()->select('nombre')->where(['=', 'id', Yii::$app->user->identity->sucursalId])->one()->nombre .   ')',
                     ['class' => 'btn btn-link logout']
                 )
                 . Html::endForm()

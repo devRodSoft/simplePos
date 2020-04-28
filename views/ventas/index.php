@@ -30,7 +30,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'total:currency',
             'descuento:currency',
             'created_at:datetime',
-            'tipoVenta',
+            [
+                'label' => 'Tipo de Venta',
+                'attribute' => 'tipoVenta',
+                'value' => function ($model) {
+                    return $model->tipoVenta === 0 ? "Efectivo" : "Tarjeta";
+                }
+            ],
             //'updated_at',
 
             ['class' => 'yii\grid\ActionColumn',

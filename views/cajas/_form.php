@@ -1,9 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\helpers\ArrayHelper;
 use yii\widgets\ActiveForm;
-use app\models\Sucursales;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Cajas */
@@ -14,14 +12,9 @@ use app\models\Sucursales;
 
     <?php 
         $form = ActiveForm::begin();
-
-        /* Get data for dopdowns */
-        $ldSucursales = Sucursales::find()->all();
-        $sucursales   = ArrayHelper::map($ldSucursales,'id','nombre');    
-        $session      = Yii::$app->session;
     ?>
     
-    <?php echo $form->field($model, 'sucursalId')->hiddenInput(['value' => $session->get('sucursal')])->label(false); ?> 
+    <?php echo $form->field($model, 'sucursalId')->hiddenInput(['value' =>  Yii::$app->user->identity->sucursalId])->label(false); ?> 
 
     <?php echo $form->field($model, 'userId')->hiddenInput(['value' => Yii::$app->user->identity->id])->label(false); ?>    
 

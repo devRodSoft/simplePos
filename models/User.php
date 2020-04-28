@@ -51,12 +51,13 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['username', 'auth_key', 'password_hash'], 'required'],
+            [['username', 'auth_key', 'password_hash', 'sucursalId'], 'required'],
             [['status', 'created_at', 'updated_at', 'userType'], 'integer'],
             [['username', 'password_hash', 'password_reset_token'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
             [['username'], 'unique'],
             [['password_reset_token'], 'unique'],
+            [['sucursalId'], 'exist', 'skipOnError' => true, 'targetClass' => Sucursales::className(), 'targetAttribute' => ['sucursalId' => 'id']],
         ];
     }
 
@@ -68,6 +69,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         return [
             'id' => 'ID',
             'username' => 'Username',
+            'sucursalId' => 'Sucursal',
             'auth_key' => 'Auth Key',
             'password_hash' => 'Password Hash',
             'password_reset_token' => 'Password Reset Token',            
@@ -78,6 +80,51 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         ];
     }
 
+    /**
+     * Gets query for [[Abonos]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAbonos()
+    {
+        return $this->hasMany(Abonos::className(), ['userId' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Cajas]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCajas()
+    {
+        return $this->hasMany(Cajas::className(), ['userId' => 'id']);
+    }
+
+    public function getSalidas()
+    {
+        return $this->hasMany(Salidas::className(), ['userId' => 'id']);
+    }
+
+
+    /**
+     * Gets query for [[Sucursal]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSucursal()
+    {
+        return $this->hasOne(Sucursales::className(), ['id' => 'sucursalId']);
+    }
+
+    /**
+     * Gets query for [[Ventas]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getVentas()
+    {
+        return $this->hasMany(Ventas::className(), ['userId' => 'id']);
+    }
 
     /**
      * @inheritdoc

@@ -44,7 +44,7 @@ class CajasController extends Controller
 
         //Check if the user is admin or is restaurant type in then sisten vendedor
         if (!Yii::$app->user->identity->userType == User::SUPER_ADMIN) {
-            $searchModel->sucursalId = $session->get('sucursal');
+            $searchModel->sucursalId = Yii::$app->user->identity->sucursalId;
         }
                 
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -85,6 +85,9 @@ class CajasController extends Controller
             'model' => $model,
         ]);
     }
+
+
+
 
     /**
      * Updates an existing Cajas model.
