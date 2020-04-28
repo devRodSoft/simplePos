@@ -29,6 +29,13 @@ $this->params['breadcrumbs'][] = $this->title;
 
            // 'id',
             //'ventaId',
+            [
+                'label' => "Vendedor",
+                'attribute' => 'ventaId',
+                'value' => function ($model) {
+                    return $model->venta->user['username'];
+                }
+            ],
             'producto.descripcion',
             [
                 'label' => "precio Unitario",

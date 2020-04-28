@@ -5,8 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\Ventas;
 use app\models\VentasSearch;
-use app\models\Detalleventa;
-use app\models\Productos;
+use app\models\DetalleVenta;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -88,22 +87,25 @@ class VentasController extends Controller
         $model = new Ventas();
         $caja  = new Cajas();
 
-        $total     = Yii::$app->request->post('total');
-        $descuento = Yii::$app->request->post('descuento');
-        $productos = Yii::$app->request->post('productos');
-        $wPrice    = Yii::$app->request->post('precioSelected');
-        $tipoVenta = Yii::$app->request->post('tipoVenta');
+        $total       = Yii::$app->request->post('total');
+        $descuento   = Yii::$app->request->post('descuento');
+        $productos   = Yii::$app->request->post('productos');
+        $wPrice      = Yii::$app->request->post('precioSelected');
+        $tipoVenta   = Yii::$app->request->post('tipoVenta');
+        $descripcion = Yii::$app->request->post('desc');
 
-        $model->total     =  $total;
-        $model->descuento =  $descuento;
-        $model->cajaId    =  $caja->getIdOpenCaja()->id;
-        $model->tipoVenta =  $tipoVenta != "false" ? Ventas::TARGETA : Ventas::EFECTIVO;
+        $model->total       =  $total;
+        $model->descuento   =  $descuento;
+        $model->cajaId      =  $caja->getIdOpenCaja()->id;
+        $model->tipoVenta   =  $tipoVenta != "false" ? Ventas::TARGETA : Ventas::EFECTIVO;
+        $model->userId      = Yii::$app->user->identity->id;
+        $model->descripcion = $descripcion;
         
         //Guardamos la venta
         if ($model->save()) {
             foreach($productos as $producto) {
                 //Intentamos guardar el detalle de la venta
-                $modelDetalle = new Detalleventa();
+                $modelDetalle = new DetalleVenta();
     
                 $modelDetalle->ventaId    = $model->id;
                 $modelDetalle->productoId = $producto['producto']['id'];              
@@ -183,7 +185,7 @@ class VentasController extends Controller
      * Finds the Ventas model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $idVenta
-     * @return Ventas model with the send id to get the relation with DetalleVEnta to re print a ticket
+     * @return Ventas model with the send id to get the relation with Detalleventa to re print a ticket
      */
     public function reimpresionTicket($idVenta) {
 

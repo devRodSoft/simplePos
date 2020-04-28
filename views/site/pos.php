@@ -49,10 +49,10 @@ $this->title = 'Punto de Venta';
                     'clientOptions' => [
                     'source' => $data,
                     'minLength'=>'3', 
-                    'options' => ['class' => 'form-control'],    
+                    'options' => ['class' => 'form-control findByDescReset'],    
                     'select' => new JsExpression("function( event, ui ) {
                         $('#descripcion').val(ui.item.id);
-                        findByDescription(ui.item.id);
+                        findByDescription(event, ui.item.id);
                         //#memberssearch-family_name_id is the id of hiddenInput.
                         }")],
                     ]);
@@ -78,8 +78,18 @@ $this->title = 'Punto de Venta';
                 <tbody id="productos">
                 </tbody>
             </table>
-            <div>
-                <input placeholder="Descuento" type="text" class="form-control" id="descuento" aria-describedby="basic-addon3">
+
+            <div class="row">
+                <h4>Descuento</h4>
+                <input type="text" class="form-control" id="descuento" aria-describedby="basic-addon3">
+            </div>
+            
+            <div class="row">
+                <h4>Detalle Venta</h4>
+                <input type="text" class="form-control" id="desc" aria-describedby="basic-addon3">
+            </div>
+
+            <div class="row">
                 <h1 id="total"></h1>
             </div>
             
@@ -140,7 +150,7 @@ $this->title = 'Punto de Venta';
 
     $('#pagar').on('click', function () {        
         url =   "<?php echo Yii::$app->request->baseUrl; ?>" + "/ventas/pagar/";
-        $.post(url, {'total': total, 'descuento': descuento, 'precioSelected': precioSelected, 'tipoVenta': $('#pagoTargeta').prop('checked'), 'productos': cart})
+        $.post(url, {'total': total, 'descuento': descuento, 'precioSelected': precioSelected, 'desc': $('#desc').val(), 'tipoVenta': $('#pagoTargeta').prop('checked'), 'productos': cart})
             .done(function( data ) {
                 url = "http://localhost/simpleprint/index.php";
 
@@ -165,6 +175,9 @@ $this->title = 'Punto de Venta';
         $('#descuento').val("");
         $('#barCode').val("");        
         $('#total').text("")
+        $('#desc').val("");
+        $('#total').text("");        
+        $('.findByDescReset').val('');
         $('.detalle').remove();
         total = 0;
         descuento = 0;
@@ -240,8 +253,7 @@ $this->title = 'Punto de Venta';
     }
     // findl product by id
 
-    function findByDescription (id) {
-        console.log(id);
+    function findByDescription (event, id) {        
         var url = "<?php echo Yii::$app->request->baseUrl; ?>" + "/productos/nombre/" + id;
         $.get(url)
             .done(function(productos) {           
@@ -264,7 +276,7 @@ $this->title = 'Punto de Venta';
                     productos.push(productos[0]);
                     selectedItems(productos[0]);
                }
-
+               
                $('#barCode').val("");
             })
             .fail(function(jqXHR, textStatus, errorThrown) { 

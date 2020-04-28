@@ -19,7 +19,7 @@ use yii\behaviors\TimestampBehavior;
  * @property Productos $producto
  * @property Ventas $venta
  */
-class Detalleventa extends \yii\db\ActiveRecord
+class DetalleVenta extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}

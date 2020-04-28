@@ -29,6 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'total:currency',
             'descuento:currency',
+            'descripcion',
             'created_at:datetime',
             [
                 'label' => 'Tipo de Venta',

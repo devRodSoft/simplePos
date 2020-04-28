@@ -49,6 +49,7 @@ class Ventas extends \yii\db\ActiveRecord
         return [
             [['total', 'cajaId'], 'required'],
             [['total', 'descuento'], 'number'],
+            [['descripcion'], 'string'],
             [['userId', 'cajaId', 'tipoVenta', 'created_at', 'updated_at'], 'integer'],
             [['cajaId'], 'exist', 'skipOnError' => true, 'targetClass' => Cajas::className(), 'targetAttribute' => ['cajaId' => 'id']],
             [['userId'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['userId' => 'id']],
@@ -66,6 +67,7 @@ class Ventas extends \yii\db\ActiveRecord
             'descuento' => 'Descuento',
             'userId' => 'User ID',
             'cajaId' => 'Caja ID',
+            'descripcion' => 'Detalle',
             'tipoVenta' => "tipoVenta",
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
