@@ -45,7 +45,7 @@ class Salidas extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['cajaId', 'sucursalId', 'userId', 'retiroCantidad'], 'required'],
+            [['cajaId', 'sucursalId', 'userId', 'retiroCantidad', 'concepto'], 'required'],
             [['cajaId', 'sucursalId', 'userId', 'retiroCantidad', 'created_at', 'updated_at'], 'integer'],
             [['cajaId'], 'exist', 'skipOnError' => true, 'targetClass' => Cajas::className(), 'targetAttribute' => ['cajaId' => 'id']],
             [['sucursalId'], 'exist', 'skipOnError' => true, 'targetClass' => Sucursales::className(), 'targetAttribute' => ['sucursalId' => 'id']],
@@ -63,6 +63,7 @@ class Salidas extends \yii\db\ActiveRecord
             'cajaId' => 'Caja ID',
             'sucursalId' => 'Sucursal ID',
             'userId' => 'User ID',
+            'concepto' => 'Concepto',
             'retiroCantidad' => 'Retiro Cantidad',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',

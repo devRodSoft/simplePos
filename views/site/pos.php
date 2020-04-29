@@ -11,17 +11,21 @@ use app\models\Productos;
 
 $this->title = 'Punto de Venta';
 
+$ldSucursales = Sucursales::find()->all();
+$sucursales   = ArrayHelper::map($ldSucursales,'id','nombre');   
+
+
 ?>
 <div class="site-index">
     <div class="container">
         <div class="container">
             <div class="col-md-3">
                 <h2>Sucursal</h2>
-                <select name="sucursales" id="sucursales" class="form-control">
-                    <option value="1" selected>Seduction centro</option>
-                    <option value="2">Seduction 2 central</option>
-                </select>
+                <?php
+                    echo Html::dropDownList('sucursales', $selection = Yii::$app->user->identity->sucursalId, $sucursales, $options = ["class"=>"form-control", "id"=>"sucursales", "name"=>"sucursales"]);
+                ?>
             </div>
+
             <div class="col-md-3">
                 
                 <h2>Precio</h2>
@@ -99,9 +103,9 @@ $this->title = 'Punto de Venta';
                     <button id="cancelar" class="btn btn-warning">Cancelar</button>
                 </div>
                 <div class="col-md-4">
-                    <label for="">Anticipo</label>
+                    <!--<label for="">Anticipo</label>
                     <input type="text" id="anticipo" class="form-control text-apartar" style="display: inline; width:129px;">
-                    <button id="apartar" class="btn btn-success">Apartar</button>
+                    <button id="apartar" class="btn btn-success">Apartar</button>-->
                 </div>
 
                 <div class="col-md-4">
@@ -403,7 +407,7 @@ $this->title = 'Punto de Venta';
         for (product in cart) {
             var productTotal = '<td>' + cart[product].selectedCantidad + '</td>'
             var desc         = '<td>' + cart[product].producto.descripcion + '</td>';
-            var sucursal     = '<td>' + (cart[product].sucursalId == 1   ? "Seduction centro" : "Seduction 2 central") + '</td>';
+            var sucursal     = '<td>' + (cart[product].sucursalId == 1   ? "Matriz" : "Sucursal") + '</td>';
             var actions      = '<td><button name="'+ cart[product].sucursalId + '-' + cart[product].producto.id + '" class="buttonDelete">-</button><button name="'+ cart[product].sucursalId + '-' + cart[product].producto.id + '" class="buttonAdd">+</button></td>';
 
             if ($("#precios :selected").val() == 1) {

@@ -18,20 +18,24 @@ use app\models\Cajas;
 
         /* Get data for dopdowns */
         $ldCajas = Cajas::find()->all();
-        $cajas   = ArrayHelper::map($ldCajas,'id','sucursal.nombre');   
+        $cajas   = ArrayHelper::map($ldCajas,'id','sucursal.nombre');
+        
+        $oCajas = new Cajas();
 ?>
 
 <div class="salidas-form">
 
-    <?php $form = ActiveForm::begin();?>  
+    <?php $form = ActiveForm::begin();?>
  
-    <?php echo $form->field($model, 'cajaId')->hiddenInput(['value' =>  Cajas::getIdOpenCaja()->id])->label(false); ?> 
+    <?php echo $form->field($model, 'cajaId')->hiddenInput(['value' =>  $oCajas->getIdOpenCaja()->id])->label(false); ?> 
 
     <?php echo $form->field($model, 'sucursalId')->hiddenInput(['value' =>  Yii::$app->user->identity->sucursalId])->label(false); ?> 
 
     <?php echo $form->field($model, 'userId')->hiddenInput(['value' => Yii::$app->user->identity->id])->label(false); ?>
 
     <?= $form->field($model, 'retiroCantidad')->textInput() ?>
+    
+    <?= $form->field($model, 'concepto')->textInput() ?>
 
 
     <div class="form-group">

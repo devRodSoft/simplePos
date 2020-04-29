@@ -32,6 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'sucursalId',
             'userId',
             'retiroCantidad',
+            'concepto',
             //'created_at',
             //'updated_at',
 
