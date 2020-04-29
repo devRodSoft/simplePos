@@ -24,6 +24,8 @@ use app\models\Sucursales;
 
     <?= $form->field($model, 'descripcion')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'costo')->textInput(['maxlength' => true]) ?>
+
     <?= $form->field($model, 'precio')->textInput() ?>
 
     <?= $form->field($model, 'precio1')->textInput() ?>
@@ -32,15 +34,11 @@ use app\models\Sucursales;
 
     <?php
         foreach($ldSucursales  as $sucursal) {
-            
-            
-
             echo Html::label("cantidad - " . $sucursal->nombre, 'sucu');
             
             echo Html::hiddenInput('sucursal'.$sucursal->id, $sucursal->id);
 
             echo  Html::input('text', "cantidad" . $sucursal->id, '', $options=['class'=>'form-control']);
-  
         }
     ?>
 

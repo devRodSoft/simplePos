@@ -175,15 +175,13 @@ class ProductosController extends Controller
     }
     /* import inventary */ 
     public function actionImport() {
-        echo "importing";
+        
         $inputFileName = 'uploads/inven.xlsx';
         //  $helper->log('Loading file ' . pathinfo($inputFileName, PATHINFO_BASENAME) . ' using IOFactory to identify the format');
         $spreadsheet = IOFactory::load($inputFileName);
         $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
 
         foreach ($sheetData as $data => $valor) {
-            // $array[3] se actualizará con cada valor de $array...
-            //var_dump($valor);
             if ($valor["B"] != NULL) {
 
                 $producto = new Productos();
@@ -195,10 +193,8 @@ class ProductosController extends Controller
                 $producto->precio1      = $valor["E"];
                 $producto->cantidad     = $valor["F"];
 
-                //var_dump();
                 //Save the product
                 echo $producto->save();
-
                 //save the fisrt sucursal
                 $sucursalProducto = new SucursalProducto();
 
@@ -207,7 +203,6 @@ class ProductosController extends Controller
                 $sucursalProducto->cantidad   = $valor['H'];
 
                 echo $sucursalProducto->save();
-
 
                 //save the secon sucursal
                 $sucursalProducto = new SucursalProducto();
