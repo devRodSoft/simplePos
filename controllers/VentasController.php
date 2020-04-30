@@ -6,6 +6,7 @@ use Yii;
 use app\models\Ventas;
 use app\models\VentasSearch;
 use app\models\DetalleVenta;
+use app\models\DetalleVentaSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -57,12 +58,12 @@ class VentasController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
+    /*public function actionView($id)
     {
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
-    }
+    }*/
 
     /**
      * Creates a new Ventas model.
@@ -189,5 +190,16 @@ class VentasController extends Controller
      */
     public function reimpresionTicket($idVenta) {
 
+    }
+
+    public function actionView($id) {
+        $dataProvider  =  new DetalleVentaSearch();
+        $dataProvider->ventaId =  $id;
+        $data = $dataProvider->search(Yii::$app->request->queryParams);
+
+        return $this->render('detalle', [
+            'data' => $data,
+            'searchModel' => $dataProvider
+        ]);
     }
 }

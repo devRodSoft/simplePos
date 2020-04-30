@@ -21,6 +21,8 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-warning']) ?>
         
         <?= Html::a("Ventas", ['corte', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+
+        <?= Html::a("Salidas", ['salidas', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         
         <?php 
             if($model->canClose($model->id))

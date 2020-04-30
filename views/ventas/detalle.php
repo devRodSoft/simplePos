@@ -6,17 +6,17 @@ use kartik\export\ExportMenu;
 /* @var $this yii\web\View */
 /* @var $model app\models\Cajas */
 
-$this->title = "Corte detalle por producto";
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Cajas'), 'url' => ['index']];
+$this->title = "Venta detalle por producto";
+$this->params['breadcrumbs'][] = ['label' => "Ventas", 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
 <div class="cajas-view">
 
-    <h1>Corte</h1>
+    <h1>Detalle Venta</h1>
     
     <?php 
-        echo ExportMenu::widget([
+       echo ExportMenu::widget([
             'dataProvider' => $data,
             'columns' => [
                 [

@@ -30,6 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'codidoBarras',
             'descripcion',
+            'costo',
             'precio',
             'cantidad',
             //'created_at',

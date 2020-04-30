@@ -12,6 +12,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\Salidas;
+use app\models\SalidasSearch;
 
 /**
  * CajasController implements the CRUD actions for Cajas model.
@@ -144,6 +145,17 @@ class CajasController extends Controller
         $data = $dataProvider->Corte([], $id);
 
         return $this->render('corte', [
+            'data' => $data,
+            'searchModel' => $dataProvider
+        ]);
+    }
+
+    public function actionSalidas($id) {
+        $dataProvider  =  new SalidasSearch();
+        $dataProvider->cajaId =  $id;
+        $data = $dataProvider->search(Yii::$app->request->queryParams);
+
+        return $this->render('salidas', [
             'data' => $data,
             'searchModel' => $dataProvider
         ]);
