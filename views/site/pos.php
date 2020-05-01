@@ -103,9 +103,9 @@ $sucursales   = ArrayHelper::map($ldSucursales,'id','nombre');
                     <button id="cancelar" class="btn btn-warning">Cancelar</button>
                 </div>
                 <div class="col-md-4">
-                    <!--<label for="">Anticipo</label>
+                    <label for="">Anticipo</label>
                     <input type="text" id="anticipo" class="form-control text-apartar" style="display: inline; width:129px;">
-                    <button id="apartar" class="btn btn-success">Apartar</button>-->
+                    <button id="apartar" class="btn btn-success">Apartar</button>
                 </div>
 
                 <div class="col-md-4">
@@ -154,7 +154,7 @@ $sucursales   = ArrayHelper::map($ldSucursales,'id','nombre');
 
     $('#pagar').on('click', function () {        
         url =   "<?php echo Yii::$app->request->baseUrl; ?>" + "/ventas/pagar/";
-        $.post(url, {'total': total, 'descuento': descuento, 'precioSelected': precioSelected, 'desc': $('#desc').val(), 'tipoVenta': $('#pagoTargeta').prop('checked'), 'productos': cart})
+        $.post(url, {'total': total, 'descuento': descuento, 'precioSelected': precioSelected, 'desc': $('#desc').val(), 'tipoVenta': $('#pagoTargeta').prop('checked'), 'apartado':  false, 'productos': cart})
             .done(function( data ) {
                 url = "http://localhost/simpleprint/index.php";
 
@@ -168,6 +168,21 @@ $sucursales   = ArrayHelper::map($ldSucursales,'id','nombre');
             });
     });
 
+    $('#apartar').on('click', function () {        
+        url =   "<?php echo Yii::$app->request->baseUrl; ?>" + "/ventas/pagar/";
+        $.post(url, {'total': total, 'descuento': descuento, 'precioSelected': precioSelected, 'desc': $('#desc').val(), 'tipoVenta': $('#pagoTargeta').prop('checked'), 'apartado':  true, 'anticipo': $('#apartado').val(),  'productos': cart})
+            .done(function( data ) {
+                url = "http://localhost/simpleprint/index.php";
+
+                $.post(url, {'total': total, 'descuento': descuento, 'productos': productos})
+                    .done(function( data ) {
+                    console.log("print ticket!")
+                    toastr.success('Venta realizada');
+                    productos = [];
+                });
+                resetDatos();
+            });
+    });
 
     $('#cancelar').on('click', function clear() {
         resetDatos();

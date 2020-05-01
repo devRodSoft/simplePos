@@ -4,6 +4,8 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 use app\models\Salidas;
 use app\models\DetalleVenta;
+use app\models\Ventas;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Cajas */
@@ -58,13 +60,19 @@ $this->params['breadcrumbs'][] = $this->title;
             'saldoInicial',
             [
                 'label' => 'Ventas Efectivo',
-                'value' => DetalleVenta::find()->joinWith('venta v')
-                ->where(['in', 'v.cajaId', $model->id])->andWhere(['=', 'tipoVenta', '0'])->sum('total')
+                'value' => Ventas::find()->where(['=', 'cajaId', $model->id])->andWhere(['=', 'tipoVenta', '0'])->sum('total')
             ],
             [
                 'label' => 'Ventas Targeta',
-                'value' => DetalleVenta::find()->joinWith('venta v')
-                ->where(['in', 'v.cajaId', $model->id])->andWhere(['=', 'tipoVenta', '1'])->sum('total')
+                'value' => Ventas::find()->where(['=', 'cajaId', $model->id])->andWhere(['=', 'tipoVenta', '1'])->sum('total')
+            ],
+            [
+                'label' => 'Descuentos Efectivo',
+                'value' => Ventas::find()->where(['=', 'cajaId', $model->id])->andWhere(['=', 'tipoVenta', '0'])->sum('descuento')
+            ],
+            [
+                'label' => 'Descuentos Targeta',
+                'value' => Ventas::find()->where(['=', 'cajaId', $model->id])->andWhere(['=', 'tipoVenta', '1'])->sum('descuento')
             ],
             [
                 'label' => 'Salidas',
@@ -73,12 +81,9 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'label' => 'Saldo Final',
                 'value' =>  function ($model) {
-                    $Efectivo = DetalleVenta::find()->joinWith('venta v')
-                    ->where(['in', 'v.cajaId', $model->id])->andWhere(['=', 'tipoVenta', '0'])->sum('total');
-
-                    $targeta = DetalleVenta::find()->joinWith('venta v')
-                    ->where(['in', 'v.cajaId', $model->id])->andWhere(['=', 'tipoVenta', '1'])->sum('total');
-
+                    
+                    $Efectivo = Ventas::find()->where(['=', 'cajaId', $model->id])->andWhere(['=', 'tipoVenta', '0'])->sum('total');                    
+                    
                     $salidas = Salidas::find()->where(['=', 'cajaId', $model->id])->sum('retiroCantidad');
 
                     return ($model->saldoInicial + $Efectivo) - $salidas;

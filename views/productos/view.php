@@ -2,6 +2,8 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use app\models\SucursalProducto;
+use app\models\Sucursales;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Productos */
@@ -35,6 +37,14 @@ $this->params['breadcrumbs'][] = $this->title;
             'descripcion',
             'precio',
             'cantidad',
+            [
+                'label' => Sucursales::find()->where(['=', 'id', 1])->one()->nombre,
+                "value" =>  SucursalProducto::find()->select("cantidad")->where(['=', 'productoId', $model->id])->andWhere(['=', 'sucursalId','1'])->one()->cantidad                
+            ],
+            [
+                'label' => Sucursales::find()->where(['=', 'id', 2])->one()->nombre,
+                "value" => SucursalProducto::find()->select("cantidad")->where(['=', 'productoId', $model->id])->andWhere(['=', 'sucursalId','2'])->one()->cantidad
+            ]
             //'created_at',
             //'updated_at',
         ],

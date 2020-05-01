@@ -84,6 +84,7 @@ class ProductosController extends Controller
      */
     public function actionView($id)
     {
+        
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -226,13 +227,38 @@ class ProductosController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $modelSp = SucursalProducto::find()->andWhere(['=', 'productoId', $id]);
+
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+           
+            $cantidades = Yii::$app->request->post();
+          
+            unset($cantidades["Productos"]);
+
+            $sucursalProducto = SucursalProducto::find()->where(['=', 'productoId', $id])->andWhere(['=', 'sucursalId','1'])->one();
+
+            $sucursalProducto->cantidad   = $cantidades['cantidad1'];
+
+            $sucursalProducto->save();
+
+            $sucursalProducto = SucursalProducto::find()->andWhere(['=', 'productoId', $id])->andWhere(['=', 'sucursalId','2'])->one();
+
+            $sucursalProducto->cantidad   = $cantidades['cantidad2'];
+
+            $sucursalProducto->save();
+
+
+             return $this->render('view', [
+                'model' => $this->findModel($model->id),
+            ]);
+
+
         }
 
         return $this->render('update', [
             'model' => $model,
+            'sucursal' => $modelSp
         ]);
     }
 

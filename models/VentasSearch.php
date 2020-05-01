@@ -20,6 +20,7 @@ class VentasSearch extends Ventas
             return [
                 [['id', 'updated_at'], 'integer'],
                 [['total', 'descuento'], 'number'],
+                [['ventaApartado'], 'number'],
                 [['descripcion'], 'string'],
                 [['created_at'], 'safe'],
             ];        
@@ -45,7 +46,7 @@ class VentasSearch extends Ventas
     {
        $query = Ventas::find();
        
-      // $query->andFilterWhere(['between', 'created_at', date('Y.m.d 00:00:00'), date('Y.m.d 22:00:00')]);
+        //$query->andFilterWhere(['between', 'created_at', date('Y.m.d 00:00:00'), date('Y.m.d 22:00:00')]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -53,8 +54,8 @@ class VentasSearch extends Ventas
         $this->load($params);
 
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
+            //uncomment the following line if you do not want to return any records when validation fails
+            //$query->where('0=1');
             return $dataProvider;
         }
 
@@ -63,6 +64,7 @@ class VentasSearch extends Ventas
             'id' => $this->id,
             'total' => $this->total,
             'descuento' => $this->descuento,
+            'ventaApartado' => $this->ventaApartado,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ])->andFilterWhere(['like', 'descripcion', $this->descripcion]);

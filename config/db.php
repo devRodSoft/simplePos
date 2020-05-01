@@ -8,7 +8,7 @@ return [
     'charset' => 'utf8'
 
     /*'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=myrodsof_sex',
+    'dsn' => 'mysql:host=http://myrodsoft.com/;dbname=myrodsof_sex',
     'username' => 'myrodsof_sex',
     'password' => 'sex2020Rodsoft',
     'charset' => 'utf8'*/

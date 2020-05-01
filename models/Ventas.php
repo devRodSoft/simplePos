@@ -24,6 +24,7 @@ class Ventas extends \yii\db\ActiveRecord
 
     const EFECTIVO = 0;
     const TARGETA  = 1;
+
     /**
      * {@inheritdoc}
      */
@@ -50,6 +51,7 @@ class Ventas extends \yii\db\ActiveRecord
             [['total', 'cajaId'], 'required'],
             [['total', 'descuento'], 'number'],
             [['descripcion'], 'string'],
+            [['ventaApartado', 'liquidado'], 'integer'],
             [['userId', 'cajaId', 'tipoVenta', 'created_at', 'updated_at'], 'integer'],
             [['cajaId'], 'exist', 'skipOnError' => true, 'targetClass' => Cajas::className(), 'targetAttribute' => ['cajaId' => 'id']],
             [['userId'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['userId' => 'id']],
@@ -69,6 +71,8 @@ class Ventas extends \yii\db\ActiveRecord
             'cajaId' => 'Caja ID',
             'descripcion' => 'Detalle',
             'tipoVenta' => "tipoVenta",
+            'ventaApartado' => "Venta",
+            'liquidado' => "liquidado",
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];

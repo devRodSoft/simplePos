@@ -15,7 +15,7 @@ class m200418_112418_abonosTable extends Migration
         $this->createTable('abonos', [
             'id'           => $this->primaryKey(),
             'clienteId'    => $this->integer()->notNull(),
-            'apartadoId'   => $this->integer()->notNull(),
+            'ventaId'   => $this->integer()->notNull(),
             'userId'       => $this->integer()->notNull(),
             'cajaId'       => $this->integer()->notNull(),
             'abono'        => $this->float()->notNull(),
@@ -35,10 +35,10 @@ class m200418_112418_abonosTable extends Migration
 
         //add foreign key for table 'cajas'
         $this->addForeignKey(
-            'fk-apartados-id-abonos',
+            'fk-venta-id-abonos',
             'abonos',
-            'apartadoId',
-            'apartados',
+            'ventaId',
+            'ventas',
             'id',
             'CASCADE'
         );
@@ -62,9 +62,6 @@ class m200418_112418_abonosTable extends Migration
             'id',
             'CASCADE'
         );
-
-
-
     }
 
     /**
