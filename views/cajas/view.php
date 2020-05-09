@@ -63,17 +63,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => Ventas::find()->where(['=', 'cajaId', $model->id])->andWhere(['=', 'tipoVenta', '0'])->sum('total')
             ],
             [
-                'label' => 'Ventas Targeta',
+                'label' => 'Ventas Tarjeta',
                 'value' => Ventas::find()->where(['=', 'cajaId', $model->id])->andWhere(['=', 'tipoVenta', '1'])->sum('total')
             ],
-            [
-                'label' => 'Descuentos Efectivo',
-                'value' => Ventas::find()->where(['=', 'cajaId', $model->id])->andWhere(['=', 'tipoVenta', '0'])->sum('descuento')
-            ],
-            [
-                'label' => 'Descuentos Targeta',
-                'value' => Ventas::find()->where(['=', 'cajaId', $model->id])->andWhere(['=', 'tipoVenta', '1'])->sum('descuento')
-            ],
+
             [
                 'label' => 'Salidas',
                 'value' => Salidas::find()->where(['=', 'cajaId', $model->id])->sum('retiroCantidad')

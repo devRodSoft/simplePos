@@ -94,7 +94,7 @@ class VentasController extends Controller
         $wPrice      = Yii::$app->request->post('precioSelected');
         $tipoVenta   = Yii::$app->request->post('tipoVenta');
         $descripcion = Yii::$app->request->post('desc');
-        $isApartado  = Yii::$app->request->post('apartado');
+        //$isApartado  = Yii::$app->request->post('apartado');
 
         $model->total       =  $total;
         $model->descuento   =  $descuento;
@@ -124,12 +124,12 @@ class VentasController extends Controller
                 $productoInventario->cantidad -= $producto['selectedCantidad'];
 
                 // si es apartado agregamos que es un apartado! sea la venta como sea del inventario siempre se descuenta.
-                if ($isApartado) {
+                /*if ($isApartado) {
                     $productoInventario->apartado = $producto['selectedCantidad'];
 
 
                     //creamos el abono! 
-                }
+                }*/
                     
                 
                 $productoInventario->save();

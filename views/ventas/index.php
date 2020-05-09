@@ -27,6 +27,13 @@ $this->params['breadcrumbs'][] = $this->title;
             //['class' => 'yii\grid\SerialColumn'],
 
             'id',
+            [
+                'label' => 'Vendedor',
+                "attribute" => 'userId',
+                'value' => function ($model) {
+                    return $model->userId ? $model->user->username : "";
+                }
+            ],
             'total:currency',
             'descuento:currency',
             'descripcion',

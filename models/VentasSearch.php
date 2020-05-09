@@ -20,7 +20,7 @@ class VentasSearch extends Ventas
             return [
                 [['id', 'updated_at'], 'integer'],
                 [['total', 'descuento'], 'number'],
-                [['ventaApartado'], 'number'],
+                //[['ventaApartado'], 'number']
                 [['descripcion'], 'string'],
                 [['created_at'], 'safe'],
             ];        
@@ -64,7 +64,7 @@ class VentasSearch extends Ventas
             'id' => $this->id,
             'total' => $this->total,
             'descuento' => $this->descuento,
-            'ventaApartado' => $this->ventaApartado,
+            //'ventaApartado' => $this->ventaApartado,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ])->andFilterWhere(['like', 'descripcion', $this->descripcion]);
