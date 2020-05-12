@@ -102,7 +102,7 @@ $sucursales   = ArrayHelper::map($ldSucursales,'id','nombre');
                 <button id="apartar" class="btn btn-success">Apartar</button>-->
             </div>
             <div class="col-md-4">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" style="float: right">Pagar</button>
+                <button type="button" class="btn btn-primary"  data-target="#exampleModal" data-whatever="@mdo" style="float: right" id="mpagar">Pagar</button>
             </div>
         </div>
     </div>
@@ -205,13 +205,14 @@ $sucursales   = ArrayHelper::map($ldSucursales,'id','nombre');
     var precioSelected   = $("#precios :selected").val();
 
 
+    $('#mpagar').on('click', function () {
+        if (cart.length > 0)
+            $('#exampleModal').modal('show');
+    })
+
     //modal handle
     $('#exampleModal').on('show.bs.modal', function (event) {
         //reset datos
-    
-        
-        
-        
         var button = $(event.relatedTarget) // Button that triggered the modal
         var recipient = total // Extract info from data-* attributes
         // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
