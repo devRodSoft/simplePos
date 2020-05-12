@@ -102,7 +102,7 @@ $sucursales   = ArrayHelper::map($ldSucursales,'id','nombre');
                 <button id="apartar" class="btn btn-success">Apartar</button>-->
             </div>
             <div class="col-md-4">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">PAgar</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" style="float: right">Pagar</button>
             </div>
         </div>
     </div>
@@ -206,14 +206,19 @@ $sucursales   = ArrayHelper::map($ldSucursales,'id','nombre');
 
 
     //modal handle
-
     $('#exampleModal').on('show.bs.modal', function (event) {
+        //reset datos
+    
+        
+        
+        
         var button = $(event.relatedTarget) // Button that triggered the modal
         var recipient = total // Extract info from data-* attributes
         // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
         // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
         var modal = $(this)
         //modal.find('.modal-title').text('New message to ' + recipient)
+        modal.find('.modal-body #descuento').val("");
         modal.find('.modal-body #total').text(recipient)
 
 
@@ -232,7 +237,7 @@ $sucursales   = ArrayHelper::map($ldSucursales,'id','nombre');
             
 
             descuento = this.value;
-            var totalFinal = descuento == "" ? recipient : total -= descuento;
+            var totalFinal = descuento == "" ? recipient : total - descuento;
             modal.find('.modal-body #total').text(totalFinal)
             //$('#total').text(total);
 
