@@ -70,7 +70,7 @@ class Cajas extends \yii\db\ActiveRecord
             'saldoInicial' => 'Saldo Inicial',
             'saldoFinal' => 'Saldo Final',
             'isOpen' => 'Is Open',
-            'created_at' => 'Created At',
+            'created_at' => 'Fecha Apertura',
             'apertura' => 'Apertura',
             'cierre' => 'Cierre',
             'updated_at' => 'Updated At',

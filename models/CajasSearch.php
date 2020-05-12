@@ -49,6 +49,15 @@ class CajasSearch extends Cajas
             'query' => $query,
         ]);
 
+        $dataProvider->setSort([
+
+                'attributes' => [
+                'id' => ['default' => SORT_DESC],
+
+            ]
+
+        ]);
+        
         $this->load($params);
 
         if (!$this->validate()) {

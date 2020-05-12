@@ -42,8 +42,8 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
             ['label' => 'Productos',  'url' => ['/productos/index'],         'visible' => !Yii::$app->user->isGuest],
-            ['label' => 'Sucupro',    'url' => ['/sucursal-producto/index'], 'visible' => !Yii::$app->user->isGuest],
-            ['label' => 'Reportes',   'url' => ['/detalle-venta/index'],     'visible' => !Yii::$app->user->isGuest],
+            //['label' => 'Sucupro',    'url' => ['/sucursal-producto/index'], 'visible' => !Yii::$app->user->isGuest],
+            //['label' => 'Reportes',   'url' => ['/detalle-venta/index'],     'visible' => !Yii::$app->user->isGuest],
             ['label' => 'Ventas',     'url' => ['/ventas/index'],            'visible' => !Yii::$app->user->isGuest ],
             ['label' => 'Sucursales', 'url' => ['/sucursales/index'],        'visible' => !Yii::$app->user->isGuest],
             ['label' => 'Cajas',      'url' => ['/cajas/index'],             'visible' => !Yii::$app->user->isGuest],

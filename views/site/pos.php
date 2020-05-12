@@ -473,6 +473,7 @@ $sucursales   = ArrayHelper::map($ldSucursales,'id','nombre');
             toastr.warning('Ya no tienes existencias disponibles en ninguna Sucursal');
         }
 
+        //Check 
         if (tryOtherSucursal) {
             tryOtherSucursal = false;
             var barcode = $('#barCode').val() == "" ? item.producto.codidoBarras : $('#barCode').val();

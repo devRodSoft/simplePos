@@ -47,7 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'saldoFinal',
             //'isOpen',
-            //'created_at',
+            'created_at:datetime',
             //'apertura',
             //'cierre',
             //'updated_at',

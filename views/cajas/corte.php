@@ -53,11 +53,24 @@ $this->params['breadcrumbs'][] = $this->title;
             'showPageSummary' => true,
             'hover' => true,
             'columns' => [
-                //'id',
                 [
                     'attribute' => 'ventaId',
                     'group'     => true,
                     'filter'      => false
+                ],
+                [
+                    'label' => 'Vendedor',
+                    "attribute" => 'ventaId',
+                    'value' => function ($model) {
+                        return $model->ventaId ? $model->venta->user->username : "";
+                    }
+                ],
+                [
+                    'label' => 'Tipo de Venta',
+                    'attribute' => 'tipoVenta',
+                    'value' => function ($model) {
+                        return $model->venta->tipoVenta === 0 ? "Efectivo" : "Tarjeta";
+                    }
                 ],
                 'producto.descripcion',
                 'cantidad',
@@ -67,11 +80,20 @@ $this->params['breadcrumbs'][] = $this->title;
                     'filter' => false
                 ], 
                 [
+                    'label' => 'Descuento',
+                    'group' => true,
+                    'subGroupOf' => 0,
+                    'value' =>  function ($data) {
+                        return $data->venta->descuento;
+                    }
+                ],
+                [
                     'label' => "Precio total",
                     'pageSummary' => true,
                     'pageSummaryFunc' => GridView::F_SUM,
                     'value' =>  function ($data) {
-                        return $data->cantidad * $data->precio;
+                        //var_dump($data);die();
+                        return ($data->cantidad * $data->precio) - $data->venta->descuento;
                     }
                 ],                
             ],

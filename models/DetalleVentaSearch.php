@@ -11,6 +11,7 @@ use app\models\DetalleVenta;
  */
 class DetalleVentaSearch extends DetalleVenta
 {
+    public $username;
     /**
      * {@inheritdoc}
      */
@@ -18,6 +19,7 @@ class DetalleVentaSearch extends DetalleVenta
     {
         return [
             [['id', 'ventaId', 'productoId', 'created_at', 'updated_at'], 'integer'],
+            [['username'], 'safe'],
             [['precio'], 'number'],
         ];
     }
@@ -73,11 +75,21 @@ class DetalleVentaSearch extends DetalleVenta
         $query = DetalleVenta::find()->joinWith('venta v')
         ->where(['in', 'v.cajaId', $id]);
 
+        
+
+
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+
+        // Lets do the same with country now
+        $dataProvider->sort->attributes['venta'] = [
+            'asc' => ['v.username' => SORT_ASC],
+            'desc' => ['v.username' => SORT_DESC],
+        ];
+
 
         $this->load($params);
 
@@ -95,7 +107,9 @@ class DetalleVentaSearch extends DetalleVenta
             'precio' => $this->precio,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-        ]);
+        ])
+
+        ->andFilterWhere(['like', 'v.username', $this->username]);
 
         return $dataProvider;
     }
