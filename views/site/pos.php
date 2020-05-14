@@ -239,7 +239,8 @@ $sucursales   = ArrayHelper::map($ldSucursales,'id','nombre');
 
             descuento = this.value;
             var totalFinal = descuento == "" ? recipient : total - descuento;
-            modal.find('.modal-body #total').text(totalFinal)
+            modal.find('.modal-body #total').text(totalFinal);
+            total = totalFinal;
             //$('#total').text(total);
 
         });
