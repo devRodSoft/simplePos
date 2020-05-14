@@ -136,21 +136,32 @@ class ProductosController extends Controller
             'sucProModel' => $sucProModel,
         ]);
     }
-    public function actionProducto($barcode, $sucursal) {
+
+    //this recive de id or barcode depends that the client has to ask to find the product
+    public function actionProducto($barcode, $sucursal, $useBarcode) {
         
         $request = Yii::$app->request;
         //$params = $request->get();
 
         if (Yii::$app->request->isAjax) {            
-
-            $data = SucursalProducto::find()
-
-            ->joinWith('producto p')
-            ->where(['in', 'p.codidoBarras', $barcode])
-            ->andWhere(['sucursalproducto.sucursalId' => $sucursal])
-            ->andWhere(['>','sucursalproducto.cantidad', 0])
-            ->asArray()
-            ->all();
+            if ($useBarcode !== "false") {
+                $data = SucursalProducto::find()
+                ->joinWith('producto p')
+                ->where(['in', 'p.codidoBarras', $barcode])
+                ->andWhere(['sucursalproducto.sucursalId' => $sucursal])
+                ->andWhere(['>','sucursalproducto.cantidad', 0])
+                ->asArray()
+                ->all();
+            } else {
+                $data = SucursalProducto::find()
+                ->joinWith('producto p')
+                ->where(['in', 'p.id', $barcode])
+                ->andWhere(['sucursalproducto.sucursalId' => $sucursal])
+                ->andWhere(['>','sucursalproducto.cantidad', 0])
+                ->asArray()
+                ->all();
+            }
+            
           
             return $this->asJson($data);
         }    

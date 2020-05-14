@@ -314,7 +314,7 @@ $sucursales   = ArrayHelper::map($ldSucursales,'id','nombre');
         if (e.which != 13)
             return
 
-        var url = "<?php echo Yii::$app->request->baseUrl; ?>" + "/productos/producto/" + this.value + "/" + sucursalSelected;
+        var url = "<?php echo Yii::$app->request->baseUrl; ?>" + "/productos/producto/" + this.value + "/" + sucursalSelected + "/" + true;
         $.get(url)
             .done(function(productos) {           
                 //check products exist
@@ -345,8 +345,8 @@ $sucursales   = ArrayHelper::map($ldSucursales,'id','nombre');
     });
 
     //find by barcode 
-    function findByBarcode (barcode, sucursal) {
-        var url = "<?php echo Yii::$app->request->baseUrl; ?>" + "/productos/producto/" + barcode + "/" + sucursal;
+    function findByBarcode (barcode, sucursal, useBarcode = true) {
+        var url = "<?php echo Yii::$app->request->baseUrl; ?>" + "/productos/producto/" + barcode + "/" + sucursal + "/" + useBarcode;
         console.log(url);
         $.get(url)
             .done(function(productos) {                          
@@ -482,9 +482,16 @@ $sucursales   = ArrayHelper::map($ldSucursales,'id','nombre');
 
         //Check 
         if (tryOtherSucursal) {
+            var  useBarcode =  true;
             tryOtherSucursal = false;
-            var barcode = $('#barCode').val() == "" ? item.producto.codidoBarras : $('#barCode').val();
-            findByBarcode(barcode, suc);
+            var barcode = $('#barCode').val() == "" ? item.producto.id : $('#barCode').val();
+            
+            if ($('#barCode').val() == "")  {
+                useBarcode = false;
+            }
+
+
+            findByBarcode(barcode, suc, useBarcode);
         }
         
         showCart();
