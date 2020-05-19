@@ -197,6 +197,7 @@ $sucursales   = ArrayHelper::map($ldSucursales,'id','nombre');
     toastr.options.newestOnTop = false; 
 
     var total = 0;       
+    var totalTemporal = 0;
     var descuento = 0; 
     var productos = [];  
     var productosFound = [];
@@ -228,23 +229,30 @@ $sucursales   = ArrayHelper::map($ldSucursales,'id','nombre');
             return
 
             var cambio =  $('#cantidad-pago').val() - total;
-            $("#cambio").text(cambio)
-            })
+             $("#cambio").text(cambio)
+            });
 
             $('#descuento').on('keypress', function(e){
-                console.log("here");
             if (e.which != 13)
                 return
             
-
             descuento = this.value;
-            var totalFinal = descuento == "" ? recipient : total - descuento;
-            modal.find('.modal-body #total').text(totalFinal);
-            total = totalFinal;
+            
+            var totalConDescuento = total - descuento;
+            
+            //var totalFinal = descuento == "" ? recipient : total - descuento;
+            modal.find('.modal-body #total').text(totalConDescuento);
+            totalTemporal = totalConDescuento;
             //$('#total').text(total);
 
         });
 
+    })
+
+    $('#exampleModal').on('hidden.bs.modal', function () {
+        totalTemporal = 0;
+        $('#cantidad-pago').val("")
+        $("#cambio").text("")
     })
 
     //Buttons actions
@@ -257,7 +265,11 @@ $sucursales   = ArrayHelper::map($ldSucursales,'id','nombre');
         sucursalSelected = $("#sucursales :selected").val();
     })
 
-    $('#pagar').on('click', function () {        
+    $('#pagar').on('click', function () {
+
+        //obtenemos el total con o sin descuento
+        total = totalTemporal != 0  ? totalTemporal : total; 
+
         url =   "<?php echo Yii::$app->request->baseUrl; ?>" + "/ventas/pagar/";
         $.post(url, {'total': total, 'descuento': descuento, 'precioSelected': $("#precios :selected").val(), 'desc': $('#desc').val(), 'tipoVenta': $('#pagoTargeta').prop('checked'), 'apartado':  false, 'productos': cart})
             .done(function( data ) {
