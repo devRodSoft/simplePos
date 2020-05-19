@@ -262,13 +262,15 @@ $sucursales   = ArrayHelper::map($ldSucursales,'id','nombre');
         $.post(url, {'total': total, 'descuento': descuento, 'precioSelected': $("#precios :selected").val(), 'desc': $('#desc').val(), 'tipoVenta': $('#pagoTargeta').prop('checked'), 'apartado':  false, 'productos': cart})
             .done(function( data ) {
                 url = "http://localhost/simpleprint/index.php";
+                
+                $('#exampleModal').modal('hide');
+                $("#gracias").modal('show');
 
                 $.post(url, {'total': total, 'descuento': descuento, 'productos': productos})
                     .done(function( data ) {
                     console.log("print ticket!")
                     productos = [];                    
-                    $('#exampleModal').modal('hide');
-                    $("#gracias").modal('show');
+                    
                 });
                 resetDatos();
             });
