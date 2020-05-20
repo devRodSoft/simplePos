@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-warning']) ?>
+        <?= Html::a(Yii::t('app', 'Actualizar'), ['update', 'id' => $model->id], ['class' => 'btn btn-warning']) ?>
         
         <?= Html::a("Ventas", ['corte', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
 
@@ -59,11 +59,11 @@ $this->params['breadcrumbs'][] = $this->title;
             
             'saldoInicial',
             [
-                'label' => 'Ventas Efectivo',
+                'label' => 'Ventas en efectivo',
                 'value' => Ventas::find()->where(['=', 'cajaId', $model->id])->andWhere(['=', 'tipoVenta', '0'])->sum('total')
             ],
             [
-                'label' => 'Ventas Tarjeta',
+                'label' => 'Ventas con tarjeta',
                 'value' => Ventas::find()->where(['=', 'cajaId', $model->id])->andWhere(['=', 'tipoVenta', '1'])->sum('total')
             ],
 
@@ -72,7 +72,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => Salidas::find()->where(['=', 'cajaId', $model->id])->sum('retiroCantidad')
             ],
             [
-                'label' => 'Saldo Final',
+                'label' => 'Saldo final',
                 'value' =>  function ($model) {
                     
                     $Efectivo = Ventas::find()->where(['=', 'cajaId', $model->id])->andWhere(['=', 'tipoVenta', '0'])->sum('total');                    

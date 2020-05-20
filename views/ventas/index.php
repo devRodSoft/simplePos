@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'descripcion',
             'created_at:datetime',
             [
-                'label' => 'Tipo de Venta',
+                'label' => 'Forma de pago',
                 'attribute' => 'tipoVenta',
                 'value' => function ($model) {
                     return $model->tipoVenta === 0 ? "Efectivo" : "Tarjeta";

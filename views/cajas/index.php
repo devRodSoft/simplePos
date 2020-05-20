@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Create Cajas'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Abrir nueva caja'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]);
@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'user.username',
             [
-                'label'     =>  'Saldo Inicial',
+                'label'     =>  'Saldo inicial',
                 'attribute' =>  'saldoInicial',
                 'filter'    =>  false
             ],

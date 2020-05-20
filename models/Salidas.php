@@ -64,9 +64,9 @@ class Salidas extends \yii\db\ActiveRecord
             'sucursalId' => 'Sucursal ID',
             'userId' => 'User ID',
             'concepto' => 'Concepto',
-            'retiroCantidad' => 'Retiro Cantidad',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'retiroCantidad' => 'Cantidad',
+            'created_at' => 'Fecha de retiro',
+            'updated_at' => 'Última actualización',
         ];
     }
 

@@ -13,7 +13,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="cajas-view">
 
-    <h1>Detalle Venta</h1>
+    <h1>Detalles de venta</h1>
     
     <?php 
        echo ExportMenu::widget([
@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'producto.descripcion',
                 'cantidad',
                 [
-                    'label' => "Precio Pieza",
+                    'label' => "Precio unitario",
                     'attribute' => 'precio',
                     'filter' => false
                 ], 

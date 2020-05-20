@@ -50,7 +50,7 @@ $sucursales   = ArrayHelper::map($ldSucursales,'id','nombre');
             //'created_at',
             //'updated_at',
             [
-                'label' => 'Tipo de Usuario',
+                'label' => 'Tipo de usuario',
                 'attribute' => 'userType',
                 'filter' => ['0' => 'Administrador', '1' => 'Vendedor'],
                 'value' =>  function ($model, $key, $index, $column) {

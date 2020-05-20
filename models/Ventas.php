@@ -69,11 +69,11 @@ class Ventas extends \yii\db\ActiveRecord
             'descuento' => 'Descuento',
             'userId' => 'User ID',
             'cajaId' => 'Caja ID',
-            'descripcion' => 'Detalle',
+            'descripcion' => 'Detalles',
             'tipoVenta' => "tipoVenta",
             //'ventaApartado' => "Venta",
             'liquidado' => "liquidado",
-            'created_at' => 'Created At',
+            'created_at' => 'Fecha',
             'updated_at' => 'Updated At',
         ];
     }

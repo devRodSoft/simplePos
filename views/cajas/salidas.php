@@ -12,7 +12,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="cajas-view">
 
-    <h1>Salidas Detalle</h1>
+    <h1>Salidas</h1>
     
     <?php 
         // Create a panel layout for your GridView widget

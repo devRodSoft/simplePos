@@ -68,7 +68,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     {
         return [
             'id' => 'ID',
-            'username' => 'Username',
+            'username' => 'Usuario',
             'sucursalId' => 'Sucursal',
             'auth_key' => 'Auth Key',
             'password_hash' => 'Password Hash',
@@ -76,7 +76,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             'status' => 'Status',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
-            'userType' => 'User Type',
+            'userType' => 'Tipo de usuario',
         ];
     }
 
