@@ -83,19 +83,22 @@ $this->params['breadcrumbs'][] = $this->title;
                     'label' => 'Descuento',
                     'group' => true,
                     'subGroupOf' => 0,
+                    'pageSummary' => true,
+                    'pageSummaryFunc' => GridView::F_SUM,
                     'value' =>  function ($data) {
                         return $data->venta->descuento;
                     }
                 ],
                 [
-                    'label' => "Precio total",
+                    'label' => 'Total venta',
+                    'group' => true,
+                    'subGroupOf' => 0,
                     'pageSummary' => true,
                     'pageSummaryFunc' => GridView::F_SUM,
                     'value' =>  function ($data) {
-                        //var_dump($data);die();
-                        return ($data->cantidad * $data->precio) - $data->venta->descuento;
+                        return $data->venta->total;
                     }
-                ],                
+                ]                
             ],
             'toolbar' => [
                 '{export}',
