@@ -78,7 +78,7 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; Rodsoft 2020 <?= date('Y') ?></p>
+        <p class="pull-left">&copy; Rodsoft <?= date('Y') ?></p>
 
         <p class="pull-right">Punto</p>
     </div>

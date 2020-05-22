@@ -21,8 +21,9 @@ $this->title = 'Simple POS';
         ],
     ]);
         
+        //rod changues
     ?>
-
+        
         <?= $form->field($model, 'username')->textInput(['autofocus' => true])->label('Usuario') ?>
 
         <?= $form->field($model, 'password')->passwordInput()->label('Contraseña') ?>
