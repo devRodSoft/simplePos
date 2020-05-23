@@ -12,6 +12,7 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
+    'language' => 'es-MX',
     'components' => [
         'formatter' => [
             'class' => 'yii\i18n\Formatter',

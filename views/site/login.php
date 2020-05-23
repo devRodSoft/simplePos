@@ -5,30 +5,35 @@
 /* @var $model app\models\LoginForm */
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\bootstrap\ActiveForm;
 
 $this->title = 'smartPOS';
 ?>
-<div class="site-login">
-    <?php $form = ActiveForm::begin([
-        'id' => 'login-form',
-        'layout' => 'horizontal',
-        'fieldConfig' => [
-            'template' => "{label}\n<div class=\"col-lg-3\">{input}</div>\n<div class=\"col-lg-8\">{error}</div>",
-            'labelOptions' => ['class' => 'col-lg-1 control-label'],
-        ],
-    ]);
-        
-        //rod changues
-    ?>
-        <div class="forms">
-            <?= $form->field($model, 'username')->textInput(['autofocus' => true])->label('Usuario') ?>
-            <?= $form->field($model, 'password')->passwordInput()->label('Contraseña')?>
+<div class="container">
+    <div class="row">
+        <div class="col">
+        <?php echo Html::img( Url::base(true) . "/img/logo.png", ['class' => 'login-logo']) ?>
+        <?php $form = ActiveForm::begin([
+                'id' => 'login-form',
+                'layout' => 'horizontal',
+                'fieldConfig' => [
+                    //'template' => "{label}\n<div class=\"col-lg-3\">{input}</div>\n<div class=\"login-error\">{error}</div>",
+                    //'labelOptions' => ['class' => 'control-label'],
+                ],
+            ]);        
+            ?>
+                
+            <?= $form->field($model, 'username')->textInput(['autofocus' => true])->label('Usuario')->label(false) ?>
+            <?= $form->field($model, 'password')->passwordInput()->label('Contraseña')->label(false)?>
+            
             <div class="form-group">
-                <div class="col-lg-offset-1 col-lg-11">
-                    <?= Html::submitButton('Entrar', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+                <div>
+                    <?= Html::submitButton('Entrar', ['class' => 'btn btn-primary login-btn', 'name' => 'login-button']) ?>
                 </div>
             </div>
+                
+            <?php ActiveForm::end(); ?>
         </div>
-    <?php ActiveForm::end(); ?>
+    </div>
 </div>

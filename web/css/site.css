@@ -159,10 +159,32 @@ a.desc:after {
     color: white;
 }
 
-.site-login {
-    text-align: center;
+.login-btn {
+    margin: 0 auto;
+    display: block;
+    width: 250px;
 }
 
-.site-login .forms {
-    display: inline-block;
+#loginform-username  {
+    margin: auto;
+    width: 250px;
+}
+
+#loginform-password {
+    margin: auto;
+    width: 250px;
+}
+
+.help-block-error {
+    margin: auto;
+    width: 250px;
+    margin-top: 10px;
+}
+
+.login-logo {
+    width: 200px;
+    height: auto;
+    margin: 0 auto;
+    display: block;
+    margin-bottom: 30px;
 }

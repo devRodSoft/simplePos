@@ -6,6 +6,7 @@ use Yii;
 use app\models\Productos;
 use app\models\SucursalProducto;
 use app\models\ProductosSearch;
+use app\models\Sucursales;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -99,6 +100,7 @@ class ProductosController extends Controller
     {
         $model = new Productos();
         $sucProModel = new SucursalProducto();
+        $numSuc = Sucursales::find()->count();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
            
@@ -107,14 +109,23 @@ class ProductosController extends Controller
 
             unset($cantidades["Productos"]);
 
-            $sucursalProducto = new SucursalProducto();
 
-            $sucursalProducto->sucursalId = $cantidades['sucursal1'];
-            $sucursalProducto->productoId = $model->id;
-            $sucursalProducto->cantidad   = $cantidades['cantidad1'];
+            //check how many sucursales tenemos  we had
+            for ($i = 0; $i < $numSuc; $i++) {
+                echo "si" . ($i + 1) ;
 
-            $sucursalProducto->save();
+                $sucursalProducto = new SucursalProducto();
 
+                $aux1 = 'sucursal' . $i+1;
+                $axu2 = 'cantidad' . $i+1;
+
+                $sucursalProducto->sucursalId = $cantidades[$aux1];
+                $sucursalProducto->productoId = $model->id;
+                $sucursalProducto->cantidad   = $cantidades[$aux2];
+    
+                $sucursalProducto->save();
+            }
+    
             $sucursalProducto = new SucursalProducto();
 
             $sucursalProducto->sucursalId = $cantidades['sucursal2'];
