@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 use app\models\Sucursales;
 use yii\helpers\ArrayHelper;
 use app\models\User;
@@ -28,6 +28,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'showPageSummary' => true,
+        'hover' => true,
         'formatter' => ['class' => 'yii\i18n\Formatter','nullDisplay' => ''],
         'columns' => [
             'id',

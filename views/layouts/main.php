@@ -46,7 +46,7 @@ AppAsset::register($this);
             //['label' => 'Sucupro',    'url' => ['/sucursal-producto/index'], 'visible' => !Yii::$app->user->isGuest],
             //['label' => 'Reportes',   'url' => ['/detalle-venta/index'],     'visible' => !Yii::$app->user->isGuest],
             ['label' => 'Ventas',     'url' => ['/ventas/index'],            'visible' => !Yii::$app->user->isGuest ],
-            ['label' => 'Sucursales', 'url' => ['/sucursales/index'],        'visible' => !Yii::$app->user->isGuest],
+            ['label' => 'Sucursales', 'url' => ['/sucursales/index'],        'visible' => !Yii::$app->user->isGuest  && Yii::$app->user->identity->userType == User::SUPER_ADMIN],
             ['label' => 'Cajas',      'url' => ['/cajas/index'],             'visible' => !Yii::$app->user->isGuest],
             ['label' => 'Clientes',   'url' => ['/clientes/index'],          'visible' => !Yii::$app->user->isGuest],
             ['label' => 'Retiros',    'url' => ['/salidas/index'],           'visible' => !Yii::$app->user->isGuest],

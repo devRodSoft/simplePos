@@ -5,12 +5,12 @@ namespace app\controllers;
 use Yii;
 use app\models\Productos;
 use app\models\SucursalProducto;
+use app\models\SucursalProductoSearch;
 use app\models\ProductosSearch;
 use app\models\Sucursales;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use arogachev\excel\import\basic\Importer;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use yii\filters\AccessControl;
 
@@ -68,8 +68,10 @@ class ProductosController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new ProductosSearch();
+        
+        $searchModel = new SucursalProductoSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -85,7 +87,7 @@ class ProductosController extends Controller
      */
     public function actionView($id)
     {
-        
+
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -116,8 +118,8 @@ class ProductosController extends Controller
 
                 $sucursalProducto = new SucursalProducto();
 
-                $aux1 = 'sucursal' . $i+1;
-                $axu2 = 'cantidad' . $i+1;
+                $aux1 = 'sucursal' . ($i + 1);
+                $aux2 = 'cantidad' . ($i + 1);
 
                 $sucursalProducto->sucursalId = $cantidades[$aux1];
                 $sucursalProducto->productoId = $model->id;
@@ -125,14 +127,6 @@ class ProductosController extends Controller
     
                 $sucursalProducto->save();
             }
-    
-            $sucursalProducto = new SucursalProducto();
-
-            $sucursalProducto->sucursalId = $cantidades['sucursal2'];
-            $sucursalProducto->productoId = $model->id;
-            $sucursalProducto->cantidad   = $cantidades['cantidad2'];
-
-            $sucursalProducto->save();
 
 
              return $this->render('view', [

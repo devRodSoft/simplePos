@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\ArrayHelper;;
 use yii\widgets\DetailView;
 use app\models\SucursalProducto;
 use app\models\Sucursales;
@@ -29,25 +30,28 @@ $this->params['breadcrumbs'][] = $this->title;
         ])*/ ?>
     </p>
 
+
+    <?php
+            $attributes = [
+                'id',
+                'codidoBarras',
+                'descripcion',
+                'precio',
+                'cantidad',
+            ];
+
+            $ldSucursales = Sucursales::find()->all();
+            $sucursales   = ArrayHelper::map($ldSucursales,'id','nombre');   
+            
+            foreach($ldSucursales  as $sucursal) {                
+                $cantidad = SucursalProducto::find()->select("cantidad")->where(['=', 'productoId', $model->id])->andWhere(['=', 'sucursalId', $sucursal->id])->one()->cantidad;
+                array_push($attributes, ['label' => $sucursal->nombre, 'value' => $cantidad]);
+            }
+    ?>
+
     <?= DetailView::widget([
         'model' => $model,
-        'attributes' => [
-            'id',
-            'codidoBarras',
-            'descripcion',
-            'precio',
-            'cantidad',
-            [
-                'label' => Sucursales::find()->where(['=', 'id', 1])->one()->nombre,
-                "value" =>  SucursalProducto::find()->select("cantidad")->where(['=', 'productoId', $model->id])->andWhere(['=', 'sucursalId','1'])->one()->cantidad                
-            ],
-            [
-                'label' => Sucursales::find()->where(['=', 'id', 2])->one()->nombre,
-                "value" => SucursalProducto::find()->select("cantidad")->where(['=', 'productoId', $model->id])->andWhere(['=', 'sucursalId','2'])->one()->cantidad
-            ]
-            //'created_at',
-            //'updated_at',
-        ],
+        'attributes' => $attributes
     ]) ?>
 
 </div>
