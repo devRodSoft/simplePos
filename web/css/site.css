@@ -152,3 +152,17 @@ a.desc:after {
 .table-wrapper-scroll-y {
     display: block;
 }
+
+.navbar-brand,
+.navbar-nav li a,
+.navbar-nav li button {
+    color: white;
+}
+
+.site-login {
+    text-align: center;
+}
+
+.site-login .forms {
+    display: inline-block;
+}

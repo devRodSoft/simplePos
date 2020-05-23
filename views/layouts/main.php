@@ -32,10 +32,11 @@ AppAsset::register($this);
     <?php
     
     NavBar::begin([
-        'brandLabel' => "Simple POS",
+        'brandLabel' => "smartPOS",
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
-            'class' => 'navbar-inverse navbar-fixed-top',
+            'class' => 'navbar navbar-fixed-top',
+            'style' => 'background-color: #0e7ac2ff;'
         ],
     ]);
     echo Nav::widget([
