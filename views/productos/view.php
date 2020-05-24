@@ -6,6 +6,7 @@ use yii\widgets\DetailView;
 use app\models\SucursalProducto;
 use app\models\Sucursales;
 
+
 /* @var $this yii\web\View */
 /* @var $model app\models\Productos */
 

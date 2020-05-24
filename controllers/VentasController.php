@@ -191,25 +191,45 @@ class VentasController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
-
-        /**
-     * Finds the Ventas model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $idVenta
-     * @return Ventas model with the send id to get the relation with Detalleventa to re print a ticket
-     */
-    public function reimpresionTicket($idVenta) {
-
-    }
-
     public function actionView($id) {
+
+        //get data to ptrin
+        $printData = Ventas::find()->where(['=', 'id', $id])->one();
+        $productos = DetalleVenta::find()->where(['=', 'ventaId', $id])->all();
+        $productosPrint = [];
+        
+
+        foreach($productos as $p) {
+            $pro = [
+                
+                "descripcion" => $p->producto->descripcion,
+                "precio" => $p->producto->precio,
+                "precio1" => $p->producto->precio1,
+                "selectedCantidad" => $p->cantidad
+                
+            ];
+            array_push($productosPrint, $pro);
+        }
+        
+        $datatoPrint = [
+            "total" => $printData->total,
+            "descuento" => $printData->descuento,
+            "productos" => $productosPrint,
+            "backendPrint" => true
+        ];
+
+        
+
+
+
         $dataProvider  =  new DetalleVentaSearch();
         $dataProvider->ventaId =  $id;
         $data = $dataProvider->search(Yii::$app->request->queryParams);
 
         return $this->render('detalle', [
             'data' => $data,
-            'searchModel' => $dataProvider
+            'searchModel' => $dataProvider,
+            'print' => json_encode($datatoPrint)
         ]);
     }
 }

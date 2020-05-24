@@ -277,8 +277,8 @@ $sucursales   = ArrayHelper::map($ldSucursales,'id','nombre');
                 
                 $('#exampleModal').modal('hide');
                 $("#gracias").modal('show');
-
-                $.post(url, {'total': total, 'descuento': descuento, 'productos': productos})
+                
+                $.post(url, {'total': total, 'descuento': descuento, 'productos': cart, 'precioSelected': $("#precios :selected").val()})
                     .done(function( data ) {
                     console.log("print ticket!")
                     productos = [];                    

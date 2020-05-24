@@ -2,6 +2,9 @@
 
 use kartik\grid\GridView;
 use kartik\export\ExportMenu;
+use yii\helpers\Html;
+use yii\helpers\Url;
+use richardfan\widget\JSRegister;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Cajas */
@@ -14,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="cajas-view">
 
     <h1>Detalles de venta</h1>
-    
+    <button class="btn btn-primary" id="print">Imprimir Venta</button>
     <?php 
        echo ExportMenu::widget([
             'dataProvider' => $data,
@@ -73,7 +76,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'value' =>  function ($data) {
                         return $data->cantidad * $data->precio;
                     }
-                ],                
+                ], 
             ],
             'toolbar' => [
                 '{export}',
@@ -81,4 +84,25 @@ $this->params['breadcrumbs'][] = $this->title;
             ]
         ]);
     ?>
+    
 </div>
+<?php JSRegister::begin(); ?>
+<script>
+        var data = '<?php echo $print; ?>';
+        dataParse = JSON.parse(data);
+
+        $('#print').on('click', function () {
+            print();
+        })
+
+        function print() {
+            url = "http://localhost/simpleprint/index.php";
+            $.post(url, dataParse)
+            .done(function( data ) {
+                console.log("print ticket!")          
+            });
+        }
+        
+
+</script>
+<?php JSRegister::end(); ?>
