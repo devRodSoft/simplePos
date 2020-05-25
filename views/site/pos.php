@@ -21,11 +21,11 @@ $sucursales   = ArrayHelper::map($ldSucursales,'id','nombre');
     <div class="container">
         <div class="row">
             <div class="col-md-3">
-                    <h2>Codigo</h2>
+                    <h4>Codigo</h4>
                     <input type="text" class="form-control" id="barCode" aria-describedby="basic-addon3">
                 </div>
                 <div class="col-md-3">
-                    <h2>Descripcion</h2>
+                    <h4>Descripcion</h4>
                     <?php 
                         $data = Productos::find()
                         ->select(['descripcion as value', 'descripcion as label','id as id'])
@@ -47,14 +47,14 @@ $sucursales   = ArrayHelper::map($ldSucursales,'id','nombre');
                     ?>
                 </div>
                 <div class="col-md-3">
-                    <h2>Sucursal</h2>
+                    <h4>Sucursal</h4>
                     <?php
                         echo Html::dropDownList('sucursales', $selection = Yii::$app->user->identity->sucursalId, $sucursales, $options = ["class"=>"form-control", "id"=>"sucursales", "name"=>"sucursales"]);
                     ?>
                 </div>
 
                 <div class="col-md-3">
-                    <h2>Precio</h2>
+                    <h4>Precio</h4>
                     <select name="sucursales" id="precios" class="form-control">
                         <option value="1" selected>Menudeo</option>
                         <option value="2">Mayoreo</option>
@@ -62,17 +62,16 @@ $sucursales   = ArrayHelper::map($ldSucursales,'id','nombre');
                 </div>            
             </div>
         </div>
-        <div class="row ">
-            <h2>Venta</h2>
+        <div class="row cart-container">
+            
             <div class="table-wrapper-scroll-y my-custom-scrollbar">
-                <table class="table table table-bordered table-striped mb-0">
+                <table class="table">
                     <thead>
                         <tr>
-                        <th scope="col">Cantidad</th>
-                        <th scope="col">Producto</th>
-                        <th scope="col">Sucursal</th>
-                        <th scope="col">Precio</th>
-                        <th scope="col">Actions</th>
+                            <th scope="col" class="thead-labels">Cantidad</th>
+                            <th scope="col" class="thead-labels">Producto</th>
+                            <th scope="col" class="thead-labels">Sucursal</th>
+                            <th scope="col" class="thead-labels">Precio</th>
                         </tr>
                     </thead>
                     <tbody id="productos">
@@ -548,10 +547,15 @@ $sucursales   = ArrayHelper::map($ldSucursales,'id','nombre');
         $('.detalle').remove();
         
         for (product in cart) {
-            var productTotal = '<td>' + cart[product].selectedCantidad + '</td>'
+            
+            var buttonMinus  = '<button name="'+ cart[product].sucursalId + '-' + cart[product].producto.id + '" class="buttonDelete" style="background-color: transparent; border: none"><span class="glyphicon glyphicon-minus-sign"></span></button>';
+            var buttonPlus   = '<button name="'+ cart[product].sucursalId + '-' + cart[product].producto.id + '" class="buttonAdd" style="background-color: transparent; border: none"><span class="glyphicon glyphicon-plus-sign"></span></button></td>';
+            var productTotal = '<td>' + buttonMinus + cart[product].selectedCantidad + buttonPlus +'</td>'
             var desc         = '<td>' + cart[product].producto.descripcion + '</td>';
             var sucursal     = '<td>' + (cart[product].sucursalId == 1   ? "Matriz" : "Sucursal") + '</td>';
-            var actions      = '<td><button name="'+ cart[product].sucursalId + '-' + cart[product].producto.id + '" class="buttonDelete">-</button><button name="'+ cart[product].sucursalId + '-' + cart[product].producto.id + '" class="buttonAdd">+</button></td>';
+            //var actions      = '<td><button name="'+ cart[product].sucursalId + '-' + cart[product].producto.id + '" class="buttonDelete">-</button><button name="'+ cart[product].sucursalId + '-' + cart[product].producto.id + '" class="buttonAdd">+</button></td>';
+            //var actions      = '<td><button name="'+ cart[product].sucursalId + '-' + cart[product].producto.id + '" class="buttonDelete" style="background-color: transparent; border: none"><span class="glyphicon glyphicon-minus-sign"></span></button><button name="'+ cart[product].sucursalId + '-' + cart[product].producto.id + '" class="buttonAdd" style="background-color: transparent; border: none"><span class="glyphicon glyphicon-plus-sign"></span></button></td>';
+            //var actions      = '<td><span class="glyphicon glyphicon-eye-open"></span></td>';
 
             if ($("#precios :selected").val() == 1) {
                 var precio = '<td>' + (cart[product].selectedCantidad * cart[product].producto.precio) + '</td>';
@@ -561,7 +565,7 @@ $sucursales   = ArrayHelper::map($ldSucursales,'id','nombre');
                 totalPrice += (cart[product].selectedCantidad * cart[product].producto.precio1);
             }
             
-            $('#productos').append('<tr class=\"detalle\">'+productTotal+desc+sucursal+precio+actions+'</tr>');
+            $('#productos').append('<tr class=\"detalle\">'+productTotal+desc+sucursal+precio+'</tr>');
         }
         $('#total').text(totalPrice);
         total = totalPrice;

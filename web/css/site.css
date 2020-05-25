@@ -149,9 +149,19 @@ a.desc:after {
     overflow: auto;
 }
 
+.cart-container {
+    margin-top: 30px;
+}
+.table, .thead-labels{
+    color: #0e7ac2ff;
+    text-align: center;
+}
+
 .table-wrapper-scroll-y {
     display: block;
+    color: #0e7ac2ff;
 }
+
 
 .navbar-brand,
 .navbar-nav li a,
