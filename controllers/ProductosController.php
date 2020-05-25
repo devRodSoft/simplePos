@@ -112,7 +112,7 @@ class ProductosController extends Controller
             unset($cantidades["Productos"]);
 
 
-            //check how many sucursales tenemos  we had
+            //check how many sucursales tenemos  
             for ($i = 0; $i < $numSuc; $i++) {
                 echo "si" . ($i + 1) ;
 
@@ -244,6 +244,7 @@ class ProductosController extends Controller
     {
         $model = $this->findModel($id);
         $modelSp = SucursalProducto::find()->andWhere(['=', 'productoId', $id]);
+        $numSuc = Sucursales::find()->count();
 
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -252,18 +253,26 @@ class ProductosController extends Controller
           
             unset($cantidades["Productos"]);
 
-            $sucursalProducto = SucursalProducto::find()->where(['=', 'productoId', $id])->andWhere(['=', 'sucursalId','1'])->one();
+            
+            //check how many sucursales tenemos  
+            for ($i = 0; $i < $numSuc; $i++) {
+                echo "si" . ($i + 1) ;
 
-            $sucursalProducto->cantidad   = $cantidades['cantidad1'];
+                $sucursalProducto = new SucursalProducto();
 
-            $sucursalProducto->save();
+                $aux1 = 'sucursal' . ($i + 1);
+                $aux2 = 'cantidad' . ($i + 1);
 
-            $sucursalProducto = SucursalProducto::find()->andWhere(['=', 'productoId', $id])->andWhere(['=', 'sucursalId','2'])->one();
+                $sucursalId = $cantidades[$aux1];
+                $sucursalProducto->productoId = $model->id;
+                $cantidad   = $cantidades[$aux2];                
 
-            $sucursalProducto->cantidad   = $cantidades['cantidad2'];
+                $sucursalProducto = SucursalProducto::find()->andWhere(['=', 'productoId', $id])->andWhere(['=', 'sucursalId', $sucursalId])->one();
 
-            $sucursalProducto->save();
-
+                $sucursalProducto->cantidad  = $cantidad;
+    
+                $sucursalProducto->save();
+            }
 
              return $this->render('view', [
                 'model' => $this->findModel($model->id),
