@@ -21,11 +21,11 @@ $sucursales   = ArrayHelper::map($ldSucursales,'id','nombre');
     <div class="container">
         <div class="row">
             <div class="col-md-3">
-                    <h4>Codigo</h4>
+                    <h4 class="blue-title">Codigo</h4>
                     <input type="text" class="form-control" id="barCode" aria-describedby="basic-addon3">
                 </div>
                 <div class="col-md-3">
-                    <h4>Descripcion</h4>
+                    <h4 class="blue-title">Descripcion</h4>
                     <?php 
                         $data = Productos::find()
                         ->select(['descripcion as value', 'descripcion as label','id as id'])
@@ -47,14 +47,14 @@ $sucursales   = ArrayHelper::map($ldSucursales,'id','nombre');
                     ?>
                 </div>
                 <div class="col-md-3">
-                    <h4>Sucursal</h4>
+                    <h4 class="blue-title">Sucursal</h4>
                     <?php
                         echo Html::dropDownList('sucursales', $selection = Yii::$app->user->identity->sucursalId, $sucursales, $options = ["class"=>"form-control", "id"=>"sucursales", "name"=>"sucursales"]);
                     ?>
                 </div>
 
                 <div class="col-md-3">
-                    <h4>Precio</h4>
+                    <h4 class="blue-title">Precio</h4>
                     <select name="sucursales" id="precios" class="form-control">
                         <option value="1" selected>Menudeo</option>
                         <option value="2">Mayoreo</option>

@@ -169,6 +169,10 @@ a.desc:after {
     color: white;
 }
 
+.blue-title {
+    color: #0e7ac2ff;
+}
+
 .nav > li > a:hover, .nav > li > a:focus {
     background-color: white;
     color: #0e7ac2ff;
