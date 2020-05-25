@@ -159,6 +159,11 @@ a.desc:after {
     color: white;
 }
 
+.nav > li > a:hover, .nav > li > a:focus {
+    background-color: white;
+    color: #0e7ac2ff;
+} 
+
 .login-btn {
     margin: 0 auto;
     display: block;
