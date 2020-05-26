@@ -23,18 +23,27 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
+        //'filterModel' => $searchModel,
         'showPageSummary' => true,
         'hover' => true,
         'columns' => [
             //['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            //'id',
             'cajaId',
-            'sucursalId',
-            'userId',
+            [
+                'label' => 'Caja',
+                'attribute' => 'cajaId',
+                'filter' => false
+            ],
+            'sucursal.nombre',
+            'user.username',
             'retiroCantidad',
-            'concepto',
+            [
+                'label' => 'Concepto',
+                'attribute' => 'concepto',
+                'filter' => false,
+            ],
             //'created_at',
             //'updated_at',
 

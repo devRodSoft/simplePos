@@ -40,8 +40,8 @@ class CajasController extends Controller
      */
     public function actionIndex()
     {
-        $session = Yii::$app->session;
-        $searchModel = new CajasSearch();
+        
+        $searchModel = new CajasSearch();        
 
         //Check if the user is admin or is restaurant type in then sisten vendedor
         if (!Yii::$app->user->identity->userType == User::SUPER_ADMIN) {
@@ -49,6 +49,8 @@ class CajasController extends Controller
         }
                 
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        // set default sorting
+        $dataProvider->sort->defaultOrder = ['id' => SORT_DESC];
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -143,6 +145,7 @@ class CajasController extends Controller
     public function actionCorte($id) {
         $dataProvider  =  new DetalleVentaSearch();
         $data = $dataProvider->Corte([], $id);
+
 
         return $this->render('corte', [
             'data' => $data,

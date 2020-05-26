@@ -71,7 +71,8 @@ class ProductosController extends Controller
         
         $searchModel = new SucursalProductoSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        
+        $dataProvider->sort->defaultOrder = ['id' => SORT_DESC];
 
         return $this->render('index', [
             'searchModel' => $searchModel,
