@@ -194,7 +194,7 @@ class ProductosController extends Controller
     /* import inventary */ 
     public function actionImport() {
         
-        $inputFileName = 'uploads/inven.xlsx';
+        $inputFileName = 'uploads/abarrotes.xlsx';
         //  $helper->log('Loading file ' . pathinfo($inputFileName, PATHINFO_BASENAME) . ' using IOFactory to identify the format');
         $spreadsheet = IOFactory::load($inputFileName);
         $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
@@ -206,28 +206,19 @@ class ProductosController extends Controller
 
                 $producto->codidoBarras = $valor["A"];
                 $producto->descripcion  = $valor["B"];
-                $producto->costo        = $valor["C"];
+                $producto->costo        = 0;
                 $producto->precio       = $valor["D"];
-                $producto->precio1      = $valor["E"];
-                $producto->cantidad     = $valor["F"];
+                $producto->precio1      = 0;
+                $producto->cantidad     = 0;
 
                 //Save the product
                 echo $producto->save();
                 //save the fisrt sucursal
                 $sucursalProducto = new SucursalProducto();
 
-                $sucursalProducto->sucursalId = $valor['G'];
+                $sucursalProducto->sucursalId = 1;
                 $sucursalProducto->productoId = $producto->id;
-                $sucursalProducto->cantidad   = $valor['H'];
-
-                echo $sucursalProducto->save();
-
-                //save the secon sucursal
-                $sucursalProducto = new SucursalProducto();
-
-                $sucursalProducto->sucursalId = $valor['I'];
-                $sucursalProducto->productoId = $producto->id;
-                $sucursalProducto->cantidad   = $valor['J'];
+                $sucursalProducto->cantidad   = 10;
 
                 echo $sucursalProducto->save();
             }       
