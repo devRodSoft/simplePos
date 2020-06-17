@@ -150,7 +150,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'label' => "Total",
                     'width' => '80px',
                     'value' => function ($data) {
-                        return $data->venta->total;
+                        return $data->precio - $data->venta->descuento;
                     },
                     'filter' => false,
                     'group' => true,

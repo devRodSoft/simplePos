@@ -66,20 +66,31 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Ventas con tarjeta',
                 'value' => Ventas::find()->where(['=', 'cajaId', $model->id])->andWhere(['=', 'tipoVenta', '1'])->sum('total')
             ],
-
             [
                 'label' => 'Salidas',
                 'value' => Salidas::find()->where(['=', 'cajaId', $model->id])->sum('retiroCantidad')
             ],
             [
+                'label' => 'Descuentos',
+                'value' => Ventas::find()->where(['=', 'cajaId', $model->id])->sum('descuento')
+            ],
+            [
                 'label' => 'Saldo final',
                 'value' =>  function ($model) {
                     
-                    $Efectivo = Ventas::find()->where(['=', 'cajaId', $model->id])->andWhere(['=', 'tipoVenta', '0'])->sum('total');                    
+                    $Efectivo  = Ventas::find()->where(['=', 'cajaId', $model->id])->andWhere(['=', 'tipoVenta', '0'])->sum('total');                    
                     
-                    $salidas = Salidas::find()->where(['=', 'cajaId', $model->id])->sum('retiroCantidad');
+                    $salidas   = Salidas::find()->where(['=', 'cajaId', $model->id])->sum('retiroCantidad');
 
-                    return ($model->saldoInicial + $Efectivo) - $salidas;
+                    $descuento =  Ventas::find()->where(['=', 'cajaId', $model->id])->sum('descuento');
+
+
+                    $total = $model->saldoInicial + $Efectivo;
+                    $total -= $salidas;
+                    $total -= $descuento;
+
+
+                    return $total;
                 }
             ],
         
