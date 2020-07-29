@@ -46,7 +46,7 @@ class Productos extends \yii\db\ActiveRecord
     {
         return [
             [['descripcion', 'precio', 'cantidad'], 'required'],
-            [['cantidad', 'created_at', 'updated_at'], 'integer'],
+            [['cantidad', 'preguntarPrecio', 'created_at', 'updated_at'], 'integer'],
             [['costo', 'precio', 'precio1'], 'number'],
             [['codidoBarras', 'descripcion'], 'string', 'max' => 255],
         ];
@@ -65,8 +65,10 @@ class Productos extends \yii\db\ActiveRecord
             'precio' => 'Precio',
             'precio1' => 'Precio 1',
             'cantidad' => 'Cantidad',
+            'preguntarPrecio' => 'Preguntar Precio',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
+
         ];
     }
 

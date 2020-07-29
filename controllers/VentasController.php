@@ -100,8 +100,8 @@ class VentasController extends Controller
         $model->descuento   =  $descuento;
         $model->cajaId      =  $caja->getIdOpenCaja()->id;
         $model->tipoVenta   =  $tipoVenta != "false" ? Ventas::TARGETA : Ventas::EFECTIVO;
-        $model->userId      = Yii::$app->user->identity->id;
-        $model->descripcion = $descripcion;
+        $model->userId      =  Yii::$app->user->identity->id;
+        $model->descripcion =  $descripcion;
         
         //Guardamos la venta
         if ($model->save()) {

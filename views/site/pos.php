@@ -100,7 +100,6 @@ $clientes   = ArrayHelper::map($ldClientes, 'id', 'nombre');
             <div class="col-md-4">                
             </div>
             <div class="col-md-4">
-                <!--<button id="btnApartar" class="btn btn-success">Apartar</button>-->
                 <button type="button" class="btn btn-primary"  data-target="#exampleModal" data-whatever="@mdo" style="float: right" id="mpagar">Pagar</button>
             </div>
         </div>
@@ -232,7 +231,7 @@ $clientes   = ArrayHelper::map($ldClientes, 'id', 'nombre');
 <!-- End modal apartar -->
 
 <!-- Small modal -->
-<div class="modal fade" id="gracias" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="gracias" tabindex="-1" role="dialog" aria-labelledby="setPrecioLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -250,10 +249,32 @@ $clientes   = ArrayHelper::map($ldClientes, 'id', 'nombre');
     </div>
   </div>
 </div>
-
+<!-- modal precio -->
+<div class="modal fade" id="setPrecio" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Asignar precio</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+            <br>
+            <label for="message-precio" class="col-form-label">Precio</label>  
+            <input type="text" class="form-control" id="setPrecio">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-secondary" id="setPrice">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end modal precio -->
 <?php JSRegister::begin(); ?>
 <script>
-    toastr.options.newestOnTop = false; 
+    ////toastr.options.newestOnTop = false; 
 
     var total = 0;       
     var totalTemporal = 0;
@@ -378,14 +399,14 @@ $clientes   = ArrayHelper::map($ldClientes, 'id', 'nombre');
 
     $('#apartar').on('click', function () {        
         url =   "<?php echo Yii::$app->request->baseUrl; ?>" + "/ventas/pagar/";
-        $.post(url, {'total': total, 'precioSelected': precioSelected, 'desc': $('#desc').val(), 'tipoVenta': $('#pagoTargeta').prop('checked'), 'apartado':  true, 'anticipo': $('#cantidad-anticipo').val(),  'productos': cart})
+        $.post(url, {'total': total, 'precioSelected': precioSelected, 'desc': $('#desc').val(), 'tipoVenta': $('#pagoTargeta').prop('checked'), 'apartado': true, 'anticipo': $('#cantidad-anticipo').val(),  'productos': cart})
             .done(function( data ) {
                 url = "http://localhost/simpleprint/index.php";
 
                 $.post(url, {'total': total, 'descuento': descuento, 'productos': productos})
                     .done(function( data ) {
                     console.log("print ticket!")
-                    toastr.success('Venta realizada');
+                    //toastr.success('Venta realizada');
                     productos = [];
                 });
                 resetDatos();
@@ -410,7 +431,9 @@ $clientes   = ArrayHelper::map($ldClientes, 'id', 'nombre');
         descuento = 0;
         cart = [];
     }
-
+    function setPrice(producto) {
+        debugger
+    }
     //Find a product
     $('#barCode').on('keypress', function getProducto(e) {
         if (e.which != 13)
@@ -422,18 +445,20 @@ $clientes   = ArrayHelper::map($ldClientes, 'id', 'nombre');
                 //check products exist
                //check if product exist 
                if (!productos.length) {
-                 toastr.warning('No se encontro el producto!');     
+                 //toastr.warning('No se encontro el producto!');     
                  return;
                } 
                
                if (productos.length>1) {
                    for (index in productos) {
                        if (productos[index].sucursalId == sucursalSelected) {
+                            
                             productos.push(productos[index]);
                             selectedItems(productos[index]);
                        }
                    }
                } else {
+
                     productos.push(productos[0]);
                     selectedItems(productos[0]);
                }
@@ -455,7 +480,7 @@ $clientes   = ArrayHelper::map($ldClientes, 'id', 'nombre');
                 //check products exist
                //check if product exist 
                if (!productos.length) {
-                 toastr.warning('No se encontro el producto!');     
+                 //toastr.warning('No se encontro el producto!');     
                  return;
                } 
                
@@ -480,6 +505,7 @@ $clientes   = ArrayHelper::map($ldClientes, 'id', 'nombre');
     }
     // findl product by id
 
+
     function findByDescription (event, id) {        
         var url = "<?php echo Yii::$app->request->baseUrl; ?>" + "/productos/nombre/" + id;
         $.get(url)
@@ -488,18 +514,25 @@ $clientes   = ArrayHelper::map($ldClientes, 'id', 'nombre');
                 //check products exist
                //check if product exist 
                if (!productos.length) {
-                 toastr.warning('No se encontro el producto!');     
+                 //toastr.warning('No se encontro el producto!');     
                  return;
-               } 
+               }                
                
                if (productos.length>1) {
                    for (index in productos) {
                        if (productos[index].sucursalId == sucursalSelected) {
+                            if (parseInt(productos[index].producto.preguntarPrecio)) {                        
+                                productos[index].producto.precio = prompt("Precio", "0");
+                            }
                             productos.push(productos[index]);
                             selectedItems(productos[index]);
                        }
                    }
                } else {
+                    if (parseInt(productos[0].producto.preguntarPrecio)) {                        
+                        productos[0].producto.precio = prompt("Precio", "0");
+                    }
+
                     productos.push(productos[0]);
                     selectedItems(productos[0]);
                }
@@ -511,6 +544,7 @@ $clientes   = ArrayHelper::map($ldClientes, 'id', 'nombre');
                 console.log("fail");
             });
     }
+
     // Add selected items and do the validations to quantity!
     
     function selectedItems (item) {
@@ -579,7 +613,7 @@ $clientes   = ArrayHelper::map($ldClientes, 'id', 'nombre');
         }
 
         if (showAlert) {
-            toastr.warning('Ya no tienes existencias disponibles en ninguna Sucursal');
+            //toastr.warning('Ya no tienes existencias disponibles en ninguna Sucursal');
         }
 
         //Check 
@@ -641,7 +675,7 @@ $clientes   = ArrayHelper::map($ldClientes, 'id', 'nombre');
             var buttonPlus   = '<button name="'+ cart[product].sucursalId + '-' + cart[product].producto.id + '" class="buttonAdd" style="background-color: transparent; border: none"><span class="glyphicon glyphicon-plus-sign"></span></button></td>';
             var productTotal = '<td>' + buttonMinus + cart[product].selectedCantidad + buttonPlus +'</td>'
             var desc         = '<td>' + cart[product].producto.descripcion + '</td>';
-            var sucursal     = '<td>' + (cart[product].sucursalId == 1   ? "Matriz" : "Sucursal") + '</td>';
+            var sucursal     = '<td>' + (cart[product].sucursalId == 1   ? "Tienda" : "Sucursal") + '</td>';
             //var actions      = '<td><button name="'+ cart[product].sucursalId + '-' + cart[product].producto.id + '" class="buttonDelete">-</button><button name="'+ cart[product].sucursalId + '-' + cart[product].producto.id + '" class="buttonAdd">+</button></td>';
             //var actions      = '<td><button name="'+ cart[product].sucursalId + '-' + cart[product].producto.id + '" class="buttonDelete" style="background-color: transparent; border: none"><span class="glyphicon glyphicon-minus-sign"></span></button><button name="'+ cart[product].sucursalId + '-' + cart[product].producto.id + '" class="buttonAdd" style="background-color: transparent; border: none"><span class="glyphicon glyphicon-plus-sign"></span></button></td>';
             //var actions      = '<td><span class="glyphicon glyphicon-eye-open"></span></td>';

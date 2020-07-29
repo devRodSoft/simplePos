@@ -194,7 +194,7 @@ class ProductosController extends Controller
     /* import inventary */ 
     public function actionImport() {
         
-        $inputFileName = 'uploads/abarrotes.xlsx';
+        $inputFileName = 'uploads/aba.xlsx';
         //  $helper->log('Loading file ' . pathinfo($inputFileName, PATHINFO_BASENAME) . ' using IOFactory to identify the format');
         $spreadsheet = IOFactory::load($inputFileName);
         $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);

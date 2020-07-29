@@ -14,7 +14,8 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="cajas-view">
     
-    <?php  /*
+    <?php          
+    /*
         echo ExportMenu::widget([
             'dataProvider' => $data,
             'columns' => [
@@ -64,6 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'width'               => '50px',
                     //'filterInputOptions' => ['placeholder' => 'Any supplier'],
                     'group'               => true, // enable grouping
+                    //'groupedRow'          => true,  
                     'groupFooter'         => function ($model, $key, $index, $widget) {
                         //if ($model->ventaId == [Totales]) {
                           //  return false;
@@ -73,11 +75,13 @@ $this->params['breadcrumbs'][] = $this->title;
                             'mergeColumns'   => [[0, 6]], // columns to merge in summary
                             'content'        => [ // content to show in each summary cell
                                 //0 => $model->nombre_pelicula,
-                                //6 => GridView::F_SUM,
+                                7 => GridView::F_SUM,
+                                8 => GridView::F_SUM,
                                 
                             ],
                             'contentFormats' => [ // content reformatting for each summary cell
-                                //6 => ['format' => 'number', 'decimals' => 0],
+                                7 => ['format' => 'number', 'decimals' => 2],
+                                8 => ['format' => 'number', 'decimals' => 2],
                                 
                             ],
                             'contentOptions' => [ // content html attributes for each summary cell
@@ -143,6 +147,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     },
                     'width' => '100px',
                     'filter' => false,
+                    'group' => true,
+                    'subGroupOf' => 0,
                     'pageSummary' => true,
                     'pageSummaryFunc' => GridView::F_SUM,
                 ], 
@@ -150,12 +156,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     'label' => "Total",
                     'width' => '80px',
                     'value' => function ($data) {
-                        return $data->precio - $data->venta->descuento;
+                        return $data->venta->total;
                     },
                     'filter' => false,
                     'group' => true,
                     'subGroupOf' => 0,
                     'pageSummary' => true,
+                    
                     
                 ],        
             ],

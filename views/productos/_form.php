@@ -28,6 +28,8 @@ use app\models\SucursalProducto;
 
     <?= $form->field($model, 'cantidad')->textInput(['maxlength' => true])->label("Almacen") ?>
 
+    <?= $form->field($model, 'preguntarPrecio')->checkbox(); ?>
+
     <?php
 
         //to add a new producto on else to edit

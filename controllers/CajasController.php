@@ -66,8 +66,19 @@ class CajasController extends Controller
      */
     public function actionView($id)
     {
+        $dataProvider  =  new DetalleVentaSearch();
+        $data = $dataProvider->Corte([], $id);
+
+        $dataProviderSalidas  =  new SalidasSearch();
+        $dataProviderSalidas->cajaId =  $id;
+        $dataSalidas = $dataProviderSalidas->search(Yii::$app->request->queryParams);
+
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'data'  => $data,
+            'searchModel' => $dataProvider,
+            'dataSalidas'  => $dataSalidas,
+            'searchModelSalidas' => $dataProviderSalidas
         ]);
     }
 
