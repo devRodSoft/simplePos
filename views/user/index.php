@@ -65,12 +65,7 @@ $sucursales   = ArrayHelper::map($ldSucursales,'id','nombre');
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{update}',
                 'visible' => Yii::$app->user->identity->userType == User::SUPER_ADMIN
-            ],
-            [
-                'class' => 'yii\grid\ActionColumn',
-                'template' => '{delete}',
-                'visible' => Yii::$app->user->identity->userType == User::SUPER_ADMIN
-            ]     
+            ],   
         ],
     ]); ?>
 </div>

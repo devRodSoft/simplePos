@@ -47,6 +47,20 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->tipoVenta === 0 ? "Efectivo" : "Tarjeta";
                 }
             ],
+            [
+                'label' => 'Venta de',
+                'attribute' => 'tipoVenta',
+                'value' => function ($model) {
+                    return $model->ventaApartado === 0 ? "Contado" : "Credito";
+                }
+            ],
+            [
+                'label' => 'Liquidado',
+                'attribute' => 'tipoVenta',
+                'value' => function ($model) {
+                    return $model->liquidado === 1 ? "si" : "no";
+                }
+            ],
             //'updated_at',
 
             ['class' => 'yii\grid\ActionColumn',

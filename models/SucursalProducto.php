@@ -32,8 +32,8 @@ class SucursalProducto extends \yii\db\ActiveRecord
     {
         return [
             [['sucursalId', 'productoId'], 'required'],
-            [['sucursalId', 'productoId', 'cantidad'], 'integer'],
-            //[['sucursalId', 'productoId', 'cantidad', 'apartado'], 'integer'],
+            //[['sucursalId', 'productoId', 'cantidad'], 'integer'],
+            [['sucursalId', 'productoId', 'cantidad', 'productoApartado'], 'integer'],
             [['sucursalId'], 'exist', 'skipOnError' => true, 'targetClass' => Sucursales::className(), 'targetAttribute' => ['sucursalId' => 'id']],
             [['productoId'], 'exist', 'skipOnError' => true, 'targetClass' => Productos::className(), 'targetAttribute' => ['productoId' => 'id']],
         ];
@@ -49,7 +49,7 @@ class SucursalProducto extends \yii\db\ActiveRecord
             'sucursalId' => 'Sucursal ID',
             'productoId' => 'Producto ID',
             'cantidad' => 'Cantidad',
-            //'apartado' => 'Apartados',
+            'productoApartado' => 'Apartados',
         ];
     }
 

@@ -2,7 +2,7 @@
 
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=smartpos',
+    'dsn' => 'mysql:host=localhost;dbname=smartpos_sex',
     'username' => 'root',
     'password' => '',
     'charset' => 'utf8'

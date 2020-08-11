@@ -4,10 +4,16 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Clientes;
+use app\models\Ventas;
+use app\models\VentasSearch;
+use app\models\Abonos;
+use app\models\AbonosSearch;
 use app\models\ClientesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\DetalleVenta;
+use app\models\DetalleVentaSearch;
 
 /**
  * ClientesController implements the CRUD actions for Clientes model.
@@ -53,8 +59,65 @@ class ClientesController extends Controller
      */
     public function actionView($id)
     {
+        
+
+        // get if the use has apartados open
+        $query = Abonos::find()
+        ->leftJoin('ventas', ['ventas.ventaApartado' => '1'])
+        ->where(['clienteId' =>  $id])
+        ->andFilterWhere(['ventas.liquidado' => '0'])
+        ->one();
+      
+        if ($query != NULL) {
+            //get the abonos
+            $abonosData = new AbonosSearch();
+            $abonosData->clienteId = $id;
+            $abonos = $abonosData->search([]);
+
+            //get thte total venta
+            $ventaTotal = Ventas::find()->andFilterWhere(['id' => $query->ventaId])->one();
+
+            //get venta sin liquidar
+            $searchModel = new VentasSearch();  
+            $searchModel->liquidado = 0;
+            $searchModel->ventaApartado = 1;
+            $searchModel->id = $query->ventaId;
+            $ventas = $searchModel->search([]);
+
+            //get venta detalle
+            $dataProvider  =  new DetalleVentaSearch();
+            $dataProvider->ventaId = $query->ventaId;
+            $data = $dataProvider->search([]);
+        } else {
+            //get the abonos
+            $abonosData = new AbonosSearch();
+            $abonosData->clienteId = 0;
+            $abonos = $abonosData->search([]);
+
+            //get thte total venta
+           // $ventaTotal = Ventas::find()->andFilterWhere(['id' => $query->ventaId])->one();
+
+            //get venta sin liquidar
+            $searchModel = new VentasSearch();  
+            $searchModel->id = 0;
+            $ventas = $searchModel->search([]);
+
+            //get venta detalle
+            $dataProvider  =  new DetalleVentaSearch();
+            $dataProvider->ventaId = 0;
+            $data = $dataProvider->search([]);
+        }
+
+            
+        //return al data needed for the abono and check the apartado
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'ventaAparados'=> $ventas,
+            'abonos'=> $abonos,
+            'detalleVenta' => $data,
+            'ventaId' => isset($query->ventaId) ? $query->ventaId : null,
+            'restante' => isset($query->restante) ? $query->restante : null,
+            'ventatotal'=> isset($ventaTotal->total) ? $ventaTotal->total : null
         ]);
     }
 

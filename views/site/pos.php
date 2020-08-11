@@ -100,6 +100,7 @@ $clientes   = ArrayHelper::map($ldClientes, 'id', 'nombre');
             <div class="col-md-4">                
             </div>
             <div class="col-md-4">
+                <button type="button" class="btn btn-primary"  data-target="#exampleModal" data-whatever="@mdo" style="float: right" id="btnApartar">Apartar</button>
                 <button type="button" class="btn btn-primary"  data-target="#exampleModal" data-whatever="@mdo" style="float: right" id="mpagar">Pagar</button>
             </div>
         </div>
@@ -159,6 +160,7 @@ $clientes   = ArrayHelper::map($ldClientes, 'id', 'nombre');
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+
         <button type="button" class="btn btn-primary" id="pagar">Pagar</button>
       </div>
     </div>
@@ -297,8 +299,8 @@ $clientes   = ArrayHelper::map($ldClientes, 'id', 'nombre');
             $('#apartadoModal').modal('show');
     })
 
-        //modal handle
-        $('#apartadoModal').on('show.bs.modal', function (event) {
+    //modal handle
+    $('#apartadoModal').on('show.bs.modal', function (event) {
         //reset datos
         var button = $(event.relatedTarget) // Button that triggered the modal
         var recipient = total // Extract info from data-* attributes
@@ -315,9 +317,8 @@ $clientes   = ArrayHelper::map($ldClientes, 'id', 'nombre');
             return
 
             var restante = total - $('#cantidad-anticipo').val();
-             $("#restante").text(restante)
+                $("#restante").text(restante)
         });
-
     })
 
     //modal handle
@@ -397,17 +398,18 @@ $clientes   = ArrayHelper::map($ldClientes, 'id', 'nombre');
             });
     });
 
-    $('#apartar').on('click', function () {        
+    $('#apartarOk').on('click', function () {        
         url =   "<?php echo Yii::$app->request->baseUrl; ?>" + "/ventas/pagar/";
-        $.post(url, {'total': total, 'precioSelected': precioSelected, 'desc': $('#desc').val(), 'tipoVenta': $('#pagoTargeta').prop('checked'), 'apartado': true, 'anticipo': $('#cantidad-anticipo').val(),  'productos': cart})
+        $.post(url, {'total': total, 'precioSelected': precioSelected, 'desc': $('#desc').val(), 'tipoVenta': $('#pagoTargeta').prop('checked'), 'apartado': 1, 'abono': parseInt($('#cantidad-anticipo').val()), 'clientId': $('#clientes').val(),  'productos': cart})
             .done(function( data ) {
                 url = "http://localhost/simpleprint/index.php";
+                $('#apartadoModal').modal('hide');
+                $("#gracias").modal('show');
 
                 $.post(url, {'total': total, 'descuento': descuento, 'productos': productos})
                     .done(function( data ) {
-                    console.log("print ticket!")
-                    //toastr.success('Venta realizada');
-                    productos = [];
+                       
+                        productos = [];
                 });
                 resetDatos();
             });

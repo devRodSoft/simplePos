@@ -7,6 +7,7 @@ use app\models\Ventas;
 use app\models\VentasSearch;
 use app\models\DetalleVenta;
 use app\models\DetalleVentaSearch;
+use app\models\Abonos;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -45,6 +46,8 @@ class VentasController extends Controller
     {
         $searchModel = new VentasSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        // set default sorting
+        $dataProvider->sort->defaultOrder = ['id' => SORT_DESC];
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -94,17 +97,24 @@ class VentasController extends Controller
         $wPrice      = Yii::$app->request->post('precioSelected');
         $tipoVenta   = Yii::$app->request->post('tipoVenta');
         $descripcion = Yii::$app->request->post('desc');
-        //$isApartado  = Yii::$app->request->post('apartado');
+        $isApartado  = Yii::$app->request->post('apartado');
 
-        $model->total       =  $total;
-        $model->descuento   =  $descuento;
-        $model->cajaId      =  $caja->getIdOpenCaja()->id;
-        $model->tipoVenta   =  $tipoVenta != "false" ? Ventas::TARGETA : Ventas::EFECTIVO;
-        $model->userId      =  Yii::$app->user->identity->id;
-        $model->descripcion =  $descripcion;
+
+      
+        $model->total         =  $total;
+        $model->descuento     =  $descuento;
+        $model->cajaId        =  $caja->getIdOpenCaja()->id;
+        $model->tipoVenta     =  $tipoVenta != "false" ? Ventas::TARGETA : Ventas::EFECTIVO;
+        $model->userId        =  Yii::$app->user->identity->id;
+        $model->descripcion   =  $descripcion;
+        $model->ventaApartado =  $isApartado ? 0 : 1;
+        $model->liquidado     =  $isApartado ? 0 : 1; 
+
+        die(var_dump($isApartado));
         
         //Guardamos la venta
         if ($model->save()) {
+            
             foreach($productos as $producto) {
                 //Intentamos guardar el detalle de la venta
                 $modelDetalle = new DetalleVenta();
@@ -124,14 +134,22 @@ class VentasController extends Controller
                 $productoInventario->cantidad -= $producto['selectedCantidad'];
 
                 // si es apartado agregamos que es un apartado! sea la venta como sea del inventario siempre se descuenta.
-                /*if ($isApartado) {
-                    $productoInventario->apartado = $producto['selectedCantidad'];
+                if ($isApartado) {
+                    $productoInventario->productoApartado = $producto['selectedCantidad'];
 
+                    $Abono = new Abonos();
+
+                    $Abono->clienteId = Yii::$app->request->post('clientId');
+                    $Abono->ventaId   = $model->id;
+                    $Abono->userId    = Yii::$app->user->identity->id;
+                    $Abono->cajaId    = $caja->getIdOpenCaja()->id;
+                    $Abono->abono     = Yii::$app->request->post('abono');
+                    $Abono->restante  = $total - Yii::$app->request->post('abono');
+                    
+                    $Abono->save();
 
                     //creamos el abono! 
-                }*/
-                    
-                
+                }
                 $productoInventario->save();
             }
                      
@@ -193,7 +211,7 @@ class VentasController extends Controller
 
     public function actionView($id) {
 
-        //get data to ptrin
+        //get data to ptrint
         $printData = Ventas::find()->where(['=', 'id', $id])->one();
         $productos = DetalleVenta::find()->where(['=', 'ventaId', $id])->all();
         $productosPrint = [];
@@ -217,10 +235,6 @@ class VentasController extends Controller
             "productos" => $productosPrint,
             "backendPrint" => true
         ];
-
-        
-
-
 
         $dataProvider  =  new DetalleVentaSearch();
         $dataProvider->ventaId =  $id;
