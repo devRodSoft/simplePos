@@ -66,9 +66,10 @@ class ClientesController extends Controller
         ->leftJoin('ventas', ['ventas.ventaApartado' => '1'])
         ->where(['clienteId' =>  $id])
         ->andFilterWhere(['ventas.liquidado' => '0'])
+        ->orderBy(['(id)' => SORT_DESC])
         ->one();
-      
-        if ($query != NULL) {
+
+        if (isset($query->restante) && $query->restante != 0) {
             //get the abonos
             $abonosData = new AbonosSearch();
             $abonosData->clienteId = $id;
@@ -95,7 +96,7 @@ class ClientesController extends Controller
             $abonos = $abonosData->search([]);
 
             //get thte total venta
-           // $ventaTotal = Ventas::find()->andFilterWhere(['id' => $query->ventaId])->one();
+            //$ventaTotal = Ventas::find()->andFilterWhere(['id' => $query->ventaId])->one();
 
             //get venta sin liquidar
             $searchModel = new VentasSearch();  

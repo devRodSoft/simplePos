@@ -107,10 +107,9 @@ class VentasController extends Controller
         $model->tipoVenta     =  $tipoVenta != "false" ? Ventas::TARGETA : Ventas::EFECTIVO;
         $model->userId        =  Yii::$app->user->identity->id;
         $model->descripcion   =  $descripcion;
-        $model->ventaApartado =  $isApartado ? 0 : 1;
-        $model->liquidado     =  $isApartado ? 0 : 1; 
+        $model->ventaApartado =  (int)$isApartado ? 1 : 0;
+        $model->liquidado     =  (int)$isApartado ? 0 : 1; 
 
-        die(var_dump($isApartado));
         
         //Guardamos la venta
         if ($model->save()) {
@@ -136,23 +135,25 @@ class VentasController extends Controller
                 // si es apartado agregamos que es un apartado! sea la venta como sea del inventario siempre se descuenta.
                 if ($isApartado) {
                     $productoInventario->productoApartado = $producto['selectedCantidad'];
-
-                    $Abono = new Abonos();
-
-                    $Abono->clienteId = Yii::$app->request->post('clientId');
-                    $Abono->ventaId   = $model->id;
-                    $Abono->userId    = Yii::$app->user->identity->id;
-                    $Abono->cajaId    = $caja->getIdOpenCaja()->id;
-                    $Abono->abono     = Yii::$app->request->post('abono');
-                    $Abono->restante  = $total - Yii::$app->request->post('abono');
-                    
-                    $Abono->save();
-
-                    //creamos el abono! 
                 }
+
                 $productoInventario->save();
             }
-                     
+            
+            //creamos un solo abono para toda la compra
+            if ($isApartado) {
+                $Abono = new Abonos();
+
+                $Abono->clienteId = Yii::$app->request->post('clientId');
+                $Abono->ventaId   = $model->id;
+                $Abono->userId    = Yii::$app->user->identity->id;
+                $Abono->cajaId    = $caja->getIdOpenCaja()->id;
+                $Abono->abono     = Yii::$app->request->post('abono');
+                $Abono->restante  = $total - Yii::$app->request->post('abono');
+                
+                $Abono->save();
+            }
+            
             return true;
         } else {
             die("hubo problema");

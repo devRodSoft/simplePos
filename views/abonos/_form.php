@@ -14,7 +14,6 @@ use richardfan\widget\JSRegister;
 
     <?php $form = ActiveForm::begin(); 
         $caja = new Cajas();
-       var_dump($caja->getIdOpenCaja()->id);
     ?>
 
     <?php echo $form->field($model, 'clienteId')->hiddenInput([$model->clienteId])->label(false); ?>
@@ -41,7 +40,6 @@ use richardfan\widget\JSRegister;
 <script>
     var restanteInitial = $('#abonos-restante').val();
     
-    console.log(restanteInitial);
     $('#abonos-abono').on('blur', function () {
         if (this.value) {
             newRestante = restanteInitial - this.value;
@@ -51,5 +49,19 @@ use richardfan\widget\JSRegister;
 
         $('#abonos-restante').val(newRestante);
     });
+
+    $('#abonos-abono').on('keypress', function (ele){
+            if (ele.which != 13)
+             return
+
+            if (this.value) {
+                newRestante = restanteInitial - this.value;
+            } else {
+                newRestante = restanteInitial;
+            }
+            
+            $('#abonos-restante').val(newRestante);
+        });
+
 </script>
 <?php JSRegister::end(); ?>

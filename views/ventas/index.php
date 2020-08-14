@@ -12,8 +12,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="ventas-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <p>
         <?php /*Html::a('Create Ventas', ['create'], ['class' => 'btn btn-success'])*/ ?>
     </p>
@@ -24,6 +22,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'showPageSummary' => true,
+        'containerOptions' => ['style' => 'overflow: auto'], // only set when $responsive = false
+        'headerRowOptions' => ['class' => 'kartik-sheet-style'],
+        'panel' => [
+            'type' => GridView::TYPE_PRIMARY,
+            'heading' => "Ventas",
+        ],
         'hover' => true,
         'columns' => [
             //['class' => 'yii\grid\SerialColumn'],

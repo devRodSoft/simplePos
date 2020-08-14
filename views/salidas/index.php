@@ -13,10 +13,8 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="salidas-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <p>
-        <?= Html::a('Nueva salida', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Nueva retiro', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -25,6 +23,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         //'filterModel' => $searchModel,
         'showPageSummary' => true,
+        'containerOptions' => ['style' => 'overflow: auto'], // only set when $responsive = false
+        'headerRowOptions' => ['class' => 'kartik-sheet-style'],
+        'panel' => [
+            'type' => GridView::TYPE_PRIMARY,
+            'heading' => "Retiros de Caja",
+        ],
         'hover' => true,
         'columns' => [
             //['class' => 'yii\grid\SerialColumn'],

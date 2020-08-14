@@ -71,13 +71,14 @@ class AbonosController extends Controller
         $model->clienteId = $id;
         $model->ventaId   = $ventaId;
         $model->restante  = $restante;
+        
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
 
             //liquidamos la cuenta.
             if($model->restante == 0) {
-
-                $venta = Venta::find($ventaId);
+       
+                $venta = Ventas::find()->where(['id' => $ventaId])->one();
                 $venta->liquidado = 1;
                 $venta->save();
 
