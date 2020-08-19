@@ -100,8 +100,14 @@ $clientes   = ArrayHelper::map($ldClientes, 'id', 'nombre');
             <div class="col-md-4">                
             </div>
             <div class="col-md-4">
-                <button type="button" class="btn btn-primary"  data-target="#exampleModal" data-whatever="@mdo" style="float: right" id="btnApartar">Apartar</button>
-                <button type="button" class="btn btn-primary"  data-target="#exampleModal" data-whatever="@mdo" style="float: right" id="mpagar">Pagar</button>
+                <div class="row">
+                  <div class="col-md-6">
+                    <button type="button" class="btn btn-warning btn-pay"  data-target="#exampleModal" data-whatever="@mdo" style="float: right" id="btnApartar">Apartar</button>  
+                  </div>
+                  <div class="col-md-6">
+                    <button type="button" class="btn btn-success btn-apartar"  data-target="#exampleModal" data-whatever="@mdo" style="float: right" id="mpagar">Pagar</button>
+                  </div>
+                </div>
             </div>
         </div>
     </div>
@@ -180,8 +186,7 @@ $clientes   = ArrayHelper::map($ldClientes, 'id', 'nombre');
       </div>
       <div class="modal-body">
         <form>
-        <div class="form-group">
-            
+        <div class="form-group">    
             <div class="row">
                 <div class="col-md-12">
                     <label for="recipient-name" class="col-form-label">Detalle Apartado</label>
@@ -218,7 +223,7 @@ $clientes   = ArrayHelper::map($ldClientes, 'id', 'nombre');
             
             <div style="text-align: right">
                 <label for="">Pago con tarjeta?</label>
-                <input type="checkbox" name="targeta" id="pagoTargeta">
+                <input type="checkbox" name="targeta" id="pagoTargetaAbonos">
             </div>
         </div>
         </form>
@@ -277,7 +282,6 @@ $clientes   = ArrayHelper::map($ldClientes, 'id', 'nombre');
 <?php JSRegister::begin(); ?>
 <script>
     ////toastr.options.newestOnTop = false; 
-
     var total = 0;       
     var totalTemporal = 0;
     var descuento = 0; 
@@ -308,7 +312,8 @@ $clientes   = ArrayHelper::map($ldClientes, 'id', 'nombre');
         // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
         var modal = $(this)
         //modal.find('.modal-title').text('New message to ' + recipient)
-        modal.find('.modal-body #descuento').val("");
+        modal.find('.modal-body #cantidad-anticipo').val("");
+        $("#restante").text(recipient)
         modal.find('.modal-body #total').text(recipient)
 
 
@@ -336,9 +341,9 @@ $clientes   = ArrayHelper::map($ldClientes, 'id', 'nombre');
 
         $('#cantidad-pago').on('keypress', function (ele){
             if (ele.which != 13)
-            return
+                return
 
-            var cambio =  $('#cantidad-pago').val() - total;
+            var cambio =  $('#cantidad-pago').val() - parseInt(modal.find('.modal-body #total').text());
              $("#cambio").text(cambio)
             });
 
@@ -400,7 +405,7 @@ $clientes   = ArrayHelper::map($ldClientes, 'id', 'nombre');
 
     $('#apartarOk').on('click', function () {        
         url =   "<?php echo Yii::$app->request->baseUrl; ?>" + "/ventas/pagar/";
-        $.post(url, {'total': total, 'precioSelected': precioSelected, 'desc': $('#desc').val(), 'tipoVenta': $('#pagoTargeta').prop('checked'), 'apartado': 1, 'abono': parseInt($('#cantidad-anticipo').val()), 'clientId': $('#clientes').val(),  'productos': cart})
+        $.post(url, {'total': total, 'precioSelected': precioSelected, 'desc': $('#desc').val(), 'tipoVenta': $('#pagoTargetaAbonos').prop('checked'), 'apartado': 1, 'abono': parseInt($('#cantidad-anticipo').val()), 'clientId': $('#clientes').val(),  'productos': cart})
             .done(function( data ) {
                 url = "http://localhost/simpleprint/index.php";
                 $('#apartadoModal').modal('hide');

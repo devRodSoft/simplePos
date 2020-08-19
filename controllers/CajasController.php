@@ -7,6 +7,7 @@ use app\models\Cajas;
 use app\models\CajasSearch;
 use app\models\DetalleVenta;
 use app\models\DetalleVentaSearch;
+use app\models\AbonosSearch;
 use app\models\User;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -73,12 +74,17 @@ class CajasController extends Controller
         $dataProviderSalidas->cajaId =  $id;
         $dataSalidas = $dataProviderSalidas->search(Yii::$app->request->queryParams);
 
+        $dataProviderAbonos = new AbonosSearch();
+        $dataProviderAbonos->cajaId = $id;
+        $abonos =  $dataProviderAbonos->search([]);
+
         return $this->render('view', [
             'model' => $this->findModel($id),
             'data'  => $data,
             'searchModel' => $dataProvider,
             'dataSalidas'  => $dataSalidas,
-            'searchModelSalidas' => $dataProviderSalidas
+            'searchModelSalidas' => $dataProviderSalidas,
+            'abonos' => $abonos
         ]);
     }
 

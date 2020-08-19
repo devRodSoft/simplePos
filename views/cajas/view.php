@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 use app\models\Salidas;
 use app\models\Ventas;
+use app\models\Abonos;
 use kartik\grid\GridView;
 use kartik\export\ExportMenu;
 
@@ -25,10 +26,6 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php 
             if($model->canClose($model->id))
              echo Html::a("Cerrar", ['cerrar', 'id' => $model->id], ['class' => 'btn btn-primary'])
-            
-        
-        
-        
         /*
         Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
@@ -56,11 +53,19 @@ $this->params['breadcrumbs'][] = $this->title;
             'saldoInicial',
             [
                 'label' => 'Ventas en efectivo',
-                'value' => Ventas::find()->where(['=', 'cajaId', $model->id])->andWhere(['=', 'tipoVenta', '0'])->sum('total')
+                'value' => Ventas::find()->where(['=', 'cajaId', $model->id])->andWhere(['=', 'tipoVenta', '0'])->andWhere(['ventaApartado' => 0])->sum('total')
             ],
             [
-                'label' => 'Ventas con tarjeta',
-                'value' => Ventas::find()->where(['=', 'cajaId', $model->id])->andWhere(['=', 'tipoVenta', '1'])->sum('total')
+                'label' => 'Abonos Efectivo',
+                'value' => Abonos::find()->where(['=', 'abonos.cajaId', $model->id])->andWhere(['=', 'ventas.tipoVenta', 0])->innerJoin('ventas','ventas.id = abonos.ventaId')->sum('abono')
+            ],
+            [
+                'label' => 'Ventas tarjeta',
+                'value' => Ventas::find()->where(['=', 'cajaId', $model->id])->andWhere(['=', 'tipoVenta', '1'])->andWhere(['ventaApartado' => 0])->sum('total')
+            ],
+            [
+                'label' => 'Abonos Targeta',
+                'value' => Abonos::find()->where(['=', 'abonos.cajaId', $model->id])->andWhere(['=', 'ventas.tipoVenta', 1])->innerJoin('ventas','ventas.id = abonos.ventaId')->sum('abono')
             ],
             [
                 'label' => 'Salidas',
@@ -74,14 +79,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Saldo final',
                 'value' =>  function ($model) {
                     
-                    $Efectivo  = Ventas::find()->where(['=', 'cajaId', $model->id])->andWhere(['=', 'tipoVenta', '0'])->sum('total');                    
+                    $Efectivo = Ventas::find()->where(['=', 'cajaId', $model->id])->andWhere(['=', 'tipoVenta', '0'])->andWhere(['ventaApartado' => 0])->sum('total');
                     
-                    $salidas   = Salidas::find()->where(['=', 'cajaId', $model->id])->sum('retiroCantidad');
+                    
+                    $abonosEfectivo = Abonos::find()->where(['=', 'abonos.cajaId', $model->id])->andWhere(['=', 'ventas.tipoVenta', 0])->innerJoin('ventas','ventas.id = abonos.ventaId')->sum('abono');  
+                    //$abonosTargeta = Abonos::find()->where(['=', 'abonos.cajaId', $model->id])->andWhere(['=', 'ventas.tipoVenta', 1])->innerJoin('ventas','ventas.id = abonos.ventaId')->sum('abono');
+                    
+                    $salidas  =  Salidas::find()->where(['=', 'cajaId', $model->id])->sum('retiroCantidad');
 
-                   // $descuento =  Ventas::find()->where(['=', 'cajaId', $model->id])->sum('descuento');
-
-
-                    $total = $model->saldoInicial + $Efectivo;
+                    $total = $model->saldoInicial + $Efectivo + $abonosEfectivo;
                     $total -= $salidas;
                     //$total -= $descuento;
 
@@ -139,7 +145,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'headerRowOptions' => ['class' => 'kartik-sheet-style'],
             'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
-                'heading' => "Corte",
+                'heading' => "Ventas",
             ],
             'hover' => true,
             'columns' => [
@@ -256,7 +262,43 @@ $this->params['breadcrumbs'][] = $this->title;
             ]
         ]);
     ?>
+
+            
     <?php 
+        //create grid for abonos
+        // Create a panel layout for your GridView widget
+        echo GridView::widget([
+            'dataProvider'=> $abonos,
+            //'filterModel' => $searchModelSalidas,
+            'showPageSummary' => true,
+            'containerOptions' => ['style' => 'overflow: auto'], // only set when $responsive = false
+            'headerRowOptions' => ['class' => 'kartik-sheet-style'],
+            'panel' => [
+                'type' => GridView::TYPE_PRIMARY,
+                'heading' => "Abonos",
+            ],
+            'hover' => true,
+            'columns' => [
+
+                
+                [
+                    'attribute' => 'ventaId',
+                    'group'     => true
+                ],
+                [
+                    'attribute' => 'cliente.nombre',
+                    'group'    => true
+                ],
+                'user.username',
+                'abono',
+                'restante'
+                
+            ],
+            'toolbar' => [
+                '{export}',
+                '{toggleData}'
+            ]
+        ]);
         // Create a panel layout for your GridView widget
         echo GridView::widget([
             'dataProvider'=> $dataSalidas,

@@ -73,13 +73,10 @@ class DetalleVentaSearch extends DetalleVenta
     public function Corte($params, $id)
     {
         $query = DetalleVenta::find()->joinWith('venta v')
-        ->where(['in', 'v.cajaId', $id]);
-
-        
-
+        ->where(['in', 'v.cajaId', $id])
+        ->andWhere(['in', 'v.ventaApartado', 0]);
 
         // add conditions that should always apply here
-
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
