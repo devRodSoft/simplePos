@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Abonos;
 use Yii;
 use app\models\Cajas;
 use app\models\CajasSearch;
@@ -15,6 +16,7 @@ use yii\filters\VerbFilter;
 use app\models\Salidas;
 use app\models\SalidasSearch;
 use app\models\Ventas;
+use yii\helpers\ArrayHelper;
 /**
  * CajasController implements the CRUD actions for Cajas model.
  */
@@ -78,13 +80,61 @@ class CajasController extends Controller
         $dataProviderAbonos->cajaId = $id;
         $abonos =  $dataProviderAbonos->search([]);
 
+        $model = $this->findModel($id);
+
+        //queries to get the total.
+        $Efectivo = Ventas::find()->where(['=', 'cajaId', $model->id])->andWhere(['=', 'tipoVenta', '0'])->andWhere(['ventaApartado' => 0])->sum('total');
+        $abonosEfectivo = Abonos::find()->where(['=', 'abonos.cajaId', $model->id])->andWhere(['=', 'ventas.tipoVenta', 0])->innerJoin('ventas','ventas.id = abonos.ventaId')->sum('abono');  
+        $salidas  =  Salidas::find()->where(['=', 'cajaId', $model->id])->sum('retiroCantidad');
+        $total = $model->saldoInicial + $Efectivo + $abonosEfectivo;
+        $total -= $salidas;
+
+
+        //get the caja products
+        $productsIDS = Ventas::find()->where(['=', 'cajaId', $id])->select('id')->all();
+        $ids = ArrayHelper::map($productsIDS, 'id', 'id');
+        $productos = DetalleVenta::find()->where(['=', 'ventaId', array_values($ids)])->all();
+        $productosPrint = [];
+        
+
+        foreach($productos as $p) {
+            $pro = [
+                
+                "descripcion" => $p->producto->descripcion,
+                "precio" => $p->producto->precio,
+                "precio1" => $p->producto->precio1,
+                "selectedCantidad" => $p->cantidad
+                
+            ];
+            array_push($productosPrint, $pro);
+        }
+
+
+        $printData = [
+            'id' => $model->id,
+            'sucursal' => $model->sucursal->nombre,
+            'empleado' => $model->user->username,
+            'saldoInitial' => $model->saldoInicial,
+            'saldoFinal' => $total,
+            'ventasEfectivo' => Ventas::find()->where(['=', 'cajaId', $id])->andWhere(['=', 'tipoVenta', '0'])->andWhere(['ventaApartado' => 0])->sum('total'),
+            'ventasAbonosEfectivo' => Abonos::find()->where(['=', 'abonos.cajaId', $id])->andWhere(['=', 'ventas.tipoVenta', 0])->innerJoin('ventas','ventas.id = abonos.ventaId')->sum('abono'),
+            'ventasTargeta' => Ventas::find()->where(['=', 'cajaId', $id])->andWhere(['=', 'tipoVenta', '1'])->andWhere(['ventaApartado' => 0])->sum('total'),
+            'abonosTargeta' => Abonos::find()->where(['=', 'abonos.cajaId', $id])->andWhere(['=', 'ventas.tipoVenta', 1])->innerJoin('ventas','ventas.id = abonos.ventaId')->sum('abono'),
+            'salidas' => Salidas::find()->where(['=', 'cajaId', $id])->sum('retiroCantidad'),
+            'isOpen' => $model->isOpen,
+            'apertura' => $model->apertura,
+            'cierre' => $model->cierre,
+            "productos" => $productosPrint
+        ];
+        
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
             'data'  => $data,
             'searchModel' => $dataProvider,
             'dataSalidas'  => $dataSalidas,
             'searchModelSalidas' => $dataProviderSalidas,
-            'abonos' => $abonos
+            'abonos' => $abonos,
+            'printData' => json_encode($printData)
         ]);
     }
 

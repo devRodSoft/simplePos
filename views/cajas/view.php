@@ -6,7 +6,7 @@ use app\models\Salidas;
 use app\models\Ventas;
 use app\models\Abonos;
 use kartik\grid\GridView;
-use kartik\export\ExportMenu;
+use richardfan\widget\JSRegister;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Cajas */
@@ -19,10 +19,10 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="cajas-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
+    <button class="btn btn-primary" id="print">Imprimir Corte</button>
 
     <p>
         <?= Html::a(Yii::t('app', 'Actualizar'), ['update', 'id' => $model->id], ['class' => 'btn btn-warning']) ?>
-        
         <?php 
             if($model->canClose($model->id))
              echo Html::a("Cerrar", ['cerrar', 'id' => $model->id], ['class' => 'btn btn-primary'])
@@ -65,7 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'label' => 'Abonos Targeta',
-                'value' => Abonos::find()->where(['=', 'abonos.cajaId', $model->id])->andWhere(['=', 'ventas.tipoVenta', 1])->innerJoin('ventas','ventas.id = abonos.ventaId')->sum('abono')
+                'value' =>  Abonos::find()->where(['=', 'abonos.cajaId', $model->id])->andWhere(['=', 'ventas.tipoVenta', 1])->innerJoin('ventas','ventas.id = abonos.ventaId')->sum('abono')
             ],
             [
                 'label' => 'Salidas',
@@ -344,3 +344,25 @@ $this->params['breadcrumbs'][] = $this->title;
         ]);
     ?>
 </div>
+<?php JSRegister::begin(); ?>
+<script>
+        var data = '<?php echo $printData; ?>';
+        dataParse = JSON.parse(data);
+        
+        //console.log(dateParse);
+
+        $('#print').on('click', function () {
+            print();
+        })
+
+        function print() {
+            url = "http://localhost/simpleprint/corte.php";
+            $.post(url, dataParse)
+            .done(function( data ) {
+                console.log("print ticket!")          
+            });
+        }
+        
+
+</script>
+<?php JSRegister::end(); ?>

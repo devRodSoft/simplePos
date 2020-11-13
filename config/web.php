@@ -59,6 +59,7 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'gridview/export/download' => 'gridview/export/download',
                 '<controller:\w+>/<action:\w+>/<barcode>/<sucursal:\w+>/<useBarcode:\w+>' => '<controller>/<action>',
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
                 '<controller:\w+>/<action:\w+>/<idProducto:\w+>' => '<controller>/<action>',
