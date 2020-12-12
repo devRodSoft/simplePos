@@ -40,8 +40,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->userId ? $model->user->username : "";
                 }
             ],
-            'total:currency',
-            'descuento:currency',
+            'total',
+            'descuento',
             'descripcion',
             'created_at:datetime',
             [

@@ -383,17 +383,18 @@ $clientes   = ArrayHelper::map($ldClientes, 'id', 'nombre');
     $('#pagar').on('click', function () {
 
         //obtenemos el total con o sin descuento
+        var subTotal = total;
         total = totalTemporal != 0  ? totalTemporal : total; 
-
+        debugger
         url =   "<?php echo Yii::$app->request->baseUrl; ?>" + "/ventas/pagar/";
-        $.post(url, {'total': total, 'descuento': descuento, 'precioSelected': $("#precios :selected").val(), 'desc': $('#desc').val(), 'tipoVenta': $('#pagoTargeta').prop('checked'), 'apartado':  false, 'productos': cart})
+        $.post(url, {'total': total, 'descuento': descuento, 'subTotal': subTotal, 'precioSelected': $("#precios :selected").val(), 'desc': $('#desc').val(), 'tipoVenta': $('#pagoTargeta').prop('checked'), 'apartado':  false, 'productos': cart})
             .done(function( data ) {
                 url = "http://localhost/simpleprint/index.php";
                 
                 $('#exampleModal').modal('hide');
                 $("#gracias").modal('show');
                 
-                $.post(url, {'total': total, 'descuento': descuento, 'productos': cart, 'precioSelected': $("#precios :selected").val()})
+                $.post(url, {'total': total, 'descuento': descuento, 'subTotal': subTotal, 'productos': cart, 'precioSelected': $("#precios :selected").val()})
                     .done(function( data ) {
                     console.log("print ticket!")
                     productos = [];                    

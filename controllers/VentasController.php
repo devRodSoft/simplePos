@@ -91,6 +91,7 @@ class VentasController extends Controller
         $model = new Ventas();
         $caja  = new Cajas();
 
+        //$subTotal    = Yii::$app->request->post('subTotal');
         $total       = Yii::$app->request->post('total');
         $descuento   = Yii::$app->request->post('descuento');
         $productos   = Yii::$app->request->post('productos');
@@ -100,7 +101,10 @@ class VentasController extends Controller
         $isApartado  = Yii::$app->request->post('apartado');
 
 
-      
+        if ($descuento == $total) { 
+            $total = 0;
+        } 
+
         $model->total         =  $total;
         $model->descuento     =  $descuento;
         $model->cajaId        =  $caja->getIdOpenCaja()->id;
