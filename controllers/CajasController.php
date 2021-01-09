@@ -93,7 +93,13 @@ class CajasController extends Controller
         //get the caja products
         $productsIDS = Ventas::find()->where(['=', 'cajaId', $id])->select('id')->all();
         $ids = ArrayHelper::map($productsIDS, 'id', 'id');
-        $productos = DetalleVenta::find()->where(['=', 'ventaId', array_values($ids)])->all();
+        
+
+        $productos = [];
+        if (count($ids)) {
+            $productos = DetalleVenta::find()->where(['=', 'ventaId', array_values($ids)])->all();
+        } 
+        
         $productosPrint = [];
         
 
