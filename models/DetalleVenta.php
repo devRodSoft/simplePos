@@ -13,6 +13,7 @@ use yii\behaviors\TimestampBehavior;
  * @property int $productoId
  * @property float|null $precio
  * @property int |null $cantidad
+ * @property int $sucursalId
  * @property int $created_at
  * @property int $updated_at
  *
@@ -45,7 +46,7 @@ class DetalleVenta extends \yii\db\ActiveRecord
     {
         return [
             [['ventaId', 'productoId'], 'required'],
-            [['ventaId', 'productoId', 'cantidad', 'created_at', 'updated_at'], 'integer'],
+            [['ventaId', 'productoId', 'cantidad',  'sucursalId', 'created_at', 'updated_at'], 'integer'],
             [['precio'], 'number'],
             [['productoId'], 'exist', 'skipOnError' => true, 'targetClass' => Productos::className(), 'targetAttribute' => ['productoId' => 'id']],
             [['ventaId'], 'exist', 'skipOnError' => true, 'targetClass' => Ventas::className(), 'targetAttribute' => ['ventaId' => 'id']],
@@ -63,6 +64,7 @@ class DetalleVenta extends \yii\db\ActiveRecord
             'productoId' => 'Producto ID',
             'precio' => 'Precio',
             'Cantidad' => 'Cantidad',
+            'SucursalId' => 'Sucursal Id',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];

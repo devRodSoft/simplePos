@@ -72,6 +72,9 @@ class CajasController extends Controller
         $dataProvider  =  new DetalleVentaSearch();
         $data = $dataProvider->Corte([], $id);
 
+        $dataProviderCancel  =  new DetalleVentaSearch();
+        $dataCancel = $dataProvider->CorteCancel([], $id);
+
         $dataProviderSalidas  =  new SalidasSearch();
         $dataProviderSalidas->cajaId =  $id;
         $dataSalidas = $dataProviderSalidas->search(Yii::$app->request->queryParams);
@@ -83,7 +86,7 @@ class CajasController extends Controller
         $model = $this->findModel($id);
 
         //queries to get the total.
-        $Efectivo = Ventas::find()->where(['=', 'cajaId', $model->id])->andWhere(['=', 'tipoVenta', '0'])->andWhere(['ventaApartado' => 0])->sum('total');
+        $Efectivo = Ventas::find()->where(['=', 'cajaId', $model->id])->andWhere(['=', 'tipoVenta', '0'])->andWhere(['ventaApartado' => 0])->andWhere(['=', 'status', 0])->sum('total');
         $abonosEfectivo = Abonos::find()->where(['=', 'abonos.cajaId', $model->id])->andWhere(['=', 'ventas.tipoVenta', 0])->innerJoin('ventas','ventas.id = abonos.ventaId')->sum('abono');  
         $salidas  =  Salidas::find()->where(['=', 'cajaId', $model->id])->sum('retiroCantidad');
         $total = $model->saldoInicial + $Efectivo + $abonosEfectivo;
@@ -91,12 +94,13 @@ class CajasController extends Controller
 
 
         //get the caja products
-        $productsIDS = Ventas::find()->where(['=', 'cajaId', $id])->select('id')->all();
+        $productsIDS = Ventas::find()->where(['=', 'cajaId', $id])->andWhere(['=', 'status', 0])->select('id')->all();
         $ids = ArrayHelper::map($productsIDS, 'id', 'id');
         
 
         $productos = [];
-        if (count($ids)) {
+        
+        if (count($ids) > 1) {
             $productos = DetalleVenta::find()->where(['=', 'ventaId', array_values($ids)])->all();
         } 
         
@@ -137,6 +141,8 @@ class CajasController extends Controller
             'model' => $model,
             'data'  => $data,
             'searchModel' => $dataProvider,
+            'dataCancel'  => $dataCancel,
+            'searchModelCancel' => $dataProviderCancel,
             'dataSalidas'  => $dataSalidas,
             'searchModelSalidas' => $dataProviderSalidas,
             'abonos' => $abonos,

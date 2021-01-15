@@ -18,9 +18,10 @@ class m200209_174224_productstable extends Migration
             'id'           => $this->primaryKey(),
             'codidoBarras' => $this->string(),
             'descripcion'  => $this->string()->notNull(),
+            'costo'        => $this->float(),
             'precio'       => $this->float()->notNull(),
             'precio1'      => $this->float(),
-            'cantidad'     => $this->integer()->default(0),
+            'cantidad'     => $this->integer()->defaultValue(0),
         ]);
     }
     /**

@@ -53,7 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'saldoInicial',
             [
                 'label' => 'Ventas en efectivo',
-                'value' => Ventas::find()->where(['=', 'cajaId', $model->id])->andWhere(['=', 'tipoVenta', '0'])->andWhere(['ventaApartado' => 0])->sum('total')
+                'value' => Ventas::find()->where(['=', 'cajaId', $model->id])->andWhere(['=', 'tipoVenta', '0'])->andWhere(['=', 'status', 0])->andWhere(['ventaApartado' => 0])->sum('total')
             ],
             [
                 'label' => 'Abonos Efectivo',
@@ -61,7 +61,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'label' => 'Ventas tarjeta',
-                'value' => Ventas::find()->where(['=', 'cajaId', $model->id])->andWhere(['=', 'tipoVenta', '1'])->andWhere(['ventaApartado' => 0])->sum('total')
+                'value' => Ventas::find()->where(['=', 'cajaId', $model->id])->andWhere(['=', 'tipoVenta', '1'])->andWhere(['=', 'status', 0])->andWhere(['ventaApartado' => 0])->sum('total')
             ],
             [
                 'label' => 'Abonos Targeta',
@@ -147,6 +147,134 @@ $this->params['breadcrumbs'][] = $this->title;
                 'type' => GridView::TYPE_PRIMARY,
                 'heading' => "Ventas",
             ],
+            'hover' => true,
+            'columns' => [
+
+                [
+                    'attribute'           => 'ventaId',
+                    'width'               => '50px',
+                    //'filterInputOptions' => ['placeholder' => 'Any supplier'],
+                    'group'               => true, // enable grouping
+                    //'groupedRow'          => true,  
+                    'groupFooter'         => function ($model, $key, $index, $widget) {
+                        //if ($model->ventaId == [Totales]) {
+                          //  return false;
+                       // }
+                        // Closure method
+                        return [
+                            'mergeColumns'   => [[0, 6]], // columns to merge in summary
+                            'content'        => [ // content to show in each summary cell
+                                //0 => $model->nombre_pelicula,
+                                7 => GridView::F_SUM,
+                                8 => GridView::F_SUM,
+                                
+                            ],
+                            'contentFormats' => [ // content reformatting for each summary cell
+                                7 => ['format' => 'number', 'decimals' => 2],
+                                8 => ['format' => 'number', 'decimals' => 2],
+                                
+                            ],
+                            'contentOptions' => [ // content html attributes for each summary cell
+                                //1 => ['style' => 'text-align:center'],
+                                //6 => ['style' => 'text-align:right'],
+                                
+                            ],
+                            // html attributes for group summary row
+                            'options'        => ['class' => 'info table-info', 'style' => 'font-weight:bold;'],
+                        ];
+                    },
+                ],
+                [
+                    'label' => 'Vendedor',
+                    "attribute" => 'ventaId',
+                    'width' => '100px',
+                    'group' => true,
+                    'subGroupOf' => 0,
+                    'value' => function ($model) {
+                        return $model->ventaId ? $model->venta->user->username : "";
+                    }
+                ],
+                [
+                    'label' => 'Tipo de Venta',
+                    'attribute' => 'tipoVenta',
+                    'width' => '100px',
+                    'group' => true,
+                    'subGroupOf' => 0,
+                    'value' => function ($model) {
+                        return $model->venta->tipoVenta === 0 ? "Efectivo" : "Tarjeta";
+                    }
+                ],
+                [
+                    'label' => 'Descripcion',
+                    'attribute' => 'producto.descripcion',
+                    'width' => '300px',
+                ],
+                [
+                    'label' => 'Cantidad',
+                    'attribute' => 'cantidad',
+                    'width' => '80px',
+                ],
+                [
+                    'label' => "Precio Pieza",
+                    'attribute' => 'precio',
+                    'filter' => false,
+                    'width' => '80px',
+                ], 
+                [
+                    'label' => "Total Pieza",
+                    'value' => function ($data) {
+                        return $data->cantidad * $data->precio;
+                    },
+                    'width' => '100px',
+                    'filter' => false,
+                    'pageSummary' => true,
+                    'pageSummaryFunc' => GridView::F_SUM,
+                ],    
+                [
+                    'label' => "Descuento",
+                    'value' => function ($data) {
+                        return $data->venta->descuento;
+                    },
+                    'width' => '100px',
+                    'filter' => false,
+                    'group' => true,
+                    'subGroupOf' => 0,
+                    'pageSummary' => true,
+                    'pageSummaryFunc' => GridView::F_SUM,
+                ], 
+                [
+                    'label' => "Total",
+                    'width' => '80px',
+                    'value' => function ($data) {
+                        return $data->venta->total;
+                    },
+                    'filter' => false,
+                    'group' => true,
+                    'subGroupOf' => 0,
+                    'pageSummary' => true,
+                    
+                    
+                ],        
+            ],
+            'toolbar' => [
+                '{export}',
+                '{toggleData}'
+            ]
+        ]);
+
+
+        //ventas Canceladas
+
+        echo GridView::widget([
+            'dataProvider'=> $dataCancel,
+            'filterModel' => $searchModelCancel,
+            //'showPageSummary' => true,
+            'containerOptions' => ['style' => 'overflow: auto'], // only set when $responsive = false
+            'headerRowOptions' => ['class' => 'kartik-sheet-style'],
+            'panel' => [
+                'type' => GridView::TYPE_DANGER,
+                'heading' => "Ventas Canceladas",
+            ], 
             'hover' => true,
             'columns' => [
 

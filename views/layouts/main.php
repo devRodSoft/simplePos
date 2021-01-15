@@ -51,7 +51,7 @@ AppAsset::register($this);
             ['label' => 'Cajas',      'url' => ['/cajas/index'],             'visible' => !Yii::$app->user->isGuest],
             ['label' => 'Clientes',   'url' => ['/clientes/index'],          'visible' => !Yii::$app->user->isGuest],
             ['label' => 'Retiros',    'url' => ['/salidas/index'],           'visible' => !Yii::$app->user->isGuest],
-            ['label' => 'Usuarios',   'url' => ['/user/index'],              'visible' => !Yii::$app->user->isGuest && Yii::$app->user->identity->userType == User::SUPER_ADMIN],
+            ['label' => 'Usuarios',   'url' => ['/user/index'],              'visible' => true],
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login']]
             ) : (

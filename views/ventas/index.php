@@ -65,6 +65,14 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->liquidado === 1 ? "si" : "no";
                 }
             ],
+            [
+                'label' => 'Estado',
+                'attribute' => 'status',
+                'format' => 'html',
+                'value' => function ($model) {
+                    return $model->status === 0 ? "<span style=\"color: green;\" class=\"glyphicon glyphicon-ok\" aria-hidden=\"true\"></span>" : "<span style=\"color: red;\" class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span>" ;
+                }
+            ],
             //'updated_at',
 
             ['class' => 'yii\grid\ActionColumn',

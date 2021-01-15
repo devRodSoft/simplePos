@@ -12,6 +12,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\Cajas;
+use app\models\Productos;
 use app\models\SucursalProducto;
 //to print
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
@@ -126,6 +127,7 @@ class VentasController extends Controller
                 $modelDetalle->productoId = $producto['producto']['id'];              
                 $modelDetalle->precio     = $wPrice == 1 ? $producto['producto']['precio'] : $producto['producto']['precio1'];
                 $modelDetalle->cantidad   = $producto['selectedCantidad'];
+                $modelDetalle->sucursalId = $producto['sucursalId'];
 
                 //Guardamos el detalle de la venta
                 $modelDetalle->save();  
@@ -192,8 +194,21 @@ class VentasController extends Controller
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
+    {   
+        
+        $productos = DetalleVenta::find()->where(['=', 'ventaId', $id])->all();
+        
+        foreach($productos as $p) {
+            $pro = SucursalProducto::find()->where(['=', 'productoId', $p->productoId])->andWhere(['=', 'sucursalId', $p->sucursalId])->one();
+            $pro->cantidad += $p->cantidad;
+            $pro->save();
+        }
+        
+        $venta = $this->findModel($id);
+        
+        //udpate the status 1 to set to cancel.
+        $venta->status = 1;
+        $venta->save();
 
         return $this->redirect(['index']);
     }

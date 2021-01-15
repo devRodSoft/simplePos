@@ -74,6 +74,49 @@ class DetalleVentaSearch extends DetalleVenta
     {
         $query = DetalleVenta::find()->joinWith('venta v')
         ->where(['in', 'v.cajaId', $id])
+        ->andWhere(['=', 'v.status', 0])
+        ->andWhere(['in', 'v.ventaApartado', 0]);
+
+        // add conditions that should always apply here
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        // Lets do the same with country now
+        $dataProvider->sort->attributes['venta'] = [
+            'asc' => ['v.username' => SORT_ASC],
+            'desc' => ['v.username' => SORT_DESC],
+        ];
+
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
+
+        // grid filtering conditions
+        $query->andFilterWhere([
+            'id' => $this->id,
+            'ventaId' => $this->ventaId,
+            'productoId' => $this->productoId,
+            'precio' => $this->precio,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+        ])
+
+        ->andFilterWhere(['like', 'v.username', $this->username]);
+
+        return $dataProvider;
+    }
+
+    public function CorteCancel($params, $id)
+    {
+        $query = DetalleVenta::find()->joinWith('venta v')
+        ->where(['in', 'v.cajaId', $id])
+        ->andWhere(['=', 'v.status', 1])
         ->andWhere(['in', 'v.ventaApartado', 0]);
 
         // add conditions that should always apply here
