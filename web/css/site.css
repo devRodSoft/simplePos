@@ -159,7 +159,7 @@ a.desc:after {
 
 .table-wrapper-scroll-y {
     display: block;
-    color: #0e7ac2ff;
+    color: #E10C78;
 }
 
 
@@ -175,7 +175,7 @@ a.desc:after {
 
 .nav > li > a:hover, .nav > li > a:focus {
     background-color: white;
-    color: #0e7ac2ff;
+    color: #E10C78;
 } 
 
 .login-btn {

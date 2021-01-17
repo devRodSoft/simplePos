@@ -32,11 +32,11 @@ AppAsset::register($this);
     <?php
     
     NavBar::begin([
-        'brandLabel' => "smartPOS",
+        'brandLabel' => "Seduction Sexshop",
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar navbar-fixed-top',
-            'style' => 'background-color: #0e7ac2ff;'
+            'style' => 'background-color: #E10C78;'
         ],
     ]);
     echo Nav::widget([
@@ -51,7 +51,7 @@ AppAsset::register($this);
             ['label' => 'Cajas',      'url' => ['/cajas/index'],             'visible' => !Yii::$app->user->isGuest],
             ['label' => 'Clientes',   'url' => ['/clientes/index'],          'visible' => !Yii::$app->user->isGuest],
             ['label' => 'Retiros',    'url' => ['/salidas/index'],           'visible' => !Yii::$app->user->isGuest],
-            ['label' => 'Usuarios',   'url' => ['/user/index'],              'visible' => true],
+            ['label' => 'Usuarios',   'url' => ['/user/index'],              'visible' => !Yii::$app->user->isGuest && Yii::$app->user->identity->userType == User::SUPER_ADMIN],
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login']]
             ) : (
