@@ -9,6 +9,7 @@ use app\models\CajasSearch;
 use app\models\DetalleVenta;
 use app\models\DetalleVentaSearch;
 use app\models\AbonosSearch;
+use app\models\Productos;
 use app\models\User;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -96,14 +97,16 @@ class CajasController extends Controller
         //get the caja products
         $productsIDS = Ventas::find()->where(['=', 'cajaId', $id])->andWhere(['=', 'status', 0])->select('id')->all();
         $ids = ArrayHelper::map($productsIDS, 'id', 'id');
-        
 
         $productos = [];
-        
+
         if (count($ids) > 1) {
-            $productos = DetalleVenta::find()->where(['=', 'ventaId', array_values($ids)])->all();
-        } 
-        
+            $productos = DetalleVenta::find()->where(['in', 'ventaId', array_values($ids)])->all();
+        } elseif (count($ids) == 1) {
+            $productos = DetalleVenta::find()->where(['=', 'ventaId', $ids[array_key_first($ids)]])->all();
+        }
+
+       
         $productosPrint = [];
         
 
@@ -117,6 +120,32 @@ class CajasController extends Controller
                 
             ];
             array_push($productosPrint, $pro);
+        }
+
+        //get the cancel ids to print in the corte ticket
+        $productsCancelIDS = Ventas::find()->where(['=', 'cajaId', $id])->andWhere(['=', 'status', 1])->select('id')->all();
+        $cancelIds = ArrayHelper::map($productsCancelIDS, 'id', 'id');
+        
+        $productosCancel = [];
+
+        if (count($cancelIds) > 1) {
+            $productosCancel = DetalleVenta::find()->where(['in', 'ventaId', array_values($cancelIds)])->all();
+        } elseif (count($cancelIds) == 1) {
+            $productosCancel = DetalleVenta::find()->where(['=', 'ventaId', $cancelIds[array_key_first($cancelIds)]])->all();
+        }
+
+        $productosCancelPrint = [];
+        
+        foreach($productosCancel as $p) {
+            $pro = [
+                
+                "descripcion" => $p->producto->descripcion,
+                "precio" => $p->producto->precio,
+                "precio1" => $p->producto->precio1,
+                "selectedCantidad" => $p->cantidad
+                
+            ];
+            array_push($productosCancelPrint, $pro);
         }
 
 
@@ -134,7 +163,8 @@ class CajasController extends Controller
             'isOpen' => $model->isOpen,
             'apertura' => $model->apertura,
             'cierre' => $model->cierre,
-            "productos" => $productosPrint
+            "productos" => $productosPrint,
+            "productosCancel" => $productosCancelPrint
         ];
         
         return $this->render('view', [

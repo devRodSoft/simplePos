@@ -198,8 +198,10 @@ class VentasController extends Controller
         
         $productos = DetalleVenta::find()->where(['=', 'ventaId', $id])->all();
         
+        
         foreach($productos as $p) {
             $pro = SucursalProducto::find()->where(['=', 'productoId', $p->productoId])->andWhere(['=', 'sucursalId', $p->sucursalId])->one();
+            
             $pro->cantidad += $p->cantidad;
             $pro->save();
         }
