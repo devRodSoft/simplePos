@@ -404,17 +404,16 @@ $clientes   = ArrayHelper::map($ldClientes, 'id', 'nombre');
             });
     });
 
-    $('#apartarOk').on('click', function () {        
+    $('#apartarOk').on('click', function () { 
         url =   "<?php echo Yii::$app->request->baseUrl; ?>" + "/ventas/pagar/";
         $.post(url, {'total': total, 'precioSelected': precioSelected, 'desc': $('#desc').val(), 'tipoVenta': $('#pagoTargetaAbonos').prop('checked'), 'apartado': 1, 'abono': parseInt($('#cantidad-anticipo').val()), 'clientId': $('#clientes').val(),  'productos': cart})
             .done(function( data ) {
-                url = "http://localhost/simpleprint/index.php";
+                url = "http://localhost/simpleprint/apartado.php";
                 $('#apartadoModal').modal('hide');
                 $("#gracias").modal('show');
 
-                $.post(url, {'total': total, 'descuento': descuento, 'productos': productos})
+                $.post(url, {'total': total, 'abono': parseInt($('#cantidad-anticipo').val()), 'cliente': $('#clientes option:selected').text(), 'clienteId': $('#clientes').val(), 'productos': cart})
                     .done(function( data ) {
-                       
                         productos = [];
                 });
                 resetDatos();

@@ -122,11 +122,11 @@ class VentasController extends Controller
             foreach($productos as $producto) {
                 //Intentamos guardar el detalle de la venta
                 $modelDetalle = new DetalleVenta();
-    
+               
                 $modelDetalle->ventaId    = $model->id;
                 $modelDetalle->productoId = $producto['producto']['id'];              
                 $modelDetalle->precio     = $wPrice == 1 ? $producto['producto']['precio'] : $producto['producto']['precio1'];
-                $modelDetalle->cantidad   = $producto['selectedCantidad'];
+                $modelDetalle->cantidad   = $producto['qty'];
                 $modelDetalle->sucursalId = $producto['sucursalId'];
 
                 //Guardamos el detalle de la venta
@@ -136,11 +136,11 @@ class VentasController extends Controller
                 $productoInventario = SucursalProducto::find()->where(['=', 'productoId', $producto['producto']['id']])->andWhere(['=', 'sucursalId', $producto['sucursalId']])->one();
 
                 //var_dump($productoInventario->cantidad);
-                $productoInventario->cantidad -= $producto['selectedCantidad'];
+                $productoInventario->cantidad -= $producto['qty'];
 
                 // si es apartado agregamos que es un apartado! sea la venta como sea del inventario siempre se descuenta.
                 if ($isApartado) {
-                    $productoInventario->productoApartado = $producto['selectedCantidad'];
+                    $productoInventario->productoApartado = $producto['qty'];
                 }
 
                 $productoInventario->save();
@@ -193,7 +193,7 @@ class VentasController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id)
+    public function actionDelete($id, $keep = false, $clienteId = 0)
     {   
         
         $productos = DetalleVenta::find()->where(['=', 'ventaId', $id])->all();
@@ -209,6 +209,10 @@ class VentasController extends Controller
         //udpate the status 1 to set to cancel.
         $venta->status = 1;
         $venta->save();
+
+        if ($keep) {
+            return $this->redirect(['clientes/view?id=' . $clienteId]);
+        }
 
         return $this->redirect(['index']);
     }
@@ -236,14 +240,13 @@ class VentasController extends Controller
         $productos = DetalleVenta::find()->where(['=', 'ventaId', $id])->all();
         $productosPrint = [];
         
-
         foreach($productos as $p) {
             $pro = [
                 
                 "descripcion" => $p->producto->descripcion,
-                "precio" => $p->producto->precio,
+                "precio" => $p->precio,
                 "precio1" => $p->producto->precio1,
-                "selectedCantidad" => $p->cantidad
+                "qty" => $p->cantidad
                 
             ];
             array_push($productosPrint, $pro);

@@ -61,7 +61,7 @@ class ClientesController extends Controller
     {
         
 
-        // get if the use has apartados open
+        // get if the user has apartados open
         $query = Abonos::find()
         ->leftJoin('ventas', ['ventas.ventaApartado' => '1'])
         ->where(['clienteId' =>  $id])
@@ -69,7 +69,7 @@ class ClientesController extends Controller
         ->orderBy(['(id)' => SORT_DESC])
         ->one();
 
-        if (isset($query->restante) && $query->restante != 0) {
+        if (isset($query->restante) && $query->restante != 0 && $query->venta->status !=  '0') {
             //get the abonos
             $abonosData = new AbonosSearch();
             $abonosData->clienteId = $id;
@@ -116,6 +116,7 @@ class ClientesController extends Controller
             'ventaAparados'=> $ventas,
             'abonos'=> $abonos,
             'detalleVenta' => $data,
+            'clienteId' => $id,
             'ventaId' => isset($query->ventaId) ? $query->ventaId : null,
             'restante' => isset($query->restante) ? $query->restante : null,
             'ventatotal'=> isset($ventaTotal->total) ? $ventaTotal->total : null
@@ -138,6 +139,11 @@ class ClientesController extends Controller
         return $this->render('create', [
             'model' => $model,
         ]);
+    }
+
+    public function actionClientes() {
+        $data = Clientes::find()->all();
+        return $this->asJson($data); 
     }
 
     /**

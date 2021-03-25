@@ -11,6 +11,8 @@ use app\models\Cajas;
  */
 class CajasSearch extends Cajas
 {
+    public $username;
+    public $sucursal;
     /**
      * {@inheritdoc}
      */
@@ -19,7 +21,7 @@ class CajasSearch extends Cajas
         return [
             [['id', 'sucursalId', 'userId', 'isOpen', 'created_at', 'updated_at'], 'integer'],
             [['saldoInicial', 'saldoFinal'], 'number'],
-            [['apertura', 'cierre'], 'safe'],
+            [['username', 'apertura', 'cierre'], 'safe'],
         ];
     }
 
@@ -44,20 +46,25 @@ class CajasSearch extends Cajas
         $query = Cajas::find();
 
         // add conditions that should always apply here
+        $query->joinWith(["user", "sucursal"]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
 
-        $dataProvider->setSort([
 
-                'attributes' => [
-                'id' => ['default' => SORT_DESC],
+         // Lets do the same with user
+        $dataProvider->sort->attributes['username'] = [
+            'asc' => ['user.username' => SORT_ASC],
+            'desc' => ['user.username' => SORT_DESC],
+        ];
 
-            ]
-
-        ]);
-        
+        // Lets do the same with user
+        $dataProvider->sort->attributes['sucursal'] = [
+            'asc' => ['sucursal.nombre' => SORT_ASC],
+            'desc' => ['sucursal.nombre' => SORT_DESC],
+        ];
+                
         $this->load($params);
 
         if (!$this->validate()) {
@@ -69,7 +76,7 @@ class CajasSearch extends Cajas
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'sucursalId' => $this->sucursalId,
+            'cajas.sucursalId' => $this->sucursalId,
             'userId' => $this->userId,
             'saldoInicial' => $this->saldoInicial,
             'saldoFinal' => $this->saldoFinal,
@@ -78,7 +85,8 @@ class CajasSearch extends Cajas
             'apertura' => $this->apertura,
             'cierre' => $this->cierre,
             'updated_at' => $this->updated_at,
-        ]);
+        ])->andFilterWhere(['like', 'sucursal.nombre', $this->sucursal])
+        ->andFilterWhere(['like', 'user.username', $this->username]);
 
         return $dataProvider;
     }

@@ -56,6 +56,11 @@ class SucursalesController extends Controller
             'model' => $this->findModel($id),
         ]);
     }
+    
+    public function actionSucursales() {
+        $data = Sucursales::find()->all();
+        return $this->asJson($data);
+    }
 
     /**
      * Creates a new Sucursales model.

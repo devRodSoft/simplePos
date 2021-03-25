@@ -39,7 +39,7 @@ class m200414_034125_cotesCajaTable extends Migration
 
         // add foreign key for table `venta`
         $this->addForeignKey(
-            'fk-venta-detalle-producto-id',
+            'fk-user-venta',
             'cajas',
             'userId',
             'user',

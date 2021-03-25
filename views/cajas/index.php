@@ -38,20 +38,22 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             'id',
             [
-                'label' => 'Sucursal',
                 'attribute' => 'sucursalId',
-                'filter' => false,
-                'value' => function ($model) {
-                    return $model->sucursal->nombre;
-                }
+                'label' => 'Sucursal',
+                'value' => 'sucursal.nombre',
+                'filter' => ArrayHelper::map(Sucursales::find()->all(), 'id', 'nombre')
             ],
-            'user.username',
             [
-                'label'     =>  'Saldo inicial',
-                'attribute' =>  'saldoInicial',
-                'filter'    =>  false
+                'attribute' => 'userId',
+                'label' => 'Empleado',
+                'value' => 'user.username',
+                'filter' => ArrayHelper::map(User::find()->all(), 'id', 'username'),
             ],
-            'saldoFinal',
+            [
+                'attribute' => 'Saldo Final',
+                'value' => 'saldoFinal',
+                'filter' => false
+            ],
             //'isOpen',
             'created_at:datetime',
             //'apertura',

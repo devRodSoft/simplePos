@@ -173,6 +173,11 @@ class ProductosController extends Controller
         }    
     }
 
+    public function actionProductos() {
+        $data = Productos::find()->all();
+        return $this->asJson($data);
+    }
+
     public function actionNombre($idProducto) {
         $request = Yii::$app->request;
         //$params = $request->get();
@@ -222,6 +227,20 @@ class ProductosController extends Controller
 
                 echo $sucursalProducto->save();
             }       
+        }
+    }
+    public function actionSucursal() {
+        $productos = Productos::find()->all();
+
+        foreach($productos as $pro => $value) {
+            $sucursalProducto = new SucursalProducto();
+
+            $sucursalProducto->sucursalId = 3;
+            $sucursalProducto->productoId = $value->id;
+            $sucursalProducto->cantidad = 0;
+            $sucursalProducto->productoApartado = 0;
+
+            $sucursalProducto->save();
         }
     }
     /**

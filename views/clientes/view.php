@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;;
 use yii\widgets\DetailView;
 use kartik\grid\GridView;
 use app\models\User;
@@ -51,14 +52,29 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             //['class' => 'yii\grid\SerialColumn'],
             'id',
-            'clienteId',
+            [
+                'label' => 'Estado',
+                //'attribute' => 'status',
+                'format' => 'html',
+                'value' => function ($model) {
+                    return $model->venta->status === 0 ? "<span style=\"color: green;\" class=\"glyphicon glyphicon-ok\" aria-hidden=\"true\"></span>" : "<span style=\"color: red;\" class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span>" ;
+                }
+            ],
             'ventaId',
-            'userId',
-            'cajaId',
+            [
+                'label' => 'Vendedor',
+                "attribute" => 'userId',
+                'value' => function ($model) {
+                    return $model->userId ? $model->user->username : "";
+                }
+            ],
+            //'cajaId',
             'abono',
-            'restante'
+            'restante',
+            'created_at:datetime'
         ],
-    ]); ?>
+    ]); 
+    ?>
 
     <?= GridView::widget([
         'dataProvider' => $ventaAparados,
@@ -105,6 +121,14 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->liquidado === 1 ? "si" : "no";
                 }
             ],
+            [
+                'label' => 'Estado',
+                'attribute' => 'status',
+                'format' => 'html',
+                'value' => function ($model) {
+                    return $model->status === 0 ? "<span style=\"color: green;\" class=\"glyphicon glyphicon-ok\" aria-hidden=\"true\"></span>" : "<span style=\"color: red;\" class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span>" ;
+                }
+            ],
             //'updated_at',
 
             ['class' => 'yii\grid\ActionColumn',
@@ -112,12 +136,10 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{update}',
-                'visible' => Yii::$app->user->identity->userType == User::SUPER_ADMIN
-            ],
-            [
-                'class' => 'yii\grid\ActionColumn',
                 'template' => '{delete}',
+                'urlCreator' => function ($action, $model, $key, $index) {
+                    return Url::to(['ventas/delete', 'id' => $model->id, 'keep' => true, 'clienteId' => Yii::$app->request->get('id')]);
+                },
                 'visible' => Yii::$app->user->identity->userType == User::SUPER_ADMIN
             ]     
         ],

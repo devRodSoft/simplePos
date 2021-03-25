@@ -2,7 +2,8 @@
 
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=smartclean',
+    'dsn' => 'mysql:host=localhost;dbname=nuevaTienda',
+    //'dsn' => 'mysql:host=localhost;dbname=smartpos_sex',
     'username' => 'root',
     'password' => '',
     'charset' => 'utf8'

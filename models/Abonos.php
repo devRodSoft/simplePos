@@ -67,10 +67,10 @@ class Abonos extends \yii\db\ActiveRecord
             'clienteId' => 'Cliente ID',
             'ventaId' => 'Venta ID',
             'userId' => 'User ID',
-            'cajaId' => 'Caja ID',  
+            //'cajaId' => 'Caja ID',  
             'abono' => 'Abono',
             'restante' => 'Restante',
-            'created_at' => 'Created At',
+            'created_at' => 'Fecha',
             'updated_at' => 'Updated At',
         ];
     }

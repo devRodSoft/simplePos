@@ -207,3 +207,7 @@ a.desc:after {
     display: block;
     margin-bottom: 30px;
 }
+
+.v-application--wrap {
+    min-height: initial  !important;  
+}

@@ -63,7 +63,7 @@ class SiteController extends Controller
         $cajas =  new Cajas();
 
         if (count($cajas->getOpenCaja())) {
-            return $this->render('pos');
+            return $this->render('new');
         }     
 
         return $this->redirect("cajas/create");

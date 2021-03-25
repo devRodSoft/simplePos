@@ -79,8 +79,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Saldo final',
                 'value' =>  function ($model) {
                     
-                    $Efectivo = Ventas::find()->where(['=', 'cajaId', $model->id])->andWhere(['=', 'tipoVenta', '0'])->andWhere(['ventaApartado' => 0])->sum('total');
-                    
+                    $Efectivo = Ventas::find()->where(['=', 'cajaId', $model->id])->andWhere(['=', 'tipoVenta', '0'])->andWhere(['=', 'status', 0])->andWhere(['ventaApartado' => 0])->sum('total');
                     
                     $abonosEfectivo = Abonos::find()->where(['=', 'abonos.cajaId', $model->id])->andWhere(['=', 'ventas.tipoVenta', 0])->innerJoin('ventas','ventas.id = abonos.ventaId')->sum('abono');  
                     //$abonosTargeta = Abonos::find()->where(['=', 'abonos.cajaId', $model->id])->andWhere(['=', 'ventas.tipoVenta', 1])->innerJoin('ventas','ventas.id = abonos.ventaId')->sum('abono');
@@ -89,10 +88,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
                     $total = $model->saldoInicial + $Efectivo + $abonosEfectivo;
                     $total -= $salidas;
-                    //$total -= $descuento;
 
-
-                    return $total;
+                    return $total; 
                 }
             ],
            

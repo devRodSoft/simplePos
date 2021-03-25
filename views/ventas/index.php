@@ -88,6 +88,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'template' => '{delete}',
                 'visible' => Yii::$app->user->identity->userType == User::SUPER_ADMIN
             ]     
+            
         ],
     ]); ?>
 
