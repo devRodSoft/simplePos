@@ -52,6 +52,7 @@
         <template v-slot:default>
             <thead>
             <tr>
+                <th></th>
                 <th class="text-left">Cantidad</th>
                 <th class="text-left">Producto</th>
                 <th class="text-left">Sucursal</th>
@@ -60,7 +61,24 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="item in cart" :key="item.id">
+            <tr v-for="(item, index) in cart" :key="item.id">
+                <td>
+                
+                <v-btn
+                    class="ma-2"
+                    color="red"
+                    dark
+                    @click="removeItem(index)"
+                    >
+                    Quitar
+                    <v-icon
+                        dark
+                        right
+                    >
+                        mdi-cancel
+                    </v-icon>
+                </v-btn>
+                </td>
                 <td>
                     <input type="number" id="quantity" name="quantity" v-model="item.qty" v-on:change="canAdd(item, item.cantidad)">
                 </td>
@@ -445,6 +463,7 @@
                 });
             },
             addToCart: function addToCart(item) {
+                
                 if (this.cart.length == 0) {
                     item.qty = 1;
                     this.getPrice(item);
@@ -456,19 +475,23 @@
                 this.getCartTotal();
             },
             findItem: function findItem(item) {
+                var addNew = true;
                 for(index in this.cart) {
                     if (this.cart[index].id == item.id) {
-                        this.canAddMore(this.cart[index], item)
-                    } else {
-                        item.qty = 1;
-                        this.getPrice(item);
-                        this.cart.push(item);
-                    }
+                        this.canAddMore(this.cart[index], item);
+                        addNew = false;
+                    } 
+                }
+
+                //add new item only where the for to found does not found nothing.
+                if (addNew) {
+                    item.qty = 1;
+                    this.getPrice(item);
+                    this.cart.push(item);
                 }
             },
             canAddMore: function canAddMore(producto, item) {
-            
-                if (producto.cantidad > producto.qty) {
+                if (parseInt(producto.cantidad) > producto.qty) {
                     producto.qty++;
                 } else {
                     console.log("ya no quedan existencias");
@@ -476,14 +499,22 @@
                 this.getPrice(producto);
             },
             canAdd: function canAdd(data, stock) {
-                if (stock < data.qty) {
-                    data.qty = stock;   
-                    console.log("cantidad max puesta")
-                } else {
-                    data.qty = 1;
-                    console.log("Cantidad min");
+                if (parseInt(stock) < data.qty) {
+                    data.qty = stock;
+                    console.log("Cantidad Max");
                 }
+
+                if (parseInt(data.qty) == 0) {
+                    data.qty = 1;
+                    console.log("Cantidad Min");
+                }
+
                 this.getPrice(data);
+            },
+            removeItem: function removeItem(index) { 
+                this.cart.splice(index, 1);
+                this.set_data();
+                this.getCartTotal();
             },
             changePrice: function changePrice(data) {
                 this.getPrice(data);
