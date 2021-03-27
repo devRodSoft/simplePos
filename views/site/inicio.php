@@ -70,7 +70,7 @@
                     dark
                     @click="removeItem(index)"
                     >
-                    Quitar
+                    X
                     <v-icon
                         dark
                         right
