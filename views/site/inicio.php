@@ -38,7 +38,7 @@
             </v-col>
 
             <v-col>
-                <v-select :items="sucursalesItems" label="Sucursal" v-model="sucursal" item-text="nombre" item-value="id"></v-select>
+                
             </v-col>
             
             <v-col>
@@ -83,7 +83,7 @@
                     <input type="number" id="quantity" name="quantity" v-model="item.qty" v-on:change="canAdd(item, item.cantidad)">
                 </td>
                 <td>{{item.producto.descripcion}}</td>
-                <td>{{item.sucursalId}}</td>
+                <td>{{getSucursalName(item.sucursalId)}}</td>
                 <td>
                     <v-text-field label="$" v-if="selectedPrice == 1" type="text" v-model="item.producto.precio" v-on:change="changePrice(item)"></v-text-field>
                     <v-text-field label="$" v-if="selectedPrice == 2" type="text" v-model="item.producto.precio1" v-on:change="changePrice(item)"></v-text-field>
@@ -344,7 +344,7 @@
             productBarcode: '',
             barcode: '',
             pName: '',
-            sucursal: 1,
+            sucursal: "<?php echo Yii::$app->user->identity->sucursalId ?>",
             selectedPrice: 1,
             cart: [],
             total: 0,
@@ -439,10 +439,17 @@
                     console.log("fail getting products");
                 });
             },
+            getSucursalName(id) {
+                var suc =  this.sucursalesItems.filter(function(key, value) {
+                    return key.id == parseInt(id)
+                })
+
+                return suc[0].nombre;
+            },
             findByBarcode: function findBybarCode() {
                 this.barcode = this.barcode == "" ? this.productBarcode : this.barcode;
                 self = this;
-                var url = "<?php echo Yii::$app->request->baseUrl; ?>" + "/productos/producto/" + this.barcode + "/" + this.sucursal + "/" + true;
+                var url = "<?php echo Yii::$app->request->baseUrl; ?>" + "/productos/producto/" + this.barcode + "/" + "<?php echo Yii::$app->user->identity->sucursalId ?>" + "/" + true;
 
                 $.get(url)
                 .done(function(data) {                          
@@ -529,6 +536,14 @@
                         this.getCartTotal();
                     break;
                     case "3":
+                        data.total = data.qty * data.producto.costo;
+                        this.getCartTotal();
+                    break;
+                    case 2:
+                        data.total = data.qty * data.producto.precio1;
+                        this.getCartTotal();
+                    break;
+                    case 3:
                         data.total = data.qty * data.producto.costo;
                         this.getCartTotal();
                     break;
