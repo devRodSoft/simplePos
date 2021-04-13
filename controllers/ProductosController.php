@@ -148,6 +148,7 @@ class ProductosController extends Controller
         
         $request = Yii::$app->request;
         //$params = $request->get();
+        
 
         if (Yii::$app->request->isAjax) {            
             if ($useBarcode !== "false") {
@@ -241,6 +242,18 @@ class ProductosController extends Controller
             $sucursalProducto->productoApartado = 0;
 
             $sucursalProducto->save();
+        }
+    }
+    public function actionTrim() {
+        $productos = Productos::find()->all();
+
+        foreach($productos as $pro => $value) {
+            
+            $model = $this->findModel($value->id);
+
+            $model->codidoBarras = trim($model->codidoBarras);
+
+            $model->save();
         }
     }
     /**

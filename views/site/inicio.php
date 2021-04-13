@@ -447,10 +447,11 @@
                 return suc[0].nombre;
             },
             findByBarcode: function findBybarCode() {
+                
                 this.barcode = this.barcode == "" ? this.productBarcode : this.barcode;
-                self = this;
-                var url = "<?php echo Yii::$app->request->baseUrl; ?>" + "/productos/producto/" + this.barcode + "/" + "<?php echo Yii::$app->user->identity->sucursalId ?>" + "/" + true;
-
+                
+                var url = "<?php echo Yii::$app->request->baseUrl; ?>" + "/productos/producto/" + this.barcode.trim() + "/" + "<?php echo Yii::$app->user->identity->sucursalId ?>" + "/" + true;
+                debugger
                 $.get(url)
                 .done(function(data) {                          
                     
