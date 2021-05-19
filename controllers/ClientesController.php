@@ -69,7 +69,10 @@ class ClientesController extends Controller
         ->orderBy(['(id)' => SORT_DESC])
         ->one();
 
-        if (isset($query->restante) && $query->restante != 0 && $query->venta->status !=  '0') {
+
+        //die(var_dump($query->venta->status));
+
+        if (isset($query->restante) && $query->restante != 0 && $query->venta->status !=  '1') {
             //get the abonos
             $abonosData = new AbonosSearch();
             $abonosData->clienteId = $id;
@@ -108,7 +111,6 @@ class ClientesController extends Controller
             $dataProvider->ventaId = 0;
             $data = $dataProvider->search([]);
         }
-
             
         //return al data needed for the abono and check the apartado
         return $this->render('view', [

@@ -109,9 +109,7 @@ class ProductosController extends Controller
            
             $cantidades = Yii::$app->request->post();
           
-
             unset($cantidades["Productos"]);
-
 
             //check how many sucursales tenemos  
             for ($i = 0; $i < $numSuc; $i++) {
@@ -129,12 +127,9 @@ class ProductosController extends Controller
                 $sucursalProducto->save();
             }
 
-
-             return $this->render('view', [
+            return $this->render('view', [
                 'model' => $this->findModel($model->id),
             ]);
-
-
         }
 
         return $this->render('create', [
@@ -143,7 +138,7 @@ class ProductosController extends Controller
         ]);
     }
 
-    //this recive de id or barcode depends that the client has to ask to find the product
+    //this recive de id or barcode depends that the client has to ask   to find the product
     public function actionProducto($barcode, $sucursal, $useBarcode) {
         
         $request = Yii::$app->request;
@@ -152,6 +147,7 @@ class ProductosController extends Controller
 
         if (Yii::$app->request->isAjax) {            
             if ($useBarcode !== "false") {
+              
                 $data = SucursalProducto::find()
                 ->joinWith('producto p')
                 ->where(['in', 'p.codidoBarras', $barcode])
@@ -160,6 +156,7 @@ class ProductosController extends Controller
                 ->asArray()
                 ->all();
             } else {
+                
                 $data = SucursalProducto::find()
                 ->joinWith('producto p')
                 ->where(['in', 'p.id', $barcode])

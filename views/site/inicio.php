@@ -34,6 +34,7 @@
                     item-value="codidoBarras"
                     label="Descripcion"
                     v-on:change="findByBarcode"
+                    return-object
                 ></v-autocomplete>
             </v-col>
 
@@ -41,8 +42,11 @@
                 
             </v-col>
             
-            <v-col>
+            <v-col v-if="!isAdmin">
                 <v-select :items="preciosItem" label="Precio" v-model="selectedPrice" item-text="nombre" item-value="id" v-on:change="updatePrices()"></v-select>
+            </v-col>
+            <v-col v-if="isAdmin">
+                <v-select :items="preciosItemAdmin" label="Precio" v-model="selectedPrice" item-text="nombre" item-value="id" v-on:change="updatePrices()"></v-select>
             </v-col>
         </v-row>
         
@@ -158,8 +162,7 @@
                                             </div>
                                             
                                             <div style="text-align: right">
-                                                <label for="message-cambio" class="col-form-label" style="text-align: right">Pago con tarjeta?</label>
-                                                <input type="checkbox" name="targeta" id="pagoTargeta" v-model="payModal.targeta">
+                                                 <v-select :items="formaPagoItem" label="Forma de Pago" v-model="formaPago" item-text="nombre" item-value="id"></v-select>
                                             </div>
                                     </div>
                                 </form>
@@ -245,8 +248,7 @@
                                         </div>
                                         
                                         <div style="text-align: right">
-                                            <label for="message-cambio" class="col-form-label" style="text-align: right">Pago con tarjeta?</label>
-                                            <input type="checkbox" name="targeta" id="pagoTargeta" v-model="apartarModal.targeta">
+                                        <v-select :items="formaPagoItem" label="Forma de Pago" v-model="formaPago" item-text="nombre" item-value="id"></v-select>
                                         </div>
                                     </div>
                                 </form>
@@ -334,17 +336,18 @@
 <?php JSRegister::begin(); ?>
 <script> 
     var app = new Vue({
-        el: '#app',
         vuetify: new Vuetify(),
+        el: '#app',
         data: {
             dialog: false,
             thanks: false,
             apartado: false,
             message: 'Hello Vue!',
-            productBarcode: '',
+            productBarcode: null,
             barcode: '',
             pName: '',
             sucursal: "<?php echo Yii::$app->user->identity->sucursalId ?>",
+            isAdmin: "<?php echo Yii::$app->user->identity->userType == 0?>",
             selectedPrice: 1,
             cart: [],
             total: 0,
@@ -372,6 +375,16 @@
             preciosItem: [
                 {id: 1, nombre: 'Menudeo'},
                 {id: 2, nombre: 'Mayoreo'},
+            ],
+            preciosItemAdmin: [
+                {id: 1, nombre: 'Menudeo'},
+                {id: 2, nombre: 'Mayoreo'},
+                {id: 3, nombre: 'Costo'},
+            ],
+            formaPago: 1,
+            formaPagoItem: [
+                {id: 1, nombre: 'Efectivo'},
+                {id: 2, nombre: 'Targeta'},
             ]
         },
         created() {
@@ -402,13 +415,18 @@
                 });
             },
             getAllProducts() {
-                
                 self = this;
                 var url = "<?php echo Yii::$app->request->baseUrl; ?>" + "/productos/productos";
 
                 $.get(url)
-                .done(function(data) {                          
-                    self.productosItems = data;
+                .done(function(data) {         
+                    
+                    var concatData = [];
+                    data.forEach(element => 
+                        concatData.push(element)
+                    );
+                    
+                    self.productosItems = concatData;
                 })
                 .fail(function(jqXHR, textStatus, errorThrown) { 
                     console.log("fail getting products");
@@ -447,11 +465,17 @@
                 return suc[0].nombre;
             },
             findByBarcode: function findBybarCode() {
+
+                var url = "";
+                useBarcode = true;
                 
-                this.barcode = this.barcode == "" ? this.productBarcode : this.barcode;
                 
-                var url = "<?php echo Yii::$app->request->baseUrl; ?>" + "/productos/producto/" + this.barcode.trim() + "/" + "<?php echo Yii::$app->user->identity->sucursalId ?>" + "/" + true;
-                debugger
+                if (this.barcode == "") {
+                    url = "<?php echo Yii::$app->request->baseUrl; ?>" + "/productos/producto/" + this.productBarcode.id + "/" + "<?php echo Yii::$app->user->identity->sucursalId ?>" + "/" + false;
+                } else {
+                    url = "<?php echo Yii::$app->request->baseUrl; ?>" + "/productos/producto/" + this.barcode.trim() + "/" + "<?php echo Yii::$app->user->identity->sucursalId ?>" + "/" + true;
+                }
+                
                 $.get(url)
                 .done(function(data) {                          
                     
@@ -463,7 +487,7 @@
                     }
 
                     self.barcode = '';
-                    self.productBarcode = '';
+                    self.productBarcode = null;
                 })
                 .fail(function(jqXHR, textStatus, errorThrown) { 
                     $('#barCode').val("");
@@ -578,13 +602,14 @@
             pagar: function pagar() {
                 self = this;
                 url =   "<?php echo Yii::$app->request->baseUrl; ?>" + "/ventas/pagar/";
+                debugger
                 $.post(url, {
                         'total': this.total, 
                         'descuento': this.payModal.descuento, 
                         'subTotal': this.total,
                         'precioSelected': this.selectedPrice,
                         'desc': this.payModal.motivo,
-                        'tipoVenta': this.payModal.tarjeta, 
+                        'tipoVenta': this.formaPago != 1, 
                         'apartado':  false, 
                         'productos': this.cart
                     })
@@ -612,7 +637,7 @@
                 this.payModal.motivo = "";
                 this.payModal.pago = 0;
                 this.payModal.cambio = 0;
-                this.payModal.tarjeta = false;
+                this.formaPago = 1;
             },
             apartar: function apartar() {
 
@@ -624,10 +649,10 @@
                     'total': self.total, 
                     'precioSelected': this.selectedPrice,
                     'desc': 0, 
-                    'tipoVenta': this.apartarModal.tarjeta,
+                    'tipoVenta': this.formaPago != 1,
                     'apartado': 1,
                     'abono': this.apartarModal.anticipo, 
-                    'clientId':self.apartarModal.cliente,  
+                    'clientId': self.apartarModal.cliente.id,  
                     'productos': this.cart
                 })
                 .done(function( data ) {
