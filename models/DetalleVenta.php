@@ -12,13 +12,15 @@ use yii\behaviors\TimestampBehavior;
  * @property int $ventaId
  * @property int $productoId
  * @property float|null $precio
+ * @property int |null $cantidad
+ * @property int $sucursalId
  * @property int $created_at
  * @property int $updated_at
  *
  * @property Productos $producto
  * @property Ventas $venta
  */
-class Detalleventa extends \yii\db\ActiveRecord
+class DetalleVenta extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -44,7 +46,7 @@ class Detalleventa extends \yii\db\ActiveRecord
     {
         return [
             [['ventaId', 'productoId'], 'required'],
-            [['ventaId', 'productoId', 'created_at', 'updated_at'], 'integer'],
+            [['ventaId', 'productoId', 'cantidad',  'sucursalId', 'created_at', 'updated_at'], 'integer'],
             [['precio'], 'number'],
             [['productoId'], 'exist', 'skipOnError' => true, 'targetClass' => Productos::className(), 'targetAttribute' => ['productoId' => 'id']],
             [['ventaId'], 'exist', 'skipOnError' => true, 'targetClass' => Ventas::className(), 'targetAttribute' => ['ventaId' => 'id']],
@@ -61,6 +63,8 @@ class Detalleventa extends \yii\db\ActiveRecord
             'ventaId' => 'Venta ID',
             'productoId' => 'Producto ID',
             'precio' => 'Precio',
+            'Cantidad' => 'Cantidad',
+            'SucursalId' => 'Sucursal Id',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];

@@ -4,11 +4,13 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Productos;
+use app\models\SucursalProducto;
+use app\models\SucursalProductoSearch;
 use app\models\ProductosSearch;
+use app\models\Sucursales;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use arogachev\excel\import\basic\Importer;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use yii\filters\AccessControl;
 
@@ -66,8 +68,11 @@ class ProductosController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new ProductosSearch();
+        
+        $searchModel = new SucursalProductoSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        
+        $dataProvider->sort->defaultOrder = ['id' => SORT_DESC];
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -83,6 +88,7 @@ class ProductosController extends Controller
      */
     public function actionView($id)
     {
+
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -96,49 +102,157 @@ class ProductosController extends Controller
     public function actionCreate()
     {
         $model = new Productos();
+        $sucProModel = new SucursalProducto();
+        $numSuc = Sucursales::find()->count();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+           
+            $cantidades = Yii::$app->request->post();
+          
+            unset($cantidades["Productos"]);
+
+            //check how many sucursales tenemos  
+            for ($i = 0; $i < $numSuc; $i++) {
+                echo "si" . ($i + 1) ;
+
+                $sucursalProducto = new SucursalProducto();
+
+                $aux1 = 'sucursal' . ($i + 1);
+                $aux2 = 'cantidad' . ($i + 1);
+
+                $sucursalProducto->sucursalId = $cantidades[$aux1];
+                $sucursalProducto->productoId = $model->id;
+                $sucursalProducto->cantidad   = $cantidades[$aux2];
+    
+                $sucursalProducto->save();
+            }
+
+            return $this->render('view', [
+                'model' => $this->findModel($model->id),
+            ]);
         }
 
         return $this->render('create', [
             'model' => $model,
+            'sucProModel' => $sucProModel,
         ]);
     }
-    public function actionProducto($barcode)
-    {
-        $request = Yii::$app->request;
-        $params = $request->get();
+
+    //this recive de id or barcode depends that the client has to ask   to find the product
+    public function actionProducto($barcode, $sucursal, $useBarcode) {
         
-        if (Yii::$app->request->isAjax) {
-            return $this->asJson(Productos::find()->where(['codidoBarras' => $barcode])->one());
+        $request = Yii::$app->request;
+        //$params = $request->get();
+        
+
+        if (Yii::$app->request->isAjax) {            
+            if ($useBarcode !== "false") {
+              
+                $data = SucursalProducto::find()
+                ->joinWith('producto p')
+                ->where(['in', 'p.codidoBarras', $barcode])
+                ->andWhere(['sucursalproducto.sucursalId' => $sucursal])
+                ->andWhere(['>','sucursalproducto.cantidad', 0])
+                ->asArray()
+                ->all();
+            } else {
+                
+                $data = SucursalProducto::find()
+                ->joinWith('producto p')
+                ->where(['in', 'p.id', $barcode])
+                ->andWhere(['sucursalproducto.sucursalId' => $sucursal])
+                ->andWhere(['>','sucursalproducto.cantidad', 0])
+                ->asArray()
+                ->all();
+            }
+            
+          
+            return $this->asJson($data);
         }    
+    }
+
+    public function actionProductos() {
+        $data = Productos::find()->all();
+        return $this->asJson($data);
+    }
+
+    public function actionNombre($idProducto) {
+        $request = Yii::$app->request;
+        //$params = $request->get();
+
+        if (Yii::$app->request->isAjax) {            
+
+            $data = SucursalProducto::find()
+
+            ->joinWith('producto p')
+            ->where(['in', 'p.id', $idProducto])
+            //->andWhere(['sucursalproducto.sucursalId' => $sucursal])
+            ->andWhere(['>','sucursalproducto.cantidad', 0])
+            ->asArray()
+            ->all();
+          
+            return $this->asJson($data);
+        }   
     }
     /* import inventary */ 
     public function actionImport() {
-
-        $inputFileName = 'uploads/inventario.xlsx';
+        
+        $inputFileName = 'uploads/aba.xlsx';
         //  $helper->log('Loading file ' . pathinfo($inputFileName, PATHINFO_BASENAME) . ' using IOFactory to identify the format');
         $spreadsheet = IOFactory::load($inputFileName);
         $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
 
         foreach ($sheetData as $data => $valor) {
-            // $array[3] se actualizará con cada valor de $array...
-
-            if ($valor["A"] != NULL) {
+            if ($valor["B"] != NULL) {
 
                 $producto = new Productos();
 
                 $producto->codidoBarras = $valor["A"];
-                $producto->descripcion = $valor["B"];
-                $producto->precio = $valor["C"];
-                $producto->cantidad = $valor["D"];
+                $producto->descripcion  = $valor["B"];
+                $producto->costo        = 0;
+                $producto->precio       = $valor["D"];
+                $producto->precio1      = 0;
+                $producto->cantidad     = 0;
 
+                //Save the product
                 echo $producto->save();
+                //save the fisrt sucursal
+                $sucursalProducto = new SucursalProducto();
+
+                $sucursalProducto->sucursalId = 1;
+                $sucursalProducto->productoId = $producto->id;
+                $sucursalProducto->cantidad   = 10;
+
+                echo $sucursalProducto->save();
             }       
         }
     }
+    public function actionSucursal() {
+        $productos = Productos::find()->all();
 
+        foreach($productos as $pro => $value) {
+            $sucursalProducto = new SucursalProducto();
+
+            $sucursalProducto->sucursalId = 3;
+            $sucursalProducto->productoId = $value->id;
+            $sucursalProducto->cantidad = 0;
+            $sucursalProducto->productoApartado = 0;
+
+            $sucursalProducto->save();
+        }
+    }
+    public function actionTrim() {
+        $productos = Productos::find()->all();
+
+        foreach($productos as $pro => $value) {
+            
+            $model = $this->findModel($value->id);
+
+            $model->codidoBarras = trim($model->codidoBarras);
+
+            $model->save();
+        }
+    }
     /**
      * Updates an existing Productos model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -149,13 +263,47 @@ class ProductosController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $modelSp = SucursalProducto::find()->andWhere(['=', 'productoId', $id]);
+        $numSuc = Sucursales::find()->count();
+
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+           
+            $cantidades = Yii::$app->request->post();
+          
+            unset($cantidades["Productos"]);
+
+            
+            //check how many sucursales tenemos  
+            for ($i = 0; $i < $numSuc; $i++) {
+                echo "si" . ($i + 1) ;
+
+                $sucursalProducto = new SucursalProducto();
+
+                $aux1 = 'sucursal' . ($i + 1);
+                $aux2 = 'cantidad' . ($i + 1);
+
+                $sucursalId = $cantidades[$aux1];
+                $sucursalProducto->productoId = $model->id;
+                $cantidad   = $cantidades[$aux2];                
+
+                $sucursalProducto = SucursalProducto::find()->andWhere(['=', 'productoId', $id])->andWhere(['=', 'sucursalId', $sucursalId])->one();
+
+                $sucursalProducto->cantidad  = $cantidad;
+    
+                $sucursalProducto->save();
+            }
+
+             return $this->render('view', [
+                'model' => $this->findModel($model->id),
+            ]);
+
+
         }
 
         return $this->render('update', [
             'model' => $model,
+            'sucursal' => $modelSp
         ]);
     }
 

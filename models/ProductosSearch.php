@@ -18,6 +18,7 @@ class ProductosSearch extends Productos
     {
         return [
             [['id', 'precio', 'created_at', 'updated_at'], 'integer'],
+            [['costo'], 'number'],
             [['codidoBarras', 'descripcion', 'cantidad'], 'safe'],
         ];
     }
@@ -60,6 +61,7 @@ class ProductosSearch extends Productos
         $query->andFilterWhere([
             'id' => $this->id,
             'precio' => $this->precio,
+            'costo' => $this->costo,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);

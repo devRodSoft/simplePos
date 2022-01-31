@@ -11,7 +11,9 @@ use yii\behaviors\TimestampBehavior;
  * @property int $id
  * @property string $codidoBarras
  * @property string $descripcion
+ * @property int $costo
  * @property int $precio
+ * @property int $precio1
  * @property string $cantidad
  * @property int $created_at
  * @property int $updated_at
@@ -43,8 +45,9 @@ class Productos extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['codidoBarras', 'descripcion', 'precio', 'cantidad'], 'required'],
-            [['precio', 'cantidad', 'created_at', 'updated_at'], 'integer'],
+            [['descripcion', 'precio', 'cantidad'], 'required'],
+            [['cantidad', 'preguntarPrecio', 'created_at', 'updated_at'], 'integer'],
+            [['costo', 'precio', 'precio1'], 'number'],
             [['codidoBarras', 'descripcion'], 'string', 'max' => 255],
         ];
     }
@@ -56,12 +59,16 @@ class Productos extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'codidoBarras' => 'Codido Barras',
-            'descripcion' => 'Descripcion',
+            'codidoBarras' => 'Código',
+            'descripcion' => 'Descripción',
+            'costo' => 'Costo',
             'precio' => 'Precio',
+            'precio1' => 'Precio 1',
             'cantidad' => 'Cantidad',
+            'preguntarPrecio' => 'Preguntar Precio',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
+
         ];
     }
 

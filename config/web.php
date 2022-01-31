@@ -4,7 +4,7 @@ $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
 $config = [
-    'timeZone' => 'america/Mexico_City',
+    'timeZone' => 'America/Mexico_City',
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
@@ -12,6 +12,7 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
+    'language' => 'es-MX',
     'components' => [
         'formatter' => [
             'class' => 'yii\i18n\Formatter',
@@ -20,6 +21,8 @@ $config = [
             'decimalSeparator' => ',',
             'thousandSeparator' => '.',            
             'currencyCode' => 'MXN',
+            'defaultTimeZone' => 'America/Mexico_City',
+            'nullDisplay' => '',
         ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
@@ -56,13 +59,31 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                '<controller:\w+>/<action:\w+>/<barcode:\w+>' => '<controller>/<action>',
+                'gridview/export/download' => 'gridview/export/download',
+                '<controller:\w+>/<action:\w+>/<barcode>/<sucursal:\w+>/<useBarcode:\w+>' => '<controller>/<action>',
+                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+                '<controller:\w+>/<action:\w+>/<idProducto:\w+>' => '<controller>/<action>',
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
                 
             ],
         ],
     ],
     'params' => $params,
+    'modules' => [ 
+        'gridview' =>  [
+            'class' => '\kartik\grid\Module',
+            // enter optional module parameters below - only if you need to  
+            // use your own export download action or custom translation 
+            // message source
+            'downloadAction' => 'gridview/export/download',
+            'i18n' => [
+                'class' => 'yii\i18n\PhpMessageSource',
+                'basePath' => '@kvgrid/messages',
+                'forceTranslation' => true
+            ]
+            
+        ]
+    ]
 ];
 
 if (YII_ENV_DEV) {

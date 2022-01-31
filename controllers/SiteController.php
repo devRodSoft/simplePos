@@ -9,7 +9,7 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
-use app\models\Productos;
+use app\models\Cajas;
 
 
 class SiteController extends Controller
@@ -54,8 +54,19 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        //return $this->render('index');
-        return $this->render('pos');
+
+        $model = new LoginForm();
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect(['site/login', array('model' => $model)]);
+        }
+
+        $cajas =  new Cajas();
+
+        if (count($cajas->getOpenCaja())) {
+            return $this->render('inicio');
+        }     
+
+        return $this->redirect("cajas/create");
     }    
 
     /**
@@ -65,10 +76,6 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();

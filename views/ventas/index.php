@@ -1,8 +1,8 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
-
+use kartik\grid\GridView;
+use app\models\User;
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\VentasSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -12,10 +12,8 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="ventas-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <p>
-        <?= Html::a('Create Ventas', ['create'], ['class' => 'btn btn-success']) ?>
+        <?php /*Html::a('Create Ventas', ['create'], ['class' => 'btn btn-success'])*/ ?>
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -23,16 +21,74 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'showPageSummary' => true,
+        'containerOptions' => ['style' => 'overflow: auto'], // only set when $responsive = false
+        'headerRowOptions' => ['class' => 'kartik-sheet-style'],
+        'panel' => [
+            'type' => GridView::TYPE_PRIMARY,
+            'heading' => "Ventas",
+        ],
+        'hover' => true,
         'columns' => [
             //['class' => 'yii\grid\SerialColumn'],
 
             'id',
-            'total:currency',
-            'descuento:currency',
-            'created_at',
+            [
+                'label' => 'Vendedor',
+                "attribute" => 'userId',
+                'value' => function ($model) {
+                    return $model->userId ? $model->user->username : "";
+                }
+            ],
+            'total',
+            'descuento',
+            'descripcion',
+            'created_at:datetime',
+            [
+                'label' => 'Forma de pago',
+                'attribute' => 'tipoVenta',
+                'value' => function ($model) {
+                    return $model->tipoVenta === 0 ? "Efectivo" : "Tarjeta";
+                }
+            ],
+            [
+                'label' => 'Venta de',
+                'attribute' => 'tipoVenta',
+                'value' => function ($model) {
+                    return $model->ventaApartado === 0 ? "Contado" : "Credito";
+                }
+            ],
+            [
+                'label' => 'Liquidado',
+                'attribute' => 'tipoVenta',
+                'value' => function ($model) {
+                    return $model->liquidado === 1 ? "si" : "no";
+                }
+            ],
+            [
+                'label' => 'Estado',
+                'attribute' => 'status',
+                'format' => 'html',
+                'value' => function ($model) {
+                    return $model->status === 0 ? "<span style=\"color: green;\" class=\"glyphicon glyphicon-ok\" aria-hidden=\"true\"></span>" : "<span style=\"color: red;\" class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span>" ;
+                }
+            ],
             //'updated_at',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn',
+            'template' => '{view}',
+            ],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{update}',
+                'visible' => Yii::$app->user->identity->userType == User::SUPER_ADMIN
+            ],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{delete}',
+                'visible' => Yii::$app->user->identity->userType == User::SUPER_ADMIN
+            ]     
+            
         ],
     ]); ?>
 
