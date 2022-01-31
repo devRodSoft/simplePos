@@ -111,6 +111,7 @@ class ClientesController extends Controller
             $dataProvider->ventaId = 0;
             $data = $dataProvider->search([]);
         }
+
             
         //return al data needed for the abono and check the apartado
         return $this->render('view', [

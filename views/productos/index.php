@@ -48,7 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => $listaSucursales,
                 'value' => function ($model) {
                     return $model->sucursal->nombre;
-                }
+                } 
             ],
             [
                 'attribute' => 'producto',
@@ -65,9 +65,19 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'producto.costo',
                 'visible' => Yii::$app->user->identity->userType == User::SUPER_ADMIN
                 
-            ],            
-            'producto.precio',
-            'producto.precio1',
+            ],  
+            [
+                'label' => 'Precio',
+                'attribute' => 'producto.precio',
+                'filter' => false,
+                'visible' => Yii::$app->user->identity->userType == User::SUPER_ADMIN
+            ],
+            [
+                'label' => 'Precio Mayoreo',
+                'attribute' => 'producto.precio1',
+                'filter' => false,
+                'visible' => Yii::$app->user->identity->userType == User::SUPER_ADMIN
+            ],
             [
                 'label' => 'Cantidad Sucursal',
                 'attribute' => 'cantidad',
@@ -75,7 +85,8 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'label' => 'Almacen',
-                'attribute' => 'producto.cantidad'
+                'attribute' => 'producto.cantidad',
+                'visible' => Yii::$app->user->identity->userType == User::SUPER_ADMIN
             ],
             
 
@@ -90,7 +101,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         $url = Url::to(['productos/view', 'id' => $model->producto->id]);
                         return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, ['title' => 'view']);
                         },
-                    ]
+                    ],
+                    'visible' => Yii::$app->user->identity->userType == User::SUPER_ADMIN
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
@@ -100,7 +112,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         $url = Url::to(['productos/update', 'id' => $model->producto->id]);
                         return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, ['title' => 'view']);
                         },
-                    ]
+                    ],
+                    'visible' => Yii::$app->user->identity->userType == User::SUPER_ADMIN
             ],
             [
                 'class' => 'yii\grid\ActionColumn',

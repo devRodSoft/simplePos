@@ -14,6 +14,8 @@ use yii\filters\VerbFilter;
 use app\models\Cajas;
 use app\models\Productos;
 use app\models\SucursalProducto;
+use app\models\Transpasos;
+use app\models\TranspasosDetalle;
 //to print
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Mike42\Escpos\Printerd;
@@ -166,6 +168,54 @@ class VentasController extends Controller
         }
     }
 
+    public function actionPasar() {
+
+        $model = new Transpasos();
+
+        // call to new model to set de amacen
+
+
+        $productos       = Yii::$app->request->post('productos');
+        $sucursalDestino = Yii::$app->request->post('sucursalDestino');
+        $model->userId   =  Yii::$app->user->identity->id;
+        
+        
+
+        //Guardamos la el transpaso
+        if ($model->save()) {
+            
+            foreach($productos as $producto) {
+                //Intentamos guardar el detalle de la transpaso
+                $transpasoDetalle = new TranspasosDetalle();
+               
+                $transpasoDetalle->transpasoId  = $model->id;
+                $transpasoDetalle->productoId   = $producto['producto']['id'];              
+                //$transpasoDetalle->precio     = $wPrice == 1 ? $producto['producto']['precio'] : $producto['producto']['precio1'];
+                $transpasoDetalle->cantidad     = $producto['qty'];
+                $transpasoDetalle->qtyFrom      = $producto['sucursalId'];
+                $transpasoDetalle->qtyFinal     = $sucursalDestino;
+
+                //Guardamos el detalle de la transpaso
+                $transpasoDetalle->save();
+
+                //Descontamos inventario por producto vendido
+                $productoInventario = SucursalProducto::find()->where(['=', 'productoId', $producto['producto']['id']])->andWhere(['=', 'sucursalId', $producto['sucursalId']])->one();
+                $productoInventario->cantidad -= $producto['qty'];
+                $productoInventario->save(false);
+                
+              
+                
+                //agregmos la existencia en el otro producto
+                //$pro = SucursalProducto::find()->where(['=', 'productoId', $producto['producto']['id']])->andWhere(['=', 'sucursalId', $sucursalDestino])->one();
+                //$pro->cantidad += $producto['qty'];
+                //$pro->save();
+                
+            }
+            return true;
+        } else {
+            die("hubo problema");
+        }
+    }
     /**
      * Updates an existing Ventas model.
      * If update is successful, the browser will be redirected to the 'view' page.

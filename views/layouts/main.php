@@ -42,16 +42,17 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
-            ['label' => 'Productos',  'url' => ['/productos/index'],         'visible' => !Yii::$app->user->isGuest && Yii::$app->user->identity->userType == User::SUPER_ADMIN],
+            ['label' => 'Productos',  'url' => ['/productos/index'],           'visible' => !Yii::$app->user->isGuest],
             //['label' => 'Sucupro',    'url' => ['/sucursal-producto/index'], 'visible' => !Yii::$app->user->isGuest],
             //['label' => 'Reportes',   'url' => ['/detalle-venta/index'],     'visible' => !Yii::$app->user->isGuest],
-            ['label' => 'Ventas',     'url' => ['/ventas/index'],            'visible' => !Yii::$app->user->isGuest ],
+            ['label' => 'Ventas',     'url' => ['/ventas/index'],              'visible' => !Yii::$app->user->isGuest ],
             //['label' => 'Abonos',     'url' => ['/abonos/index'],            'visible' => !Yii::$app->user->isGuest ],
             //['label' => 'Sucursales', 'url' => ['/sucursales/index'],        'visible' => !Yii::$app->user->isGuest  && Yii::$app->user->identity->userType == User::SUPER_ADMIN],
-            ['label' => 'Cajas',      'url' => ['/cajas/index'],             'visible' => !Yii::$app->user->isGuest],
-            ['label' => 'Clientes',   'url' => ['/clientes/index'],          'visible' => !Yii::$app->user->isGuest],
-            ['label' => 'Retiros',    'url' => ['/salidas/index'],           'visible' => !Yii::$app->user->isGuest],
-            ['label' => 'Usuarios',   'url' => ['/user/index'],              'visible' => !Yii::$app->user->isGuest && Yii::$app->user->identity->userType == User::SUPER_ADMIN],
+            ['label' => 'Cajas',      'url' => ['/cajas/index'],               'visible' => !Yii::$app->user->isGuest],
+            ['label' => 'Clientes',   'url' => ['/clientes/index'],            'visible' => !Yii::$app->user->isGuest],
+            ['label' => 'Retiros',    'url' => ['/salidas/index'],             'visible' => !Yii::$app->user->isGuest],
+            ['label' => 'Usuarios',   'url' => ['/user/index'],                'visible' => !Yii::$app->user->isGuest && Yii::$app->user->identity->userType == User::SUPER_ADMIN],
+            ['label' => 'Traspasos',   'url' => ['/transpasos/index'],         'visible' => !Yii::$app->user->isGuest],
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login']]
             ) : (
@@ -81,7 +82,6 @@ AppAsset::register($this);
 <footer class="footer">
     <div class="container">
         <p class="pull-left">&copy; Rodsoft <?= date('Y') ?></p>
-
         <p class="pull-right">smartPOS</p>
     </div>
 </footer>

@@ -101,8 +101,12 @@
 
         <v-divider></v-divider>
 
-        <h1 style="text-align: right">Total: {{total}}</h1>
+        <h1 style="text-align: right; margin-bottom:20px">Total: {{total}}</h1>
                 <!-- start pay modal  -->
+                <v-row>
+                    <v-select :items="sucursalesItems" label="Sucursal destino" v-model="toSucursal" item-text="nombre" item-value="id"></v-select>
+                    <v-btn elevation="2"  v-on:click="transopaso()"  color="danger">Hacer Transpaso</v-btn>
+                </v-row>
                 <v-row style="margin-top: 15px;">
                     <v-col>
                         <v-btn elevation="2" v-on:click="remove_data()" color="danger">Borrar Almacenamiento</v-btn>
@@ -347,6 +351,7 @@
             barcode: '',
             pName: '',
             sucursal: "<?php echo Yii::$app->user->identity->sucursalId ?>",
+            toSucursal: 1,
             isAdmin: "<?php echo Yii::$app->user->identity->userType == 0?>",
             selectedPrice: 1,
             cart: [],
@@ -380,6 +385,11 @@
                 {id: 1, nombre: 'Menudeo'},
                 {id: 2, nombre: 'Mayoreo'},
                 {id: 3, nombre: 'Costo'},
+            ],
+            sucursalesItems: [
+                {id: 1, nombre: 'Arandas'},
+                {id: 2, nombre: 'Arandas Sucursal'},
+                {id: 3, nombre: 'Ocotlan'},
             ],
             formaPago: 1,
             formaPagoItem: [
@@ -668,6 +678,32 @@
                             self.remove_data();
                             this.cleanApartarModal();
                     });                    
+                });
+            },
+            transopaso() {
+                selft = this;
+                
+                url =  "<?php echo Yii::$app->request->baseUrl; ?>" + "/ventas/pasar/";
+                
+                $.post(url, {
+                    'productos': this.cart,
+                    'sucursalDestino': this.toSucursal
+                })
+                .done(function( data ) {
+                    console.log('done');                    
+                    self.remove_data();
+                    /*url = "http://localhost/simpleprint/apartado.php";
+                    $.post(url, {
+                        'total': self.total, 
+                        'abono': self.apartarModal.anticipo, 
+                        'cliente': self.apartarModal.cliente.nombre,
+                        'clienteId': self.apartarModal.cliente.id,
+                        'productos': self.cart})
+                        .done(function( data ) {    
+                            console.log("Print Ticket! apartado");
+                            self.remove_data();
+                            this.cleanApartarModal();
+                    });    */                
                 });
             },
             cleanApartarModal() {
